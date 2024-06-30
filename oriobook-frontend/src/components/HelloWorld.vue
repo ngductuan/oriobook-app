@@ -17,23 +17,12 @@
   <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
 </template>
 
-<script>
+<script setup lang="ts">
 import { ref } from 'vue'
 
-export default {
-  name: 'HelloWorld',
-  setup() {
-    const count = ref(0)
+const count = ref(0)
 
-    const c = 4
-
-    const b = () => {
-      count.value++
-    }
-
-    return { count, b }
-  }
-}
+const msg = 'Hello Vite + Vue'
 </script>
 
 <style scoped>
