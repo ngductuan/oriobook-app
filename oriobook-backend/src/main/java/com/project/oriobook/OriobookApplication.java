@@ -1,5 +1,6 @@
 package com.project.oriobook;
 
+import com.project.oriobook.modules.product.entity.Product;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
