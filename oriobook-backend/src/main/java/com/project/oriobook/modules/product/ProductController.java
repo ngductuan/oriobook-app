@@ -1,17 +1,33 @@
 package com.project.oriobook.modules.product;
 
-import com.project.oriobook.modules.product.entity.Product;
+import com.project.oriobook.common.enums.CommonEnum;
+import com.project.oriobook.core.pagination.base.PageResponse;
+import com.project.oriobook.modules.product.dto.FindAllProductQuery;
+import com.project.oriobook.modules.product.entities.Product;
+import com.project.oriobook.modules.product.services.ProductService;
 import lombok.*;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("${api.prefix}/products")
 @RequiredArgsConstructor
 public class ProductController {
+    private final ProductService productService;
+
     @GetMapping("")
-    public ResponseEntity<Product> getAllProducts() {
-        Product product = new Product();
-        return ResponseEntity.ok(product);
+    @ResponseStatus(HttpStatus.OK)
+    public PageResponse<Product> getAllProducts(@ModelAttribute FindAllProductQuery query) {
+        PageRequest pageRequest = PageRequest.of(query.getPage(), query.getLimit());
+        PageResponse<Product> productsList = productService.getAllProducts(pageRequest);
+        return productsList;
+    }
+
+    @PostMapping("")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Product createProduct(@RequestBody Product product) {
+        return product;
     }
 }
