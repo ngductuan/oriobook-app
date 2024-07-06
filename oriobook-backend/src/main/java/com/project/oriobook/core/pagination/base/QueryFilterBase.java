@@ -5,14 +5,16 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+// @Data
+// @NoArgsConstructor
+// @AllArgsConstructor
+@Getter
+@Setter
+// @Builder
 public class QueryFilterBase {
-    protected int page = 0;
-    protected int limit = 10;
+    protected int page;
+    protected int limit;
     protected LocalDate startDate;
     protected LocalDate endDate;
-    protected CommonEnum.SortEnum sortByDate;
+    protected CommonEnum.SortEnum sortByDate = CommonEnum.SortEnum.SORT_DESC;
 }
