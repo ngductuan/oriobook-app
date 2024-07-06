@@ -18,9 +18,7 @@ public class ProductController {
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
     public PageResponse<Product> getAllProducts(@ModelAttribute FindAllProductQueryDTO query) {
-        System.out.println("query " + query);
         PageRequest pageRequest = PageRequest.of(query.getPage(), query.getLimit());
-        query.setPage(2);
         PageResponse<Product> productsList = productService.getAllProducts(query, pageRequest);
         return productsList;
     }
