@@ -6,5 +6,5 @@ import com.project.oriobook.modules.product.entities.Product;
 import org.springframework.data.domain.*;
 
 public interface IProductService {
-    PageResponse<Product> getAllProducts(FindAllProductQueryDTO query, Pageable pageable);
+    PageResponse<Product> getAllProducts(FindAllProductQueryDTO query);
 }

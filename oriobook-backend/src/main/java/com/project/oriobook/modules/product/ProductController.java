@@ -5,6 +5,7 @@ import com.project.oriobook.modules.product.dto.FindAllProductQueryDTO;
 import com.project.oriobook.modules.product.entities.Product;
 import com.project.oriobook.modules.product.services.ProductService;
 import lombok.*;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +17,10 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK) // @ParameterObject
     public PageResponse<Product> getAllProducts(@ModelAttribute FindAllProductQueryDTO query) {
-        PageRequest pageRequest = PageRequest.of(query.getPage(), query.getLimit());
-        PageResponse<Product> productsList = productService.getAllProducts(query, pageRequest);
+        System.out.println("query: " + query);
+        PageResponse<Product> productsList = productService.getAllProducts(query);
         return productsList;
     }
 

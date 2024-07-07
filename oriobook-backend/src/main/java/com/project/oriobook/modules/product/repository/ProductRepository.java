@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface ProductRepository extends JpaRepository<Product, String>, JpaSpecificationExecutor<Product> {
+public interface ProductRepository extends JpaRepository<Product, String> {
     @Query("SELECT p FROM Product p WHERE " +
             "(:#{#query.productName} IS NULL OR :#{#query.productName} = '' OR p.name = :#{#query.productName}) " +
             "AND (:#{#query.categoryId} IS NULL OR :#{#query.categoryId} = '' OR p.categoryNode.id = :#{#query.categoryId})")
