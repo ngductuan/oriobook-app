@@ -14,17 +14,8 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
-    // @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<?> handleGeneralException(Exception exception) {
-        // return ResponseEntity.internalServerError().body(exception.getMessage());
-        // return ResponseEntity.internalServerError().body(
-        //    ResponseObject.builder()
-        //            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        //            .message(exception.getMessage())
-        //            .build()
-        // );
-        if (exception instanceof LogicExceptionBase) {
-            LogicExceptionBase logicException = (LogicExceptionBase) exception;
+    public ResponseEntity<?> handleGlobalException(Exception exception) {
+        if (exception instanceof LogicExceptionBase logicException) {
             return ResponseEntity.status(logicException.getStatusCode()).body(logicException.getErrorResponse());
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
