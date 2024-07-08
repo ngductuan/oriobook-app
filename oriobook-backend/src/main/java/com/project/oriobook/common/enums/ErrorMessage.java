@@ -20,7 +20,7 @@ public class ErrorMessage {
         // ORDER
         // AUTHOR
         // CATEGORY
-        errorMessages.put(ErrorCodeEnum.CATEGORY_NOT_FOUND.toString(), "Category not found.");
+        errorMessages.put(ErrorCodeEnum.CATEGORY_NOT_FOUND.toString(), "Category not found");
 
         // REVIEW
     }

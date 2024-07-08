@@ -1,5 +1,6 @@
 package com.project.oriobook.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,17 +15,21 @@ import java.util.UUID;
 @MappedSuperclass
 public class BaseEntity {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @JsonIgnore
+    protected String id;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @JsonIgnore
+    protected LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @JsonIgnore
+    protected LocalDateTime updatedAt;
 
     @PrePersist
-    protected void onCreate() {
-        if (this.id == null) {
+    private void onCreate() {
+        if(this.id == null) {
             this.id = UUID.randomUUID().toString();
         }
         createdAt = LocalDateTime.now();
@@ -32,7 +37,7 @@ public class BaseEntity {
     }
 
     @PreUpdate
-    protected void onUpdate() {
+    private void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
 }

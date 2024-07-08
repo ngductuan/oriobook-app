@@ -5,14 +5,21 @@ import com.project.oriobook.modules.category.entities.Category;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Entity
 @Table(name = "products")
-@Data
-@EqualsAndHashCode(callSuper = true)
+// @Data
+// @EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Product extends BaseEntity {
+public class Product extends BaseEntity{
+    @Id
+    private String id;
+
     private String name;
 
     private String image;
