@@ -1,6 +1,8 @@
 package com.project.oriobook.common.exceptions.base;
 
+import com.project.oriobook.common.utils.ErrorUtil;
 import lombok.*;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,20 +29,7 @@ public class BusinessExceptionBase extends RuntimeException{
         responseDetails.put("statusCode", this.statusCode);
         responseDetails.put("message", this.message);
         responseDetails.put("errors", this.errorDetails);
-        responseDetails.put("stackTrace", getStackTraceElement());
+        responseDetails.put("stackTrace", ErrorUtil.getStackTraceElement(this));
         return responseDetails;
-    }
-
-    private String getStackTraceElement() {
-        StackTraceElement[] stackTrace = this.getStackTrace();
-        if (stackTrace.length > 0) {
-            StackTraceElement element = stackTrace[0];
-            return String.format("%s.%s(%s:%d)",
-                    element.getClassName(),
-                    element.getMethodName(),
-                    element.getFileName(),
-                    element.getLineNumber());
-        }
-        return "No stack trace available";
     }
 }
