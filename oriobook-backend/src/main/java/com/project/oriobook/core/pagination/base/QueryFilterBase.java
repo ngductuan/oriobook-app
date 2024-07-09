@@ -11,8 +11,10 @@ import java.time.LocalDate;
 
 @Data
 public class QueryFilterBase {
+    @Schema(example = "0")
     protected int page = 0;
 
+    @Schema(example = "10")
     protected int limit = 10;
 
     @Schema(example = "01/01/2021", format = "date")

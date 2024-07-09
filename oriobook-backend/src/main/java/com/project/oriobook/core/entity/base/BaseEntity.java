@@ -1,30 +1,30 @@
-package com.project.oriobook.core.entity;
+package com.project.oriobook.core.entity.base;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
-@NoArgsConstructor
+// @Data
+// @NoArgsConstructor
+// @AllArgsConstructor
+// @MappedSuperclass
+@Data//toString
+@Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @MappedSuperclass
 public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @JsonIgnore
     protected String id;
 
     @Column(name = "created_at")
-    @JsonIgnore
     protected LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    @JsonIgnore
     protected LocalDateTime updatedAt;
 
     @PrePersist

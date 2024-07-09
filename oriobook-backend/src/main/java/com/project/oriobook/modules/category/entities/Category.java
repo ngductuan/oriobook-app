@@ -1,6 +1,6 @@
 package com.project.oriobook.modules.category.entities;
 
-import com.project.oriobook.core.entity.BaseEntity;
+import com.project.oriobook.core.entity.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,4 +23,7 @@ public class Category extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Category parentNode;
+
+    // @OneToMany(mappedBy = "parentNode", cascade = CascadeType.ALL)
+    // private List<Category> children = new ArrayList<>();
 }

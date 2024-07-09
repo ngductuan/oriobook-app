@@ -1,6 +1,7 @@
 package com.project.oriobook.modules.user.entities;
 
-import com.project.oriobook.core.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.project.oriobook.core.entity.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -23,6 +24,7 @@ public class User extends BaseEntity {
     @Column(unique = true)
     String email;
 
+    @JsonIgnore
     String password;
 
     String phone;

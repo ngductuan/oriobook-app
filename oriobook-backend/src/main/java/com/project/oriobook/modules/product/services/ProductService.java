@@ -9,6 +9,7 @@ import com.project.oriobook.modules.product.dto.CreateProductDTO;
 import com.project.oriobook.modules.product.dto.FindAllProductQueryDTO;
 import com.project.oriobook.modules.product.entities.Product;
 import com.project.oriobook.modules.product.repository.ProductRepository;
+import com.project.oriobook.modules.product.responses.GetProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -28,7 +29,7 @@ public class ProductService implements IProductService{
     private final ModelMapper modelMapper;
 
     @Override
-    public PageResponse<Product> getAllProducts(FindAllProductQueryDTO query) {
+    public PageResponse<GetProductResponse> getAllProducts(FindAllProductQueryDTO query) {
         List<Sort.Order> orders = QueryHelper.parseSortBase(query);
 
         if(ValidationUtil.isNullOrBlank(query.getSortByRating())){
@@ -40,7 +41,7 @@ public class ProductService implements IProductService{
         }
 
         PageRequest pageRequest = PageRequest.of(query.getPage(), query.getLimit(), Sort.by(orders));
-        Page<Product> products = productRepository.findAll(query, pageRequest);
+        Page<GetProductResponse> products = productRepository.findAll(query, pageRequest);
         return new PageResponse<>(products);
     }
 
