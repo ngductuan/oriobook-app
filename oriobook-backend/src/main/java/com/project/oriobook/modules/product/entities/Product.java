@@ -9,8 +9,6 @@ import lombok.*;
 @Table(name = "products")
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

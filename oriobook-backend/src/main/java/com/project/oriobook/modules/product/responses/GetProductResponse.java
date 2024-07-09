@@ -1,7 +1,6 @@
 package com.project.oriobook.modules.product.responses;
 
 import com.project.oriobook.core.entity.base.BaseEntity;
-import com.project.oriobook.core.response.base.BaseResponse;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -28,26 +27,3 @@ public class GetProductResponse extends BaseEntity {
         private String name;
     }
 }
-
-// public interface Category extends BaseResponse {
-//     String getName();
-// }
-
-
-// String getName();
-//
-// String getImage();
-//
-// Double getPrice();
-//
-// String getDescription();
-//
-// int getStock();
-//
-// CategoryNode getCategoryNode();
-//
-// void setCategoryNode(Object o);
-//
-// interface CategoryNode extends BaseResponse {
-//     String getName();
-// }

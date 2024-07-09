@@ -1,6 +1,6 @@
 package com.project.oriobook.modules.product.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.project.oriobook.common.annotations.UUIDValid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -17,6 +17,10 @@ public class CreateProductDTO {
     private String description;
 
     @NotNull
+    @NotBlank
+    private String image;
+
+    @NotNull
     @PositiveOrZero(message = "Price must be greater than or equal to 0")
     private double price;
 
@@ -25,6 +29,6 @@ public class CreateProductDTO {
     private int stock;
 
     @NotNull
-
+    @UUIDValid
     private String categoryId;
 }

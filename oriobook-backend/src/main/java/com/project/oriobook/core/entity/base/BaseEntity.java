@@ -6,13 +6,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-// @Data
-// @NoArgsConstructor
-// @AllArgsConstructor
-// @MappedSuperclass
-@Data//toString
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @MappedSuperclass

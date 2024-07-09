@@ -41,7 +41,7 @@ public class ProductService implements IProductService{
 
         PageRequest pageRequest = PageRequest.of(query.getPage(), query.getLimit(), Sort.by(orders));
         Page<Product> productPaging = productRepository.findAll(query, pageRequest);
-        // return new PageResponse<>(products);
+
         return productPaging;
     }
 

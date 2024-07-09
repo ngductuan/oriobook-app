@@ -30,25 +30,15 @@ public class ProductController {
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
     public PageResponse<GetProductResponse> getAllProducts(@ParameterObject @ModelAttribute FindAllProductQueryDTO query) {
-        // PageResponse<Product> productsList = productService.getAllProducts(query);
-        // return productsList;
-        // PageRequest pageRequest = new PageRequest();
         Page<Product> productsList = productService.getAllProducts(query);
 
         modelMapper.typeMap(Product.class, GetProductResponse.class);
-        // modelMapper.typeMap()
-                // .addMappings(mapper -> {
-                //     mapper.skip(GetProductResponse::setCategoryNode);
-                // });
+
         Page<GetProductResponse> productResponse = productsList.map(product -> {
             GetProductResponse response = modelMapper.map(product, GetProductResponse.class);
             response.setCategoryNode(modelMapper.map(product.getCategoryNode(), GetProductResponse.Category.class));
             return response;
         });
-
-        // List<GetProductResponse> productResponse = productsList.getData()
-        //         .stream()
-        //         .map(product -> modelMapper.map(product, GetProductResponse.class)).toList();
 
         return new PageResponse<>(productResponse);
     }

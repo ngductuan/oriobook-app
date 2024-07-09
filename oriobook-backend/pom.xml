@@ -30,7 +30,7 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
-<!--		Initial dependency-->
+<!--		Initial dependencies-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -74,7 +74,7 @@
 			<version>1.8.0</version>
 		</dependency>
 
-<!--For spread out object parameters-->
+<!--		For spread out object parameters-->
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
@@ -86,6 +86,25 @@
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
 			<version>3.1.1</version>
+		</dependency>
+
+<!--		Validator (for annotation)-->
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>8.0.0.Final</version>
+		</dependency>
+
+<!--		Cloudinary-->
+		<dependency>
+			<groupId>com.cloudinary</groupId>
+			<artifactId>cloudinary-http44</artifactId>
+			<version>1.36.0</version>
 		</dependency>
 
 	</dependencies>
