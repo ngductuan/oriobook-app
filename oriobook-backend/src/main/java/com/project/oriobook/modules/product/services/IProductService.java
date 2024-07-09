@@ -4,10 +4,12 @@ import com.project.oriobook.core.pagination.base.PageResponse;
 import com.project.oriobook.modules.product.dto.CreateProductDTO;
 import com.project.oriobook.modules.product.dto.FindAllProductQueryDTO;
 import com.project.oriobook.modules.product.entities.Product;
-import com.project.oriobook.modules.product.responses.GetProductResponse;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 public interface IProductService {
-    PageResponse<GetProductResponse> getAllProducts(FindAllProductQueryDTO query);
+    // <T> PageResponse<T> getAllProducts(FindAllProductQueryDTO query, Class<T> responseClass);
+    Page<Product> getAllProducts(FindAllProductQueryDTO query);
     Product createProduct(CreateProductDTO createProductDTO) throws Exception;
 }

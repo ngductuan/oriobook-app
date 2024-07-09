@@ -1,21 +1,53 @@
 package com.project.oriobook.modules.product.responses;
 
+import com.project.oriobook.core.entity.base.BaseEntity;
 import com.project.oriobook.core.response.base.BaseResponse;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-public interface GetProductResponse extends BaseResponse {
-    String getName();
+@EqualsAndHashCode(callSuper = true)
+@Data
+public class GetProductResponse extends BaseEntity {
+    private String id;
 
-    String getImage();
+    private String name;
 
-    Double getPrice();
+    private String image;
 
-    String getDescription();
+    private Double price;
 
-    int getStock();
+    private String description;
 
-    CategoryNode getCategoryNode();
+    private int stock;
 
-    interface CategoryNode extends BaseResponse{
-        String getName();
+    private Category categoryNode;
+
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    public static class Category extends BaseEntity {
+        private String name;
     }
 }
+
+// public interface Category extends BaseResponse {
+//     String getName();
+// }
+
+
+// String getName();
+//
+// String getImage();
+//
+// Double getPrice();
+//
+// String getDescription();
+//
+// int getStock();
+//
+// CategoryNode getCategoryNode();
+//
+// void setCategoryNode(Object o);
+//
+// interface CategoryNode extends BaseResponse {
+//     String getName();
+// }

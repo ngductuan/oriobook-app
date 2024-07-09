@@ -25,5 +25,6 @@ public class CreateProductDTO {
     private int stock;
 
     @NotNull
+
     private String categoryId;
 }
