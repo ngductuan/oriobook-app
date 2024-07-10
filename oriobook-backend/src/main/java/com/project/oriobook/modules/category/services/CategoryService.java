@@ -15,10 +15,8 @@ public class CategoryService implements ICategoryService{
     private final CategoryRepository categoryRepository;
 
     public Category getCategoryById(String id) throws Exception {
-        Optional<Category> optionalCategory = categoryRepository.findById(id);
-        if(optionalCategory.isPresent()){
-            return optionalCategory.get();
-        }
-        throw new CategoryException.NotFound();
+        Category optionalCategory = categoryRepository.findById(id)
+                .orElseThrow(CategoryException.NotFound::new);
+        return optionalCategory;
     }
 }

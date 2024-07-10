@@ -6,9 +6,6 @@ import io.swagger.v3.oas.annotations.media.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
-
-import java.time.LocalDate;
-
 @Data
 public class QueryFilterBase {
     @Schema(example = "0")

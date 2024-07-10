@@ -21,7 +21,6 @@ public class UploadFileService implements IUploadFileService {
     public CloudinaryEntity upload(MultipartFile file) throws Exception {
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
                 "folder", CommonConst.CLOUDINARY_PRODUCTS_FOLDER
-
         ));
 
         CloudinaryEntity cloudinaryObject = modelMapper.map(uploadResult, CloudinaryEntity.class);

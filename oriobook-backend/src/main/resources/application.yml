@@ -1,6 +1,8 @@
 server:
   port: 8088
 spring:
+  application:
+    name: oriobook
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -19,8 +21,14 @@ spring:
       hibernate:
       dialect: org.hibernate.dialect.MySQL8Dialect #driver
       format_sql: true
-  application:
-    name: oriobook
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+  security:
+    basic:
+      enabled: false
 
 # Prefix for API
 api:
@@ -30,12 +38,24 @@ api:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+    tagsSorter: alpha
   api-docs:
     path: /api-docs
   show-actuator: true
+  writer-with-order-by-keys: true
+
+# JWT
+jwt:
+  access-token-time: 2592000 #30 days = 30 * 24 * 60 * 60
+  refresh-token-time: 5184000 #60 days = 60 * 24 * 60 * 60
+  secret-key: TaqlmGv1iEDMRiFp/pHuID1+T84IABfuA0xXh4GhiUI=
 
 # Cloudinary
 cloudinary:
   cloud-name: ${CLOUDINARY_CLOUD_NAME}
   api-key: ${CLOUDINARY_API_KEY}
   api-secret: ${CLOUDINARY_API_SECRET}
+
+security:
+  basic:
+    enabled: false

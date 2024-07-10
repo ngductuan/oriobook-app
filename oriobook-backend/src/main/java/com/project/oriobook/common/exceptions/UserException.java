@@ -5,9 +5,9 @@ import com.project.oriobook.common.enums.ErrorMessage;
 import com.project.oriobook.common.exceptions.base.ErrorDetails;
 import com.project.oriobook.common.exceptions.base.LogicExceptionBase;
 
-public class ProductException{
+public class UserException {
     public static class NotFound extends LogicExceptionBase {
-        private static final ErrorCodeEnum code = ErrorCodeEnum.PRODUCT_NOT_FOUND;
+        private static final ErrorCodeEnum code = ErrorCodeEnum.USER_NOT_FOUND;
         private static final String message = ErrorMessage.get(code);
 
         public NotFound() {

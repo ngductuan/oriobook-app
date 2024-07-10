@@ -1,6 +1,11 @@
 package com.project.oriobook.common.enums;
 
 public class CommonEnum {
+    public enum RoleEnum {
+        ADMIN,
+        USER
+    }
+
     public enum SortEnum {
         ASC,
         DESC

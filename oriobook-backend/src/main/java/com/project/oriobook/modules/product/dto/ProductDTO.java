@@ -7,7 +7,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
 @Data
-public class CreateProductDTO {
+public class ProductDTO {
     @NotNull
     @NotBlank
     private String name;

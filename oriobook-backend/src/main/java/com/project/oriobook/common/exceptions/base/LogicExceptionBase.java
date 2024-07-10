@@ -2,10 +2,8 @@ package com.project.oriobook.common.exceptions.base;
 
 import com.project.oriobook.common.utils.ErrorUtil;
 import lombok.*;
-import org.springframework.http.HttpStatus;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)
