@@ -3,6 +3,8 @@ package com.project.oriobook.modules.product.services;
 import com.project.oriobook.common.helpers.QueryHelper;
 import com.project.oriobook.common.utils.ValidationUtil;
 import com.project.oriobook.core.pagination.base.PageResponse;
+import com.project.oriobook.modules.author.entities.Author;
+import com.project.oriobook.modules.author.services.AuthorService;
 import com.project.oriobook.modules.category.entities.Category;
 import com.project.oriobook.modules.category.services.CategoryService;
 import com.project.oriobook.modules.product.dto.CreateProductDTO;
@@ -24,6 +26,7 @@ import java.util.List;
 public class ProductService implements IProductService{
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
+    private final AuthorService authorService;
 
     private final ModelMapper modelMapper;
 
@@ -32,11 +35,11 @@ public class ProductService implements IProductService{
         List<Sort.Order> orders = QueryHelper.parseSortBase(query);
 
         if(ValidationUtil.isNullOrBlank(query.getSortByRating())){
-            orders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByRating().toString()), "rating"));
+            orders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByRating().toString().toLowerCase()), "rating"));
         }
 
         if(ValidationUtil.isNullOrBlank(query.getSortByPrice())){
-            orders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByPrice().toString()), "price"));
+            orders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByPrice().toString().toLowerCase()), "price"));
         }
 
         PageRequest pageRequest = PageRequest.of(query.getPage(), query.getLimit(), Sort.by(orders));
@@ -49,16 +52,15 @@ public class ProductService implements IProductService{
     @Transactional
     public Product createProduct(CreateProductDTO createProductDTO) throws Exception{
         Category existingCategory = categoryService.getCategoryById(createProductDTO.getCategoryId());
+        Author existingAuthor = authorService.getAuthorById(createProductDTO.getAuthorId());
 
-        modelMapper.typeMap(CreateProductDTO.class, Product.class)
-                .addMappings(mapper -> {
-                    mapper.skip(Product::setCategoryNode);
-                });
+        modelMapper.typeMap(CreateProductDTO.class, Product.class);
 
         Product newProduct = new Product();
         modelMapper.map(createProductDTO, newProduct);
 
         newProduct.setCategoryNode(existingCategory);
+        newProduct.setAuthorNode(existingAuthor);
 
         return productRepository.save(newProduct);
     }

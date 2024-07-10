@@ -5,19 +5,16 @@ import com.project.oriobook.core.pagination.base.PageResponse;
 import com.project.oriobook.modules.product.dto.CreateProductDTO;
 import com.project.oriobook.modules.product.dto.FindAllProductQueryDTO;
 import com.project.oriobook.modules.product.entities.Product;
-import com.project.oriobook.modules.product.responses.GetProductResponse;
+import com.project.oriobook.modules.product.responses.ProductResponse;
 import com.project.oriobook.modules.product.services.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("${api.prefix}/products")
@@ -29,14 +26,14 @@ public class ProductController {
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public PageResponse<GetProductResponse> getAllProducts(@ParameterObject @ModelAttribute FindAllProductQueryDTO query) {
+    public PageResponse<ProductResponse> getAllProducts(@ParameterObject @ModelAttribute FindAllProductQueryDTO query) {
         Page<Product> productsList = productService.getAllProducts(query);
 
-        modelMapper.typeMap(Product.class, GetProductResponse.class);
+        modelMapper.typeMap(Product.class, ProductResponse.class);
 
-        Page<GetProductResponse> productResponse = productsList.map(product -> {
-            GetProductResponse response = modelMapper.map(product, GetProductResponse.class);
-            response.setCategoryNode(modelMapper.map(product.getCategoryNode(), GetProductResponse.Category.class));
+        Page<ProductResponse> productResponse = productsList.map(product -> {
+            ProductResponse response = modelMapper.map(product, ProductResponse.class);
+            response.setCategoryNode(modelMapper.map(product.getCategoryNode(), ProductResponse.Category.class));
             return response;
         });
 

@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class GetProductResponse extends BaseEntity {
+public class ProductResponse extends BaseEntity {
     private String id;
 
     private String name;
@@ -21,9 +21,17 @@ public class GetProductResponse extends BaseEntity {
 
     private Category categoryNode;
 
+    private Author authorNode;
+
     @EqualsAndHashCode(callSuper = true)
     @Data
     public static class Category extends BaseEntity {
+        private String name;
+    }
+
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    public static class Author extends BaseEntity {
         private String name;
     }
 }

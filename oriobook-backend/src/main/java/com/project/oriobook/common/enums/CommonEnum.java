@@ -2,27 +2,21 @@ package com.project.oriobook.common.enums;
 
 public class CommonEnum {
     public enum SortEnum {
-        SORT_ASC("asc"),
-        SORT_DESC("desc");
+        ASC,
+        DESC
+    }
 
-        private final String value;
-
-        SortEnum(String value) {
-            this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return String.valueOf(value);
-        }
+    public enum GenderEnum {
+        MALE,
+        FEMALE
     }
 
     public enum StarEnum {
-        ONE_STAR(1),
-        TWO_STAR(2),
-        THREE_STAR(3),
-        FOUR_STAR(4),
-        FIVE_STAR(5);
+        ONE(1),
+        TWO(2),
+        THREE(3),
+        FOUR(4),
+        FIVE(5);
 
         private final int value;
 

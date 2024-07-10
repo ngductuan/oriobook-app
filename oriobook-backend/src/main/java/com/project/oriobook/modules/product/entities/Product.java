@@ -1,6 +1,7 @@
 package com.project.oriobook.modules.product.entities;
 
 import com.project.oriobook.core.entity.base.BaseEntity;
+import com.project.oriobook.modules.author.entities.Author;
 import com.project.oriobook.modules.category.entities.Category;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,5 +30,8 @@ public class Product extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category categoryNode;
+
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private Author authorNode;
 }
-//     authorId

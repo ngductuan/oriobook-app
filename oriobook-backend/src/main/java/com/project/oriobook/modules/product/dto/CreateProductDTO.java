@@ -31,4 +31,8 @@ public class CreateProductDTO {
     @NotNull
     @UUIDValid
     private String categoryId;
+
+    @NotNull
+    @UUIDValid
+    private String authorId;
 }
