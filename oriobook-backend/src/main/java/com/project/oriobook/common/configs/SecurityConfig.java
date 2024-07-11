@@ -31,7 +31,7 @@ public class SecurityConfig {
         };
     }
 
-    // SHA-256
+    // HS-256
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

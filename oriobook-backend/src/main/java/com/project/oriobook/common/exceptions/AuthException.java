@@ -14,4 +14,13 @@ public class AuthException {
             super(401, message, new ErrorDetails(code.toString(), message));
         }
     }
+
+    public static class EmailExist extends LogicExceptionBase {
+        private static final ErrorCodeEnum code = ErrorCodeEnum.AUTH_EMAIL_EXISTED;
+        private static final String message = ErrorMessage.get(code);
+
+        public EmailExist() {
+            super(401, message, new ErrorDetails(code.toString(), message));
+        }
+    }
 }

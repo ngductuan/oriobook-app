@@ -6,6 +6,6 @@ import com.project.oriobook.modules.auth.responses.LoginResponse;
 import com.project.oriobook.modules.user.entities.User;
 
 public interface IAuthService {
-    User signUp(SignUpDTO userDTO);
+    User signUp(SignUpDTO userDTO) throws Exception;
     LoginResponse login(LoginDTO loginDTO) throws Exception;
 }

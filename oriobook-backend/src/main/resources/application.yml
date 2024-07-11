@@ -43,9 +43,9 @@ springdoc:
 
 # JWT
 jwt:
-  access-token-time: 2592000 #30 days = 30 * 24 * 60 * 60
-  refresh-token-time: 5184000 #60 days = 60 * 24 * 60 * 60
-  secret-key: TaqlmGv1iEDMRiFp/pHuID1+T84IABfuA0xXh4GhiUI=
+  access-token-time: ${ACCESS_TOKEN_TIME}
+  refresh-token-time: ${REFRESH_TOKEN_TIME}
+  secret-key: ${SECRET_KEY}
 
 # Cloudinary
 cloudinary:

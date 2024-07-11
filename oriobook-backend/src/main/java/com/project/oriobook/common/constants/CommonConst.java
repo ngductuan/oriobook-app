@@ -12,4 +12,8 @@ public class CommonConst {
 
     // Allowed image file extensions
     public static final List<String> ALLOWED_IMAGE_EXTENSIONS = List.of("png", "jpg", "jpeg");
+
+    // JWT mode
+    public static final String ACCESS = "access";
+    public static final String REFRESH = "refresh";
 }

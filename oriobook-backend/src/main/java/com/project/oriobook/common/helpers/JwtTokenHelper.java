@@ -1,5 +1,6 @@
 package com.project.oriobook.common.helpers;
 
+import com.project.oriobook.common.constants.CommonConst;
 import com.project.oriobook.modules.user.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 
@@ -18,17 +20,21 @@ public class JwtTokenHelper {
     @Value("${jwt.access-token-time}")
     private long accessTokenTime;
 
+    @Value("${jwt.refresh-token-time}")
+    private long refreshTokenTime;
+
     @Value("${jwt.secret-key}")
     private String secretKey;
 
-    public String generateToken(User user){
+    public String generateToken(User user, String mode){
+        long tokenTime = mode.equals(CommonConst.REFRESH) ? refreshTokenTime : accessTokenTime;
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", user.getEmail());
 
         String token = Jwts.builder()
                 .setClaims(claims)
                 .setSubject(user.getEmail())
-                .setExpiration(new Date(System.currentTimeMillis() + accessTokenTime * 1000L))
+                .setExpiration(new Date(System.currentTimeMillis() + tokenTime * 1000L))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
 
@@ -56,5 +62,10 @@ public class JwtTokenHelper {
     public boolean isTokenExpired(String token) {
         Date expirationDate = this.extractClaim(token, Claims::getExpiration);
         return expirationDate.before(new Date());
+    }
+
+    public LocalDateTime getExpirationFromToken(String token){
+        Date expirationDate = this.extractClaim(token, Claims::getExpiration);
+        return new java.sql.Timestamp(expirationDate.getTime()).toLocalDateTime();
     }
 }
