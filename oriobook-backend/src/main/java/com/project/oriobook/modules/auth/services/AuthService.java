@@ -56,11 +56,11 @@ public class AuthService implements IAuthService {
     public LoginResponse login(LoginDTO loginDTO) throws Exception{
         // Check user exists
         User existingUser = userRepository.findByEmail(loginDTO.getEmail())
-                .orElseThrow(AuthException.UnAuthorize::new);
+                .orElseThrow(AuthException.WrongCredentials::new);
 
         // Check password
         if(!passwordEncoder.matches(loginDTO.getPassword(), existingUser.getPassword())){
-            throw new AuthException.UnAuthorize();
+            throw new AuthException.WrongCredentials();
         }
 
         // Authenticate with Spring Security
@@ -76,7 +76,6 @@ public class AuthService implements IAuthService {
         loginResponse.setRefreshToken(jwtTokenHelper.generateToken(existingUser, CommonConst.REFRESH));
 
         LocalDateTime expiredTime = jwtTokenHelper.getExpirationFromToken(loginResponse.getAccessToken());
-        System.out.println("expiredTime: " + expiredTime);
         loginResponse.setExpiredAt(expiredTime);
 
         return loginResponse;

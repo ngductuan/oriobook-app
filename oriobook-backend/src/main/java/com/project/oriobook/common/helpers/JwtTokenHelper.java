@@ -2,11 +2,11 @@ package com.project.oriobook.common.helpers;
 
 import com.project.oriobook.common.constants.CommonConst;
 import com.project.oriobook.modules.user.entities.User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.project.oriobook.modules.user.repository.UserRepository;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +16,7 @@ import java.util.*;
 import java.util.function.Function;
 
 @Component
+@RequiredArgsConstructor
 public class JwtTokenHelper {
     @Value("${jwt.access-token-time}")
     private long accessTokenTime;
@@ -25,6 +26,8 @@ public class JwtTokenHelper {
 
     @Value("${jwt.secret-key}")
     private String secretKey;
+
+    private final UserRepository userRepository;
 
     public String generateToken(User user, String mode){
         long tokenTime = mode.equals(CommonConst.REFRESH) ? refreshTokenTime : accessTokenTime;
@@ -59,6 +62,10 @@ public class JwtTokenHelper {
         return claimsResolver.apply(claims);
     }
 
+    public String extractEmail(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
     public boolean isTokenExpired(String token) {
         Date expirationDate = this.extractClaim(token, Claims::getExpiration);
         return expirationDate.before(new Date());
@@ -67,5 +74,11 @@ public class JwtTokenHelper {
     public LocalDateTime getExpirationFromToken(String token){
         Date expirationDate = this.extractClaim(token, Claims::getExpiration);
         return new java.sql.Timestamp(expirationDate.getTime()).toLocalDateTime();
+    }
+
+    // improve redis cache
+    public boolean validateToken(String token, User userDetails) {
+        boolean check = !isTokenExpired(token);
+        return check;
     }
 }

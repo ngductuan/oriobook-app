@@ -1,5 +1,6 @@
 package com.project.oriobook.modules.product;
 
+import com.project.oriobook.common.constants.RoleConst;
 import com.project.oriobook.common.exceptions.ValidationException;
 import com.project.oriobook.core.pagination.base.PageResponse;
 import com.project.oriobook.modules.product.dto.ProductDTO;
@@ -14,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +40,13 @@ public class ProductController {
         return new PageResponse<>(productResponse);
     }
 
+    String test () {
+        System.out.println("test");
+        return "test";
+    }
+
     @PostMapping("")
+    @PreAuthorize(RoleConst.ROLE_ADMIN_USER)
     @ResponseStatus(HttpStatus.CREATED)
     public Boolean createProduct(@Valid @RequestBody ProductDTO productDTO, BindingResult result) throws Exception {
         if(result.hasErrors()) {
@@ -50,6 +58,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.OK)
     public Boolean updateProduct(@PathVariable String id, @Valid @RequestBody ProductDTO productDTO, BindingResult result) throws Exception {
         if(result.hasErrors()) {
@@ -61,6 +70,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.OK)
     public Boolean deleteProduct(@PathVariable String id) throws Exception {
         productService.deleteProduct(id);

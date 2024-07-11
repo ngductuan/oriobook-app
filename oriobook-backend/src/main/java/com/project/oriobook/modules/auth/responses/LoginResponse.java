@@ -1,5 +1,7 @@
 package com.project.oriobook.modules.auth.responses;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.project.oriobook.common.constants.CommonConst;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,11 +12,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginResponse {
-    String accessToken;
+    private String accessToken;
 
-    String refreshToken;
+    private String refreshToken;
 
-    String userId;
+    private String userId;
 
-    LocalDateTime expiredAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = CommonConst.DATETIME_FORMAT, timezone = CommonConst.TIME_ZONE)
+    private LocalDateTime expiredAt;
 }

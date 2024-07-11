@@ -26,6 +26,11 @@ spring:
       enabled: true
       max-file-size: 10MB
       max-request-size: 10MB
+  jackson: # redundant
+    date-format: yyyy-MM-dd'T'HH:mm:ss'Z'
+    time-zone: GMT
+    serialization:
+      write-dates-as-timestamps: false
 
 # Prefix for API
 api:

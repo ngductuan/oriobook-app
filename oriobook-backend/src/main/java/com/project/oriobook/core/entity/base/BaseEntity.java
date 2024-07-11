@@ -1,5 +1,7 @@
 package com.project.oriobook.core.entity.base;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.project.oriobook.common.constants.CommonConst;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,9 +18,11 @@ public class BaseEntity {
     protected String id;
 
     @Column(name = "created_at")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=CommonConst.DATETIME_FORMAT, timezone=CommonConst.TIME_ZONE)
     protected LocalDateTime createdAt;
 
     @Column(name = "updated_at")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=CommonConst.DATETIME_FORMAT, timezone=CommonConst.TIME_ZONE)
     protected LocalDateTime updatedAt;
 
     @PrePersist
