@@ -53,7 +53,6 @@ public class JwtTokenHelper {
         return claimsResolver.apply(claims);
     }
 
-    //check expiration
     public boolean isTokenExpired(String token) {
         Date expirationDate = this.extractClaim(token, Claims::getExpiration);
         return expirationDate.before(new Date());

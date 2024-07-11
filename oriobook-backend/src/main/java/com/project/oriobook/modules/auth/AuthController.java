@@ -18,13 +18,14 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/sign-up")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public Boolean register(@RequestBody SignUpDTO signUpDTO) {
         User user = authService.signUp(signUpDTO);
         return user != null;
     }
 
     @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
     public LoginResponse login(@RequestBody LoginDTO loginDTO) throws Exception {
         return authService.login(loginDTO);
     }
