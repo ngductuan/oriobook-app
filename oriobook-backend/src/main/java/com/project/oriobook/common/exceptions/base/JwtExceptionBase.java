@@ -2,7 +2,10 @@ package com.project.oriobook.common.exceptions.base;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.oriobook.common.constants.CommonConst;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;

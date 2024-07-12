@@ -1,7 +1,6 @@
 package com.project.oriobook.common.exceptions;
 
 import com.project.oriobook.common.exceptions.base.BusinessExceptionBase;
-import com.project.oriobook.common.exceptions.base.JwtExceptionBase;
 import com.project.oriobook.common.exceptions.base.LogicExceptionBase;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;

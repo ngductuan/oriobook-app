@@ -40,11 +40,6 @@ public class ProductController {
         return new PageResponse<>(productResponse);
     }
 
-    String test () {
-        System.out.println("test");
-        return "test";
-    }
-
     @PostMapping("")
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.CREATED)
