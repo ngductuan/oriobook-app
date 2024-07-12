@@ -3,7 +3,7 @@ package com.project.oriobook.modules.auth.dto;
 import com.project.oriobook.common.annotations.EmailValid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Data;
 
 @Data
 public class LoginDTO {

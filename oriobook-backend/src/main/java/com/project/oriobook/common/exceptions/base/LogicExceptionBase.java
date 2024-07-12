@@ -1,7 +1,10 @@
 package com.project.oriobook.common.exceptions.base;
 
 import com.project.oriobook.common.utils.ErrorUtil;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

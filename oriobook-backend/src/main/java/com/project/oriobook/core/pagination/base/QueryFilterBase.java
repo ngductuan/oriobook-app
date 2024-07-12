@@ -2,9 +2,9 @@ package com.project.oriobook.core.pagination.base;
 
 import com.project.oriobook.common.enums.CommonEnum;
 import com.project.oriobook.common.utils.EnumUtil;
-import io.swagger.v3.oas.annotations.media.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Pattern;
-import lombok.*;
+import lombok.Data;
 
 @Data
 public class QueryFilterBase {

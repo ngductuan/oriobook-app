@@ -28,11 +28,6 @@ public class JwtExceptionBase extends Exception{
             pattern= CommonConst.DATETIME_FORMAT, timezone=CommonConst.TIME_ZONE)
     private LocalDateTime time = LocalDateTime.now();
 
-    // public JwtExceptionBase(ErrorCodeEnum errorCodeEnum, String path) {
-    //     this.path = path;
-    //     init(errorCodeEnum);
-    // }
-
     public JwtExceptionBase(int statusCode, String message, ErrorDetails errorDetails, String path) {
         super(message);
         this.errorDetails = errorDetails;

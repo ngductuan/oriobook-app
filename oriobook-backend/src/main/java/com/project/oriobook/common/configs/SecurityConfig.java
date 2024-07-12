@@ -1,7 +1,6 @@
 package com.project.oriobook.common.configs;
 
 import com.project.oriobook.common.exceptions.UserException;
-import com.project.oriobook.modules.user.entities.User;
 import com.project.oriobook.modules.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

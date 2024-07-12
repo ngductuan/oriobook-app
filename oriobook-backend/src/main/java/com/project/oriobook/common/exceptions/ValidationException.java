@@ -2,11 +2,8 @@ package com.project.oriobook.common.exceptions;
 
 import com.project.oriobook.common.constants.CommonConst;
 import com.project.oriobook.common.exceptions.base.BusinessExceptionBase;
-import com.project.oriobook.common.exceptions.base.ErrorDetails;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.http.HttpMessage;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
