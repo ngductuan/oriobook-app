@@ -2,13 +2,12 @@ package com.project.oriobook.modules.auth.services;
 
 import com.project.oriobook.common.constants.CommonConst;
 import com.project.oriobook.common.exceptions.AuthException;
-import com.project.oriobook.common.helpers.JwtTokenHelper;
+import com.project.oriobook.common.components.helpers.JwtTokenHelper;
 import com.project.oriobook.modules.auth.dto.LoginDTO;
 import com.project.oriobook.modules.auth.dto.SignUpDTO;
 import com.project.oriobook.modules.auth.responses.LoginResponse;
 import com.project.oriobook.modules.user.entities.User;
 import com.project.oriobook.modules.user.repository.UserRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Optional;
 
 @Service

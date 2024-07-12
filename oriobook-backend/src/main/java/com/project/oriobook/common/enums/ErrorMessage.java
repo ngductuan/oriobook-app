@@ -17,6 +17,7 @@ public class ErrorMessage {
         errorMessages.put(ErrorCodeEnum.AUTH_UNAUTHORIZED.toString(), "Unauthorized");
         errorMessages.put(ErrorCodeEnum.AUTH_TOKEN_EXPIRED.toString(), "Token is expired");
         errorMessages.put(ErrorCodeEnum.AUTH_INVALID_TOKEN.toString(), "Invalid token");
+        errorMessages.put(ErrorCodeEnum.AUTH_BEARER_NULL.toString(), "Bearer token is null");
 
         // USER
         errorMessages.put(ErrorCodeEnum.USER_NOT_FOUND.toString(), "User not found");

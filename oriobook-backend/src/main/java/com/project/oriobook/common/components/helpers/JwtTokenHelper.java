@@ -1,4 +1,4 @@
-package com.project.oriobook.common.helpers;
+package com.project.oriobook.common.components.helpers;
 
 import com.project.oriobook.common.constants.CommonConst;
 import com.project.oriobook.modules.user.entities.User;

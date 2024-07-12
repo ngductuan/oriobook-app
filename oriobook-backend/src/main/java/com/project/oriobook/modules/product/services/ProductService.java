@@ -1,7 +1,7 @@
 package com.project.oriobook.modules.product.services;
 
 import com.project.oriobook.common.exceptions.ProductException;
-import com.project.oriobook.common.helpers.QueryHelper;
+import com.project.oriobook.common.utils.QueryUtil;
 import com.project.oriobook.common.utils.ValidationUtil;
 import com.project.oriobook.modules.author.entities.Author;
 import com.project.oriobook.modules.author.services.AuthorService;
@@ -37,7 +37,7 @@ public class ProductService implements IProductService{
             return productRepository.findAll(new FindAllProductQueryDTO(), Pageable.unpaged());
         }
 
-        List<Sort.Order> orders = QueryHelper.parseSortBase(query);
+        List<Sort.Order> orders = QueryUtil.parseSortBase(query);
 
         if(ValidationUtil.isNullOrBlank(query.getSortByRating())){
             orders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByRating().toString().toLowerCase()), "rating"));
