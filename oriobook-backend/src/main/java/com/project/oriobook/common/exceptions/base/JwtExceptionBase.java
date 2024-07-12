@@ -2,21 +2,21 @@ package com.project.oriobook.common.exceptions.base;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.oriobook.common.constants.CommonConst;
-import com.project.oriobook.common.enums.ErrorCodeEnum;
-import com.project.oriobook.common.enums.ErrorMessage;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class JwtException {
-    private int statusCode = 401;
+public class JwtExceptionBase extends Exception{
+    private int statusCode;
 
     private String message;
 
@@ -28,14 +28,17 @@ public class JwtException {
             pattern= CommonConst.DATETIME_FORMAT, timezone=CommonConst.TIME_ZONE)
     private LocalDateTime time = LocalDateTime.now();
 
-    public JwtException(ErrorCodeEnum errorCodeEnum, String path) {
-        this.path = path;
-        init(errorCodeEnum);
-    }
+    // public JwtExceptionBase(ErrorCodeEnum errorCodeEnum, String path) {
+    //     this.path = path;
+    //     init(errorCodeEnum);
+    // }
 
-    private void init(ErrorCodeEnum errorCodeEnum){
-        message = ErrorMessage.get(errorCodeEnum);
-        errorDetails = new ErrorDetails(errorCodeEnum.toString(), message);
+    public JwtExceptionBase(int statusCode, String message, ErrorDetails errorDetails, String path) {
+        super(message);
+        this.errorDetails = errorDetails;
+        this.statusCode = statusCode;
+        this.message = message;
+        this.path = path;
     }
 
     public Map<String, Object> getErrorResponse() {

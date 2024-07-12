@@ -4,7 +4,8 @@ import com.project.oriobook.common.components.helpers.CommonHelper;
 import com.project.oriobook.common.components.helpers.JwtTokenHelper;
 import com.project.oriobook.common.constants.RouteConst;
 import com.project.oriobook.common.enums.ErrorCodeEnum;
-import com.project.oriobook.common.exceptions.base.JwtException;
+import com.project.oriobook.common.exceptions.AuthException;
+import com.project.oriobook.common.exceptions.base.JwtExceptionBase;
 import com.project.oriobook.common.exceptions.web_security.FixJwtException;
 import com.project.oriobook.modules.user.entities.User;
 import jakarta.servlet.FilterChain;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -46,16 +46,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             }
             final String authHeader = request.getHeader("Authorization");
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                // request.setAttribute("pathReq", request.getRequestURI());
-                // response.sendError(
-                //         HttpServletResponse.SC_UNAUTHORIZED,
-                //         CommonHelper.transformMapToJson(
-                //                 new JwtException(ErrorCodeEnum.AUTH_BEARER_NULL,
-                //                         request.getRequestURI()).getErrorResponse()
-                //         ));
-                throw new InsufficientAuthenticationException("authHeader null or not started with Bearer");
-                // throw new JwtException(ErrorCodeEnum.AUTH_BEARER_NULL, request.getRequestURI());
-                // return;
+                throw new AuthException.TokenEmpty(request.getRequestURI());
             }
             final String token = authHeader.substring(7);
             final String extractEmail = jwtTokenHelper.extractEmail(token);
@@ -64,9 +55,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 User userDetails = (User) userDetailsService.loadUserByUsername(extractEmail);
 
                 if (userDetails == null) {
-                    System.out.println("User not found" + userDetails);
-                    // throw new AuthException.TokenInvalid();
-                    throw new FixJwtException(ErrorCodeEnum.AUTH_INVALID_TOKEN, request.getRequestURI());
+                    throw new AuthException.TokenInvalid(request.getRequestURI());
                 }
 
                 if (jwtTokenHelper.validateToken(token, userDetails)) {
@@ -80,20 +69,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 }
             }
+
             filterChain.doFilter(request, response); // enable bypass
         }
-        // catch (Exception e) {
-        //     SecurityContextHolder.clearContext();
-        //     throw e;
-        // }
-        // catch (AuthenticationException e) {
-        //     SecurityContextHolder.clearContext();
-        //     throw e;
-        // }
         catch (Exception e) {
-            System.out.println("JwtTokenFilter.doFilterInternal: " + e.getClass().getName());
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write(e.getMessage());
+            CommonHelper.responseFilterException(e, response);
         }
     }
 
@@ -106,7 +86,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         for (Pair<String, String> token : routeConst.getBypassRoutes()) {
             String path = token.getFirst();
             String method = token.getSecond();
-            // Check if the request path and method match any pair in the bypassTokens list
+            // Check if the request "path" and "method" match any pair in the bypassTokens list
             // ** in api route, *. stands for /** in matches function => Replace
             if (requestPath.matches(path.replace("**", ".*"))
                     && requestMethod.equalsIgnoreCase(method)) {

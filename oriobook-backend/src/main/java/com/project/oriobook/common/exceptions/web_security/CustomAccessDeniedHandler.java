@@ -1,7 +1,7 @@
 package com.project.oriobook.common.exceptions.web_security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.oriobook.common.exceptions.base.JwtException;
+import com.project.oriobook.common.exceptions.base.JwtExceptionBase;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                        AccessDeniedException accessDeniedException) throws IOException {
         String originalUri = request.getRequestURI();
 
-        JwtException error = new JwtException();
+        JwtExceptionBase error = new JwtExceptionBase();
         error.setStatusCode(HttpServletResponse.SC_FORBIDDEN);
         error.setMessage("Access denied");
 
