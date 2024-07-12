@@ -48,12 +48,12 @@ public class AuthException {
     }
 
     // LogicExceptionBase for Authentication
-    public static class ForbiddenResource extends LogicExceptionBase {
-        private static final ErrorCodeEnum code = ErrorCodeEnum.AUTH_INVALID_TOKEN;
+    public static class ForbiddenResource extends JwtExceptionBase {
+        private static final ErrorCodeEnum code = ErrorCodeEnum.AUTH_FORBIDDEN;
         private static final String message = ErrorMessage.get(code);
 
-        public ForbiddenResource() {
-            super(403, globalAccessDeniedMsg, new ErrorDetails(code.toString(), message));
+        public ForbiddenResource(String path) {
+            super(403, globalAccessDeniedMsg, new ErrorDetails(code.toString(), message), path);
         }
     }
 
@@ -72,6 +72,15 @@ public class AuthException {
 
         public EmailExist() {
             super(401, message, new ErrorDetails(code.toString(), message));
+        }
+    }
+
+    public static class NotCreateToken extends LogicExceptionBase {
+        private static final ErrorCodeEnum code = ErrorCodeEnum.AUTH_CANNOT_CREATE_TOKEN;
+        private static final String message = ErrorMessage.get(code);
+
+        public NotCreateToken() {
+            super(401, globalAuthMsg, new ErrorDetails(code.toString(), message));
         }
     }
 }

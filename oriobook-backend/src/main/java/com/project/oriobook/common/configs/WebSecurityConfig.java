@@ -3,6 +3,7 @@ package com.project.oriobook.common.configs;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.oriobook.common.components.filters.JwtTokenFilter;
 import com.project.oriobook.common.constants.RouteConst;
+import com.project.oriobook.common.exceptions.web_security.CustomAccessDeniedHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -42,8 +44,18 @@ public class WebSecurityConfig {
 
                     requests.anyRequest().authenticated();
                 })
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .accessDeniedHandler(accessDeniedHandler())
+                )
                 .csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
     }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
+    }
 }
+
+

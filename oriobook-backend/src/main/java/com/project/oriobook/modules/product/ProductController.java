@@ -46,7 +46,7 @@ public class ProductController {
     }
 
     @PostMapping("")
-    @PreAuthorize(RoleConst.ROLE_ADMIN_USER)
+    @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.CREATED)
     public Boolean createProduct(@Valid @RequestBody ProductDTO productDTO, BindingResult result) throws Exception {
         if(result.hasErrors()) {

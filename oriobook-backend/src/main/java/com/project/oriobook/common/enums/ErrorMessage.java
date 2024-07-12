@@ -19,6 +19,7 @@ public class ErrorMessage {
         errorMessages.put(ErrorCodeEnum.AUTH_INVALID_TOKEN.toString(), "Invalid token");
         errorMessages.put(ErrorCodeEnum.AUTH_TOKEN_EMPTY.toString(), "Token is empty");
         errorMessages.put(ErrorCodeEnum.AUTH_FORBIDDEN.toString(), "Forbidden resource");
+        errorMessages.put(ErrorCodeEnum.AUTH_CANNOT_CREATE_TOKEN.toString(), "Cannot create token");
 
         // USER
         errorMessages.put(ErrorCodeEnum.USER_NOT_FOUND.toString(), "User not found");

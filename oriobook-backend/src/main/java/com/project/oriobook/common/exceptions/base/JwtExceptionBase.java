@@ -2,10 +2,7 @@ package com.project.oriobook.common.exceptions.base;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.oriobook.common.constants.CommonConst;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
@@ -15,7 +12,7 @@ import java.util.Map;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class JwtExceptionBase extends Exception{
+public class JwtExceptionBase extends Exception {
     private int statusCode;
 
     private String message;

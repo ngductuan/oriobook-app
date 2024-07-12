@@ -1,6 +1,7 @@
 package com.project.oriobook.common.components.helpers;
 
 import com.project.oriobook.common.constants.CommonConst;
+import com.project.oriobook.common.exceptions.AuthException;
 import com.project.oriobook.modules.user.entities.User;
 import com.project.oriobook.modules.user.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -33,19 +34,23 @@ public class JwtTokenHelper {
 
     private final UserRepository userRepository;
 
-    public String generateToken(User user, String mode){
+    public String generateToken(User user, String mode) throws Exception {
         long tokenTime = mode.equals(CommonConst.REFRESH) ? refreshTokenTime : accessTokenTime;
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", user.getEmail());
 
-        String token = Jwts.builder()
-                .setClaims(claims)
-                .setSubject(user.getEmail())
-                .setExpiration(new Date(System.currentTimeMillis() + tokenTime * 1000L))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                .compact();
+        try {
+            String token = Jwts.builder()
+                    .setClaims(claims)
+                    .setSubject(user.getEmail())
+                    .setExpiration(new Date(System.currentTimeMillis() + tokenTime * 1000L))
+                    .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                    .compact();
 
-        return token;
+            return token;
+        } catch (Exception e) {
+            throw new AuthException.NotCreateToken();
+        }
     }
 
     private Key getSignInKey(){
