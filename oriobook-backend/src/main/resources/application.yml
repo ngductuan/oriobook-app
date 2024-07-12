@@ -1,0 +1,59 @@
+server:
+  port: 8088
+spring:
+  application:
+    name: oriobook
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: ${MYSQL_ROOT_PASSWORD}
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none #chỗ này mà sửa thành drop-create thì rất nguy
+      #ddl-auto: validate
+      #Hibernate sẽ không tạo, sửa đổi hoặc xóa bất kỳ bảng, cột hay ràng buộc nào trong cơ sở dữ liệu
+      #validate thường được sử dụng trong môi trường production
+      #Nếu có sự khác biệt giữa cấu trúc cơ sở dữ liệu và các entity class
+      #lỗi sẽ được hiển thị và yêu cầu sửa đổi cấu trúc cơ sở dữ liệu một cách thủ công
+    properties:
+      hibernate:
+      dialect: org.hibernate.dialect.MySQL8Dialect #driver
+      format_sql: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+  jackson: # redundant
+    date-format: yyyy-MM-dd'T'HH:mm:ss'Z'
+    time-zone: GMT
+    serialization:
+      write-dates-as-timestamps: false
+
+# Prefix for API
+api:
+  prefix: /api/v1
+
+# Swagger open api
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tagsSorter: alpha
+  api-docs:
+    path: /api-docs
+  show-actuator: true
+  writer-with-order-by-keys: true
+
+# JWT
+jwt:
+  access-token-time: ${ACCESS_TOKEN_TIME}
+  refresh-token-time: ${REFRESH_TOKEN_TIME}
+  secret-key: ${SECRET_KEY}
+
+# Cloudinary
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}
