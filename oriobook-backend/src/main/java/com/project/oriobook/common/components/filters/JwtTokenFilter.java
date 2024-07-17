@@ -45,6 +45,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 throw new AuthException.TokenEmpty(request.getRequestURI());
             }
             final String token = authHeader.substring(7);
+
+            // Check exists in redis => TokenInValid
+
+            // Check token expired
+            // if(jwtTokenHelper.isTokenExpired(token, request)){
+            //     throw new AuthException.TokenExpired(request.getRequestURI());
+            // }
+
             final String extractEmail = jwtTokenHelper.extractEmail(token);
             if (extractEmail != null
                     && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -54,7 +62,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                     throw new AuthException.TokenInvalid(request.getRequestURI());
                 }
 
-                if (jwtTokenHelper.validateToken(token, userDetails)) {
+                if (jwtTokenHelper.validateToken(token, userDetails, request)) {
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(
                                     userDetails,
@@ -63,6 +71,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                             );
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                } else {
+                    throw new AuthException.TokenExpired(request.getRequestURI());
                 }
             }
 

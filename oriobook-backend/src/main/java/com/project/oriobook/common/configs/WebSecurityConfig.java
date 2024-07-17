@@ -20,7 +20,6 @@ import java.util.List;
 @Configuration
 @EnableMethodSecurity
 // @EnableWebSecurity(debug = true)
-@EnableWebMvc
 @RequiredArgsConstructor
 public class WebSecurityConfig {
     @Value("${api.prefix}")

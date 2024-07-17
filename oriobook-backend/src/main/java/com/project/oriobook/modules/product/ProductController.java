@@ -13,7 +13,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -27,6 +29,7 @@ public class ProductController {
     private final ProductService productService;
 
     private final ModelMapper modelMapper;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
@@ -37,19 +40,26 @@ public class ProductController {
         Page<ProductResponse> productResponse = productsList.map(product ->
                 modelMapper.map(product, ProductResponse.class));
 
+        redisTemplate.opsForValue().set("test1", new Product());
         return new PageResponse<>(productResponse);
     }
 
     @PostMapping("")
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.CREATED)
-    public Boolean createProduct(@Valid @RequestBody ProductDTO productDTO, BindingResult result) throws Exception {
+    public Product createProduct(@Valid @RequestBody ProductDTO productDTO, BindingResult result) throws Exception {
         if(result.hasErrors()) {
             throw new ValidationException(result);
         }
 
         Product newProduct = productService.createProduct(productDTO);
-        return newProduct != null;
+        String testStr = (String) redisTemplate.opsForValue().get("test1");
+        return cacheProduct(newProduct);
+    }
+
+    @CachePut(value = "productCache", key = "#product.id")
+    public Product cacheProduct(Product product) {
+        return product;
     }
 
     @PutMapping("/{id}")

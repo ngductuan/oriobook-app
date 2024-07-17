@@ -20,11 +20,11 @@ public class BaseEntity {
     protected String id;
 
     @Column(name = "created_at")
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=CommonConst.DATETIME_FORMAT, timezone=CommonConst.TIME_ZONE)
+    // @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=CommonConst.DATETIME_FORMAT, timezone=CommonConst.TIME_ZONE)
     protected LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=CommonConst.DATETIME_FORMAT, timezone=CommonConst.TIME_ZONE)
+    // @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=CommonConst.DATETIME_FORMAT, timezone=CommonConst.TIME_ZONE)
     protected LocalDateTime updatedAt;
 
     @PrePersist

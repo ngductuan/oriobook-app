@@ -9,6 +9,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -75,9 +76,13 @@ public class JwtTokenHelper {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public boolean isTokenExpired(String token) {
-        Date expirationDate = this.extractClaim(token, Claims::getExpiration);
-        return expirationDate.before(new Date());
+    public boolean isTokenExpired(String token, HttpServletRequest request) throws Exception {
+        try {
+            Date expirationDate = this.extractClaim(token, Claims::getExpiration);
+            return expirationDate.before(new Date());
+        } catch (Exception e) {
+            throw new AuthException.TokenExpired(request.getRequestURI());
+        }
     }
 
     public LocalDateTime getExpirationFromToken(String token){
@@ -86,8 +91,8 @@ public class JwtTokenHelper {
     }
 
     // improve redis cache
-    public boolean validateToken(String token, User userDetails) {
-        boolean check = !isTokenExpired(token);
+    public boolean validateToken(String token, User userDetails, HttpServletRequest request) throws Exception {
+        boolean check = !isTokenExpired(token, request);
         return check;
     }
 }

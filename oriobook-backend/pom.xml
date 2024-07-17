@@ -143,6 +143,28 @@
 			<version>1.36.0</version>
 		</dependency>
 
+<!--		Redis-->
+		<!--	Spring redis data	-->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-redis</artifactId>
+			<version>3.3.0</version>
+		</dependency>
+
+		<!-- Lettuce Core (Redis client) -->
+		<dependency>
+			<groupId>io.lettuce</groupId>
+			<artifactId>lettuce-core</artifactId>
+			<version>6.3.2.RELEASE</version>
+		</dependency>
+
+<!--		 Spring Cache Abstraction -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+			<version>3.3.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
