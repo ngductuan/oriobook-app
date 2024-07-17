@@ -18,7 +18,5 @@ public class LoginResponse {
 
     private String userId;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING,
-            pattern = CommonConst.DATETIME_FORMAT, timezone = CommonConst.TIME_ZONE)
     private LocalDateTime expiredAt;
 }

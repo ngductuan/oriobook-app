@@ -1,0 +1,29 @@
+package com.project.oriobook.common.utils;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
+
+import java.util.Map;
+
+@Component
+public class MapperUtil {
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public String convertMapToJson(Map<String, Object> object) throws JsonProcessingException {
+        return objectMapper.writeValueAsString(object);
+    }
+
+    public String convertObjectToJson(Object object) throws JsonProcessingException {
+        return objectMapper.writeValueAsString(object);
+    }
+
+    public Map convertObjectToMap(Object object) {
+        // Use Jackson ObjectMapper to convert object to Map
+        return objectMapper.convertValue(object, Map.class);
+    }
+
+    public <T> T convertJsonToObject(String json, Class<T> clazz) throws JsonProcessingException {
+        return objectMapper.readValue(json, clazz);
+    }
+}

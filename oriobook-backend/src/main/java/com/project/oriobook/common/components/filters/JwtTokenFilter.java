@@ -1,6 +1,6 @@
 package com.project.oriobook.common.components.filters;
 
-import com.project.oriobook.common.components.helpers.CommonHelper;
+import com.project.oriobook.common.utils.CommonUtil;
 import com.project.oriobook.common.components.helpers.JwtTokenHelper;
 import com.project.oriobook.common.constants.RouteConst;
 import com.project.oriobook.common.exceptions.AuthException;
@@ -30,6 +30,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
     private final JwtTokenHelper jwtTokenHelper;
+    private final CommonUtil commonUtil;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -46,12 +47,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             }
             final String token = authHeader.substring(7);
 
-            // Check exists in redis => TokenInValid
+            // *** Check exists in redis => TokenInValid
 
             // Check token expired
-            // if(jwtTokenHelper.isTokenExpired(token, request)){
-            //     throw new AuthException.TokenExpired(request.getRequestURI());
-            // }
+            if(jwtTokenHelper.isTokenExpired(token, request)){
+                throw new AuthException.TokenExpired(request.getRequestURI());
+            }
 
             final String extractEmail = jwtTokenHelper.extractEmail(token);
             if (extractEmail != null
@@ -79,7 +80,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response); // enable bypass
         }
         catch (Exception e) {
-            CommonHelper.responseFilterException(e, response);
+            commonUtil.responseFilterException(e, response);
         }
     }
 

@@ -13,7 +13,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -47,19 +46,13 @@ public class ProductController {
     @PostMapping("")
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.CREATED)
-    public Product createProduct(@Valid @RequestBody ProductDTO productDTO, BindingResult result) throws Exception {
+    public Boolean createProduct(@Valid @RequestBody ProductDTO productDTO, BindingResult result) throws Exception {
         if(result.hasErrors()) {
             throw new ValidationException(result);
         }
 
         Product newProduct = productService.createProduct(productDTO);
-        String testStr = (String) redisTemplate.opsForValue().get("test1");
-        return cacheProduct(newProduct);
-    }
-
-    @CachePut(value = "productCache", key = "#product.id")
-    public Product cacheProduct(Product product) {
-        return product;
+        return newProduct != null;
     }
 
     @PutMapping("/{id}")

@@ -37,6 +37,10 @@ public class ErrorMessage {
         // UPLOAD FILE
         errorMessages.put(ErrorCodeEnum.UPLOAD_NOT_EMPTY.toString(), "File is not empty");
         errorMessages.put(ErrorCodeEnum.UPLOAD_ONLY_IMAGE.toString(), "Only upload image (png, jpg, jpeg)");
+
+        // CART
+        errorMessages.put(ErrorCodeEnum.CART_ITEM_NOT_FOUND.toString(), "Cart item not found");
+        errorMessages.put(ErrorCodeEnum.CART_INVALID_ACTION.toString(), "Invalid action");
     }
 
     public static String get(ErrorCodeEnum code) {

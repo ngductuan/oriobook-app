@@ -1,9 +1,14 @@
 package com.project.oriobook.modules.cart;
 
+import com.project.oriobook.common.constants.RoleConst;
+import com.project.oriobook.common.enums.CommonEnum;
+import com.project.oriobook.modules.cart.services.CartRedisService;
+import com.project.oriobook.modules.user.entities.User;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -11,11 +16,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("${api.prefix}/carts")
 @RequiredArgsConstructor
 public class CartController {
+    private final CartRedisService cartRedisService;
 
-    @PutMapping("/add/{productId}")
+    @PutMapping("/adjust/{productId}")
+    @PreAuthorize(RoleConst.ROLE_ADMIN_USER)
     @ResponseStatus(HttpStatus.OK)
-    @CachePut(value = "productCache", key = "#product.id")
-    public Boolean addProductToCart(@PathVariable String productId) {
-        return true;
+    public Boolean addProductToCart(@PathVariable String productId,
+                                    @RequestParam CommonEnum.AdjustCartEnum adjustMode,
+                                    @AuthenticationPrincipal User userDetails) throws Exception {
+        boolean result = cartRedisService.adjustProductToCart(userDetails.getId(), productId, adjustMode);
+        return result;
     }
 }

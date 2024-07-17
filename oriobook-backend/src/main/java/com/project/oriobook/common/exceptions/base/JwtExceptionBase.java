@@ -24,8 +24,6 @@ public class JwtExceptionBase extends Exception {
 
     private String path;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING,
-            pattern= CommonConst.DATETIME_FORMAT, timezone=CommonConst.TIME_ZONE)
     private LocalDateTime time = LocalDateTime.now();
 
     public JwtExceptionBase(int statusCode, String message, ErrorDetails errorDetails, String path) {
