@@ -1,7 +1,5 @@
 package com.project.oriobook.common.exceptions.base;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.project.oriobook.common.constants.CommonConst;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

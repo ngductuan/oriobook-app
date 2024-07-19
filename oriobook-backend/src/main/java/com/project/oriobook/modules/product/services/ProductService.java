@@ -39,11 +39,11 @@ public class ProductService implements IProductService{
 
         List<Sort.Order> orders = QueryUtil.parseSortBase(query);
 
-        if(ValidationUtil.isNullOrBlank(query.getSortByRating())){
+        if(ValidationUtil.diffNullOrBlank(query.getSortByRating())){
             orders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByRating().toString().toLowerCase()), "rating"));
         }
 
-        if(ValidationUtil.isNullOrBlank(query.getSortByPrice())){
+        if(ValidationUtil.diffNullOrBlank(query.getSortByPrice())){
             orders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByPrice().toString().toLowerCase()), "price"));
         }
 
@@ -52,6 +52,15 @@ public class ProductService implements IProductService{
 
         return productPaging;
     }
+
+    @Override
+    public Product getProductById(String id) throws Exception {
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(ProductException.NotFound::new);
+
+        return existingProduct;
+    }
+
 
     @Override
     @Transactional

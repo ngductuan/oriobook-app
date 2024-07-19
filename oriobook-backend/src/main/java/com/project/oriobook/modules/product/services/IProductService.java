@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 
 public interface IProductService {
     Page<Product> getAllProducts(FindAllProductQueryDTO query);
+    Product getProductById(String id) throws Exception;
     Product createProduct(ProductDTO createProductDTO) throws Exception;
     Product updateProduct(String id, ProductDTO updateProductDTO) throws Exception;
     void deleteProduct(String id) throws Exception;

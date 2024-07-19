@@ -4,7 +4,6 @@ import com.project.oriobook.common.exceptions.base.JwtExceptionBase;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
