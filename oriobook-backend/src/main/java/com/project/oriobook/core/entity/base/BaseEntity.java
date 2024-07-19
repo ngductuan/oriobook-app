@@ -19,17 +19,17 @@ import java.util.UUID;
 public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    protected String id;
+    private String id;
 
     @Column(name = "created_at")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
-    protected LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
-    protected LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
     @PrePersist
     private void onCreate() {

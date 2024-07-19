@@ -2,8 +2,10 @@ package com.project.oriobook.modules.cart;
 
 import com.project.oriobook.common.constants.RoleConst;
 import com.project.oriobook.common.enums.CommonEnum;
-import com.project.oriobook.modules.cart.entities.CartItem;
+import com.project.oriobook.modules.cart.entities.Cart;
+import com.project.oriobook.modules.cart.entities.CartRedisItem;
 import com.project.oriobook.modules.cart.services.CartRedisService;
+import com.project.oriobook.modules.product.services.ProductService;
 import com.project.oriobook.modules.user.entities.User;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +26,9 @@ public class CartController {
     @GetMapping("")
     @PreAuthorize(RoleConst.ROLE_ADMIN_USER)
     @ResponseStatus(HttpStatus.OK)
-    public List<CartItem> getCart(@AuthenticationPrincipal User userDetails) throws Exception {
-        // return cartRedisService.getCart(userDetails.getId());
-        return cartRedisService.getCart(userDetails.getId());
+    public Cart getCart(@AuthenticationPrincipal User userDetails) throws Exception {
+        Cart cart = cartRedisService.getCart(userDetails.getId());
+        return cart;
     }
 
     @PutMapping("/adjust/{productId}")

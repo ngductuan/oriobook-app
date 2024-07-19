@@ -6,70 +6,59 @@ import com.project.oriobook.common.exceptions.CartException;
 import com.project.oriobook.common.utils.MapperUtil;
 import com.project.oriobook.common.utils.RedisUtil;
 import com.project.oriobook.common.utils.ValidationUtil;
-import com.project.oriobook.modules.cart.entities.CartItem;
+import com.project.oriobook.modules.cart.entities.Cart;
+import com.project.oriobook.modules.cart.entities.CartRedisItem;
+import com.project.oriobook.modules.product.entities.Product;
+import com.project.oriobook.modules.product.services.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CartRedisService implements ICartRedisService {
+    private final ProductService productService;
+
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ModelMapper modelMapper;
     private final MapperUtil mapperUtil;
     private final RedisUtil redisUtil;
 
     @Override
-    public List<CartItem> getCart(String userId) throws Exception {
+    public Cart getCart(String userId) throws Exception {
         String cachePattern = String.format(RedisConst.CART_GET_CACHE, userId);
-        // boolean isExist = redisTemplate.hasKey(cacheString) == Boolean.TRUE;
         Set<String> keys = redisTemplate.keys(cachePattern);
-        List<String> test = List.of("productId", "quantity");
 
-        if(!ValidationUtil.diffNullOrEmptyList(keys)) return List.of();
+        if(!ValidationUtil.diffNullOrEmptyList(keys)) return new Cart();
 
-        // Map<String, List<Object>> cartItems = keys.stream().collect(
-        //         Collectors.toMap(
-        //                 key -> key,
-        //                 key -> {
-        //                     String cacheString = String.format(RedisConst.CART_SET_CACHE, userId, key);
-        //                     return redisTemplate.opsForHash().multiGet(cacheString, Collections.singleton(test));
-        //                 }
-        //         )
-        // );
-        try{
-            // Map<String, List<Object>> cartItems2 = keys.stream()
-            //         .collect(Collectors.toMap(
-            //                 key -> key,
-            //                 key -> redisTemplate.opsForList().range(key, 0, -1)
-            //         ));
-            // Map<String, Map<String, Object>> cartItems3 = keys.stream()
-            //         .collect(Collectors.toMap(
-            //                 key -> key,
-            //                 key -> redisTemplate.opsForHash().multiGet(key, Collections.singleton(test))
-            //         ));
-            // Map<String, CartItem> cartItems4 = keys.stream()
-            //         .collect(Collectors.toMap(
-            //                 key -> key,
-            //                 key -> {
-            //                     // return redisTemplate.opsForHash().get(key, "quantity");
-            //                     return (CartItem) ;
-            //                 }
-            //         ));
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        List<CartRedisItem> redisItems = new ArrayList<>();
+        for (String key : keys){
+            Map<Object, Object> entry = redisTemplate.opsForHash().entries(key);
+            redisItems.add(redisUtil.convertRedisToObject(entry, CartRedisItem.class));
         }
 
-        List<CartItem> cartItems = new ArrayList<>();
-        for(String key : keys){
-            Map<Object, Object> test2 = redisTemplate.opsForHash().entries(key);
-            cartItems.add(redisUtil.convertRedisToObject(test2, CartItem.class));
-        }
-        return cartItems;
+        modelMapper.typeMap(Product.class, Cart.CartItem.class);
+        Cart cart = new Cart();
+        cart.setData(new ArrayList<>());
+        double totalPrice = 0;
 
+        for (CartRedisItem item : redisItems) {
+            Product product = productService.getProductById(item.getProductId());
+
+            Cart.CartItem cartItem = modelMapper.map(product, Cart.CartItem.class);
+            cartItem.setQuantity(item.getQuantity());
+
+            totalPrice += product.getPrice() * item.getQuantity();
+
+            cart.getData().add(cartItem);
+        }
+
+        cart.setTotalPrice(totalPrice);
+
+        return cart;
     }
 
     @Override
@@ -92,7 +81,7 @@ public class CartRedisService implements ICartRedisService {
                 // If the key was already present, increment the value by 1
                 redisTemplate.opsForHash().increment(cacheString, prodQuantityName, 1);
             } else {
-                CartItem cartItem = new CartItem(productId, 1);
+                CartRedisItem cartItem = new CartRedisItem(productId, 1);
                 Map<String, Object> map = mapperUtil.convertObjectToMap(cartItem);
                 redisTemplate.opsForHash().putAll(cacheString, map);
             }
