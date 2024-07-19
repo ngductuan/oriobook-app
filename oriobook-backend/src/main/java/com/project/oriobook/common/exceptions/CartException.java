@@ -6,11 +6,11 @@ import com.project.oriobook.common.exceptions.base.ErrorDetails;
 import com.project.oriobook.common.exceptions.base.LogicExceptionBase;
 
 public class CartException {
-    public static class ItemNotExists extends LogicExceptionBase {
+    public static class ItemNotFound extends LogicExceptionBase {
         private static final ErrorCodeEnum code = ErrorCodeEnum.CART_ITEM_NOT_FOUND;
         private static final String message = ErrorMessage.get(code);
 
-        public ItemNotExists() {
+        public ItemNotFound() {
             super(404, message, new ErrorDetails(code.toString(), message));
         }
     }

@@ -23,5 +23,6 @@ public class CommonConst {
     public static final String ACCESS = "access";
     public static final String REFRESH = "refresh";
 
-
+    // Redis
+    public static final String REDIS_CONVERT_DATA = " Lists must not be null and must have the same size";
 }

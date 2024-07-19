@@ -9,6 +9,7 @@ public class ErrorMessage {
     static {
         // COMMON
         errorMessages.put(ErrorCodeEnum.COMMON_ERROR_ENUM_TYPE.toString(), "Unknown enum type");
+        errorMessages.put(ErrorCodeEnum.COMMON_GET_REDIS_DATA.toString(), "Error when converting redis data");
 
         // AUTH
         errorMessages.put(ErrorCodeEnum.AUTH_EMAIL_EXISTED.toString(), "Email already exists");

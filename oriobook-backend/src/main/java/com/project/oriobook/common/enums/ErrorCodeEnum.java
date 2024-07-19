@@ -3,6 +3,8 @@ package com.project.oriobook.common.enums;
 public enum ErrorCodeEnum {
     // COMMON
     COMMON_ERROR_ENUM_TYPE("COM_0010"),
+    COMMON_GET_REDIS_DATA("COM_0011"),
+
     // AUTH
     AUTH_EMAIL_EXISTED("AUTH_0010"),
     AUTH_EMAIL_NOT_EXISTED("AUTH_0011"),
@@ -35,7 +37,7 @@ public enum ErrorCodeEnum {
 
 
     // DEFAULT
-    DEFAULT_SEMICOLON("DEF_0000");
+    DEFAULT_ERROR("DEF_0000");
     private final String value;
 
     ErrorCodeEnum(String value) {

@@ -10,12 +10,4 @@ import lombok.NoArgsConstructor;
 public class CartItem {
     private String productId;
     private int count;
-
-    public void addItem() {
-        this.count += 1;
-    }
-
-    public void subtractItem() {
-        this.count -= 1;
-    }
 }
