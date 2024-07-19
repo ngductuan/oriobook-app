@@ -14,11 +14,6 @@ public class CommonEnum {
     public enum GenderEnum {
         MALE,
         FEMALE
-
-        // @Override
-        // public String toString() {
-        //     return String.valueOf(this.toString());
-        // }
     }
 
     public enum AdjustCartEnum {

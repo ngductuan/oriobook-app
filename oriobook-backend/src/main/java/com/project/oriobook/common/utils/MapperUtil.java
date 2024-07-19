@@ -16,7 +16,7 @@ public class MapperUtil {
     }
 
     public <T> T convertMapToObject(Map<String, Object> object, Class<T> className) throws JsonProcessingException {
-        return (T) objectMapper.convertValue(object, className);
+        return objectMapper.convertValue(object, className);
     }
 
     public String convertObjectToJson(Object object) throws JsonProcessingException {

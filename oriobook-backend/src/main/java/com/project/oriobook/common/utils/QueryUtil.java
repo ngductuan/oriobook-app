@@ -9,7 +9,7 @@ import java.util.List;
 public class QueryUtil {
     public static List<Sort.Order> parseSortBase(QueryFilterBase query){
         List<Sort.Order> orders = new ArrayList<>();
-        if(ValidationUtil.diffNullOrBlank(query.getSortByDate())){
+        if(ValidationUtil.diffNullOrBlankStr(query.getSortByDate())){
             orders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByDate().toString()),"createdAt"));
         }
         return orders;

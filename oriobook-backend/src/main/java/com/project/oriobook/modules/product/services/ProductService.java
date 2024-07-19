@@ -39,11 +39,11 @@ public class ProductService implements IProductService{
 
         List<Sort.Order> orders = QueryUtil.parseSortBase(query);
 
-        if(ValidationUtil.diffNullOrBlank(query.getSortByRating())){
+        if(ValidationUtil.diffNullOrBlankStr(query.getSortByRating())){
             orders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByRating().toString().toLowerCase()), "rating"));
         }
 
-        if(ValidationUtil.diffNullOrBlank(query.getSortByPrice())){
+        if(ValidationUtil.diffNullOrBlankStr(query.getSortByPrice())){
             orders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByPrice().toString().toLowerCase()), "price"));
         }
 

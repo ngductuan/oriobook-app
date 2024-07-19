@@ -6,6 +6,7 @@ import com.project.oriobook.modules.cart.entities.CartItem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,16 +16,31 @@ import java.util.Map;
 public class RedisUtil {
     private final MapperUtil mapperUtil;
 
-    public CartItem convertToCartItem(List<Object> values, List<Object> keys) throws Exception {
-        if (values == null || keys == null || values.size() != keys.size()) {
-            throw new CommonException.ConvertRedisData("(CartItem)" + CommonConst.REDIS_CONVERT_DATA);
+    // public CartItem convertToCartItem(List<Object, Object> entries) throws Exception {
+    //     if (values == null || keys == null || values.size() != keys.size()) {
+    //         throw new CommonException.ConvertRedisData("(CartItem)" + CommonConst.REDIS_CONVERT_DATA);
+    //     }
+    //
+    //     Map<String, Object> map = new HashMap<>();
+    //     for (int i = 0; i < keys.size(); i++) {
+    //         map.put((String) keys.get(i), values.get(i));
+    //     }
+    //
+    //     return mapperUtil.convertMapToObject(map, CartItem.class);
+    // }
+
+    public <T> T convertRedisToObject(Map<Object, Object> entries, Class<T> className) throws Exception {
+        if (entries == null) {
+            throw new CommonException.ConvertRedisData(CommonConst.REDIS_CONVERT_DATA);
         }
 
         Map<String, Object> map = new HashMap<>();
-        for (int i = 0; i < keys.size(); i++) {
-            map.put((String) keys.get(i), values.get(i));
+        for (Map.Entry<Object, Object> entry : entries.entrySet()) {
+            map.put((String) entry.getKey(), entry.getValue());
         }
 
-        return mapperUtil.convertMapToObject(map, CartItem.class);
+        T aliasItem = mapperUtil.convertMapToObject(map, className);
+
+        return aliasItem;
     }
 }
