@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CartItem {
     private String productId;
-    private int count;
+    private int quantity;
 }
