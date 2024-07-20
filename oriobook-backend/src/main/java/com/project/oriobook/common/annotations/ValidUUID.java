@@ -1,6 +1,6 @@
 package com.project.oriobook.common.annotations;
 
-import com.project.oriobook.common.annotations.validator.EmailValidator;
+import com.project.oriobook.common.annotations.validator.UUIDValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -9,11 +9,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = EmailValidator.class)
+@Constraint(validatedBy = UUIDValidator.class)
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface EmailValid {
-    String message() default "email format is not valid";
+public @interface ValidUUID {
+    String message() default "invalid UUID format";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

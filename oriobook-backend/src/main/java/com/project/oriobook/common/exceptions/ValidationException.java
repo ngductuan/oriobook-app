@@ -27,7 +27,8 @@ public class ValidationException extends BusinessExceptionBase {
                 .collect(Collectors.groupingBy(
                         FieldError::getField,
                         Collectors.mapping(
-                                fieldError -> Objects.requireNonNull(fieldError.getDefaultMessage(), CommonConst.UNKNOWN_ERROR), // Chuyển đổi FieldError thành thông báo lỗi
+                                // Convert each fieldError to message, if null return UNKNOWN_ERROR
+                                fieldError -> Objects.requireNonNull(fieldError.getDefaultMessage(), CommonConst.UNKNOWN_ERROR),
                                 Collectors.toList()
                         )
                 ));

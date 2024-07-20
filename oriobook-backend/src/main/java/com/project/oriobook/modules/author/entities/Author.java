@@ -13,6 +13,9 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Author extends BaseEntity {
+    @Id
+    private String id;
+
     private String name;
 
     private String image;

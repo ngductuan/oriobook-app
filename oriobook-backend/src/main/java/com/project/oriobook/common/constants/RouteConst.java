@@ -19,8 +19,19 @@ public class RouteConst {
 
     public void init() {
         bypassRoutes = Arrays.asList(
+                // products
                 Pair.of(String.format("%s/products**", apiPrefix), "GET"),
+                Pair.of(String.format("%s/products/**", apiPrefix), "GET"),
+
+                // categories
                 Pair.of(String.format("%s/categories**", apiPrefix), "GET"),
+                Pair.of(String.format("%s/categories/**", apiPrefix), "GET"),
+
+                // authors
+                Pair.of(String.format("%s/authors**", apiPrefix), "GET"),
+                Pair.of(String.format("%s/authors/**", apiPrefix), "GET"),
+
+                // auth
                 Pair.of(String.format("%s/auth/sign-up", apiPrefix), "POST"),
                 Pair.of(String.format("%s/auth/login", apiPrefix), "POST"),
                 Pair.of(String.format("%s/auth/refresh-token", apiPrefix), "POST"),

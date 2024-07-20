@@ -1,6 +1,6 @@
 package com.project.oriobook.modules.product.dto;
 
-import com.project.oriobook.common.annotations.UUIDValid;
+import com.project.oriobook.common.annotations.ValidUUID;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -29,10 +29,10 @@ public class ProductDTO {
     private int stock;
 
     @NotNull
-    @UUIDValid
+    @ValidUUID
     private String categoryId;
 
     @NotNull
-    @UUIDValid
+    @ValidUUID
     private String authorId;
 }

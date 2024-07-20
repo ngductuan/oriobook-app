@@ -1,7 +1,6 @@
 package com.project.oriobook.common.utils;
 
 import java.util.Collection;
-import java.util.List;
 
 public class ValidationUtil {
     public static <T> boolean diffNullOrBlankStr(T str) {

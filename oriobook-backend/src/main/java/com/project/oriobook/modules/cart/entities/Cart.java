@@ -1,7 +1,5 @@
 package com.project.oriobook.modules.cart.entities;
 
-import com.project.oriobook.core.entity.base.BaseEntity;
-import com.project.oriobook.modules.product.entities.Product;
 import com.project.oriobook.modules.product.responses.ProductResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package com.project.oriobook.modules.auth.dto;
 
-import com.project.oriobook.common.annotations.EmailValid;
+import com.project.oriobook.common.annotations.ValidEmail;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -16,7 +16,7 @@ public class SignUpDTO {
     String lastName;
 
     @NotNull
-    @EmailValid
+    @ValidEmail
     String email;
 
     @NotNull

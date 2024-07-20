@@ -11,7 +11,10 @@ import org.springframework.data.repository.query.Param;
 public interface ProductRepository extends JpaRepository<Product, String> {
     @Query("SELECT p FROM Product p WHERE " +
             "(:#{#query.productName} IS NULL OR :#{#query.productName} = '' OR p.name = :#{#query.productName}) " +
-            "AND (:#{#query.categoryId} IS NULL OR :#{#query.categoryId} = '' OR p.categoryNode.id = :#{#query.categoryId})" +
-            "AND (:#{#query.authorId} IS NULL OR :#{#query.authorId} = '' OR p.authorNode.id = :#{#query.authorId})")
+            "AND (:#{#query.categoryId} IS NULL OR :#{#query.categoryId} = '' OR p.categoryNode.id = :#{#query.categoryId}) " +
+            "AND (:#{#query.authorId} IS NULL OR :#{#query.authorId} = '' OR p.authorNode.id = :#{#query.authorId}) " +
+            "AND (:#{#query.startDate} IS NULL OR p.createdAt >= :#{#query.startDate}) " +
+            "AND (:#{#query.endDate} IS NULL OR p.createdAt <= :#{#query.endDate})"
+    )
     Page<Product> findAll(@Param("query") FindAllProductQueryDTO query, Pageable pageable);
 }

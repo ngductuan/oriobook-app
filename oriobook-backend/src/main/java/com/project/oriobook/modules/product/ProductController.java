@@ -1,5 +1,6 @@
 package com.project.oriobook.modules.product;
 
+import com.project.oriobook.common.constants.CommonConst;
 import com.project.oriobook.common.constants.RoleConst;
 import com.project.oriobook.common.exceptions.ValidationException;
 import com.project.oriobook.core.pagination.base.PageResponse;
@@ -8,6 +9,7 @@ import com.project.oriobook.modules.product.dto.ProductDTO;
 import com.project.oriobook.modules.product.entities.Product;
 import com.project.oriobook.modules.product.responses.ProductResponse;
 import com.project.oriobook.modules.product.services.ProductService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @Tag(name = "products")
@@ -31,6 +36,8 @@ public class ProductController {
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
     public PageResponse<ProductResponse> getAllProducts(@ParameterObject @ModelAttribute FindAllProductQueryDTO query) {
+        // LocalDateTime startDate = LocalDateTime.parse(query.getStartDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
+        // query.setStartDate(startDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         Page<Product> productsList = productService.getAllProducts(query);
 
         modelMapper.typeMap(Product.class, ProductResponse.class);
@@ -48,6 +55,7 @@ public class ProductController {
     }
 
     @PostMapping("")
+    @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.CREATED)
     public Boolean createProduct(@Valid @RequestBody ProductDTO productDTO, BindingResult result) throws Exception {
@@ -60,6 +68,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.OK)
     public Boolean updateProduct(@PathVariable String id, @Valid @RequestBody ProductDTO productDTO, BindingResult result) throws Exception {
@@ -72,6 +81,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.OK)
     public Boolean deleteProduct(@PathVariable String id) throws Exception {

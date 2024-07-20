@@ -1,12 +1,13 @@
 package com.project.oriobook.modules.author.services;
 
-import com.project.oriobook.common.enums.CommonEnum;
 import com.project.oriobook.common.exceptions.AuthorException;
 import com.project.oriobook.common.utils.QueryUtil;
+import com.project.oriobook.modules.author.dto.AuthorDTO;
 import com.project.oriobook.modules.author.dto.FindAllAuthorQueryDTO;
 import com.project.oriobook.modules.author.entities.Author;
 import com.project.oriobook.modules.author.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,13 +21,13 @@ import java.util.List;
 public class AuthorService implements IAuthorService{
     private final AuthorRepository authorRepository;
 
+    private final ModelMapper modelMapper;
+
     @Override
     public Page<Author> getAllAuthors(FindAllAuthorQueryDTO query) {
         if(query == null){
             return authorRepository.findAll(new FindAllAuthorQueryDTO(), Pageable.unpaged());
         }
-
-        query.setGender(CommonEnum.GenderEnum.MALE);
 
         List<Sort.Order> orders = QueryUtil.parseSortBase(query);
 
@@ -41,5 +42,12 @@ public class AuthorService implements IAuthorService{
         Author optionalAuthor = authorRepository.findById(id)
                 .orElseThrow(AuthorException.NotFound::new);
         return optionalAuthor;
+    }
+
+    @Override
+    public Author createAuthor(AuthorDTO authorDTO) throws Exception {
+        modelMapper.typeMap(AuthorDTO.class, Author.class);
+        Author author = modelMapper.map(authorDTO, Author.class);
+        return authorRepository.save(author);
     }
 }
