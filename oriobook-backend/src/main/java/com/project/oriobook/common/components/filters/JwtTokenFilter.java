@@ -30,7 +30,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
     private final JwtTokenHelper jwtTokenHelper;
-    private final CommonUtil commonUtil;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -80,7 +79,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response); // enable bypass
         }
         catch (Exception e) {
-            commonUtil.responseFilterException(e, response);
+            CommonUtil.responseFilterException(e, response);
         }
     }
 

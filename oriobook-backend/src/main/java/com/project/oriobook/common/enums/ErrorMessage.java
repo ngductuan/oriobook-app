@@ -31,6 +31,8 @@ public class ErrorMessage {
         // ORDER
         // AUTHOR
         errorMessages.put(ErrorCodeEnum.AUTHOR_NOT_FOUND.toString(), "Author not found");
+        errorMessages.put(ErrorCodeEnum.AUTHOR_INVALID_BOOK_QUANTITY.toString(), "Invalid book quantity");
+
         // CATEGORY
         errorMessages.put(ErrorCodeEnum.CATEGORY_NOT_FOUND.toString(), "Category not found");
 

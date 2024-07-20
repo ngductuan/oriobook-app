@@ -1,18 +1,19 @@
 package com.project.oriobook.common.utils;
 
+import com.project.oriobook.common.constants.CommonConst;
 import com.project.oriobook.common.exceptions.base.JwtExceptionBase;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-@Component
-@RequiredArgsConstructor
 public class CommonUtil {
-    private final MapperUtil mapperUtil;
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(CommonConst.DATE_DTO_FORMAT);
+    private static final MapperUtil mapperUtil = new MapperUtil();
 
-    public void responseFilterException(Exception e, HttpServletResponse response) {
+    public static void responseFilterException(Exception e, HttpServletResponse response) {
         try {
             response.setContentType("application/json");
             if (e instanceof JwtExceptionBase jwtE) {
@@ -25,5 +26,13 @@ public class CommonUtil {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    public static LocalDate convertStringToDate(String date) {
+        return date != null ? LocalDate.parse(date, DATE_FORMATTER) : null;
+    }
+
+    public static LocalDateTime convertStringToDateTime(String date) {
+        return date != null ? LocalDate.parse(date, DATE_FORMATTER).atStartOfDay() : null;
     }
 }

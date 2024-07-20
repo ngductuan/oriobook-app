@@ -24,7 +24,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService implements IProductService{
+public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
     private final AuthorService authorService;
@@ -33,17 +33,17 @@ public class ProductService implements IProductService{
 
     @Override
     public Page<Product> getAllProducts(FindAllProductQueryDTO query) {
-        if(query == null){
+        if (query == null) {
             return productRepository.findAll(new FindAllProductQueryDTO(), Pageable.unpaged());
         }
 
         List<Sort.Order> orders = QueryUtil.parseSortBase(query);
 
-        if(ValidationUtil.diffNullOrBlankStr(query.getSortByRating())){
+        if (ValidationUtil.diffNullOrBlankStr(query.getSortByRating())) {
             orders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByRating().toString().toLowerCase()), "rating"));
         }
 
-        if(ValidationUtil.diffNullOrBlankStr(query.getSortByPrice())){
+        if (ValidationUtil.diffNullOrBlankStr(query.getSortByPrice())) {
             orders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByPrice().toString().toLowerCase()), "price"));
         }
 
@@ -61,13 +61,14 @@ public class ProductService implements IProductService{
         return existingProduct;
     }
 
-
     @Override
     @Transactional
-    public Product createProduct(ProductDTO createProductDTO) throws Exception{
+    public Product createProduct(ProductDTO createProductDTO) throws Exception {
+        // Check foreign keys
         Category existingCategory = categoryService.getCategoryById(createProductDTO.getCategoryId());
         Author existingAuthor = authorService.getAuthorById(createProductDTO.getAuthorId());
 
+        // Add new product
         modelMapper.typeMap(ProductDTO.class, Product.class);
 
         Product newProduct = new Product();
@@ -75,6 +76,10 @@ public class ProductService implements IProductService{
 
         newProduct.setCategoryNode(existingCategory);
         newProduct.setAuthorNode(existingAuthor);
+
+        // increase book for author
+        authorService.adjustPublishedBooks(existingAuthor.getId(),
+                existingAuthor.getPublishedBook() + 1);
 
         return productRepository.save(newProduct);
     }

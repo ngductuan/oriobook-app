@@ -21,9 +21,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 @RestController
 @Tag(name = "products")
 @RequestMapping("${api.prefix}/products")
@@ -36,8 +33,6 @@ public class ProductController {
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
     public PageResponse<ProductResponse> getAllProducts(@ParameterObject @ModelAttribute FindAllProductQueryDTO query) {
-        // LocalDateTime startDate = LocalDateTime.parse(query.getStartDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
-        // query.setStartDate(startDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         Page<Product> productsList = productService.getAllProducts(query);
 
         modelMapper.typeMap(Product.class, ProductResponse.class);
@@ -71,7 +66,8 @@ public class ProductController {
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.OK)
-    public Boolean updateProduct(@PathVariable String id, @Valid @RequestBody ProductDTO productDTO, BindingResult result) throws Exception {
+    public Boolean updateProduct(@PathVariable String id, @Valid @RequestBody ProductDTO productDTO, BindingResult result)
+            throws Exception {
         if(result.hasErrors()) {
             throw new ValidationException(result);
         }

@@ -50,4 +50,31 @@ public class AuthorService implements IAuthorService{
         Author author = modelMapper.map(authorDTO, Author.class);
         return authorRepository.save(author);
     }
+
+    @Override
+    public Author updateAuthor(String id, AuthorDTO authorDTO) throws Exception {
+        Author author = authorRepository.findById(id)
+                .orElseThrow(AuthorException.NotFound::new);
+        modelMapper.typeMap(AuthorDTO.class, Author.class);
+        modelMapper.map(authorDTO, author);
+        return authorRepository.save(author);
+    }
+
+    @Override
+    public void deleteAuthor(String id) throws Exception {
+        Author author = authorRepository.findById(id)
+                .orElseThrow(AuthorException.NotFound::new);
+        authorRepository.delete(author);
+    }
+
+    @Override
+    public Boolean adjustPublishedBooks(String id, int publishedBooks) throws Exception {
+        if(publishedBooks < 0){
+            throw new AuthorException.InvalidBookQuantity();
+        }
+        Author author = authorRepository.findById(id)
+                .orElseThrow(AuthorException.NotFound::new);
+
+        return authorRepository.setPublishedBooks(id, publishedBooks) != 0;
+    }
 }

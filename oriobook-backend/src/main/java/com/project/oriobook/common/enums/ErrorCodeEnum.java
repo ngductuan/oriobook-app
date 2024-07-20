@@ -25,6 +25,8 @@ public enum ErrorCodeEnum {
     // ORDER
     // AUTHOR
     AUTHOR_NOT_FOUND("AUT_0010"),
+    AUTHOR_INVALID_BOOK_QUANTITY("AUT_0011"),
+
     // CATEGORY
     CATEGORY_NOT_FOUND("CAT_0010"),
     // REVIEW

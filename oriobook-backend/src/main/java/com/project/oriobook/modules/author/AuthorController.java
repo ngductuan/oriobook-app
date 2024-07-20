@@ -56,17 +56,26 @@ public class AuthorController {
         return newAuthor != null;
     }
 
-    //
-    // @PutMapping("/{id}")
-    // @SecurityRequirement(name = CommonConst.BEARER_KEY)
-    // @PreAuthorize(RoleConst.ROLE_ADMIN)
-    // @ResponseStatus(HttpStatus.OK)
-    // public Boolean updateAuthor(@PathVariable String id, @Valid @RequestBody AuthorDTO authorDTO, BindingResult result) throws Exception {
-    //     if(result.hasErrors()) {
-    //         throw new ValidationException(result);
-    //     }
-    //
-    //     Author updatedAuthor = authorService.updateAuthor(id, authorDTO);
-    //     return updatedAuthor != null;
-    // }
+    @PutMapping("/{id}")
+    @SecurityRequirement(name = CommonConst.BEARER_KEY)
+    @PreAuthorize(RoleConst.ROLE_ADMIN)
+    @ResponseStatus(HttpStatus.OK)
+    public Boolean updateAuthor(@PathVariable String id, @Valid @RequestBody AuthorDTO authorDTO, BindingResult result)
+            throws Exception {
+        if(result.hasErrors()) {
+            throw new ValidationException(result);
+        }
+
+        Author updatedAuthor = authorService.updateAuthor(id, authorDTO);
+        return updatedAuthor != null;
+    }
+
+    @DeleteMapping("/{id}")
+    @SecurityRequirement(name = CommonConst.BEARER_KEY)
+    @PreAuthorize(RoleConst.ROLE_ADMIN)
+    @ResponseStatus(HttpStatus.OK)
+    public Boolean deleteAuthor(@PathVariable String id) throws Exception {
+        authorService.deleteAuthor(id);
+        return true;
+    }
 }
