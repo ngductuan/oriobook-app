@@ -12,7 +12,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class AuthorDTO {
+public class CreateAuthorDTO {
     @NotNull
     @NotBlank
     private String name;

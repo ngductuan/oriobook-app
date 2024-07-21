@@ -8,7 +8,7 @@ import com.project.oriobook.modules.author.services.AuthorService;
 import com.project.oriobook.modules.category.entities.Category;
 import com.project.oriobook.modules.category.services.CategoryService;
 import com.project.oriobook.modules.product.dto.FindAllProductQueryDTO;
-import com.project.oriobook.modules.product.dto.ProductDTO;
+import com.project.oriobook.modules.product.dto.CreateProductDTO;
 import com.project.oriobook.modules.product.entities.Product;
 import com.project.oriobook.modules.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -63,13 +63,13 @@ public class ProductService implements IProductService {
 
     @Override
     @Transactional
-    public Product createProduct(ProductDTO createProductDTO) throws Exception {
+    public Product createProduct(CreateProductDTO createProductDTO) throws Exception {
         // Check foreign keys
         Category existingCategory = categoryService.getCategoryById(createProductDTO.getCategoryId());
         Author existingAuthor = authorService.getAuthorById(createProductDTO.getAuthorId());
 
         // Add new product
-        modelMapper.typeMap(ProductDTO.class, Product.class);
+        modelMapper.typeMap(CreateProductDTO.class, Product.class);
 
         Product newProduct = new Product();
         modelMapper.map(createProductDTO, newProduct);
@@ -86,14 +86,14 @@ public class ProductService implements IProductService {
 
     @Override
     @Transactional
-    public Product updateProduct(String id, ProductDTO updateProductDTO) throws Exception {
+    public Product updateProduct(String id, CreateProductDTO updateProductDTO) throws Exception {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(ProductException.NotFound::new);
 
         Category existingCategory = categoryService.getCategoryById(updateProductDTO.getCategoryId());
         Author existingAuthor = authorService.getAuthorById(updateProductDTO.getAuthorId());
 
-        modelMapper.typeMap(ProductDTO.class, Product.class);
+        modelMapper.typeMap(CreateProductDTO.class, Product.class);
         modelMapper.map(updateProductDTO, existingProduct);
 
         existingProduct.setCategoryNode(existingCategory);

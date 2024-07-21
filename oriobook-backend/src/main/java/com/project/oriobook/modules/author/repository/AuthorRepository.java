@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 public interface AuthorRepository extends JpaRepository<Author, String>{
     @Query("SELECT p FROM Author p WHERE " +
             // authorName
-            "(:#{#query.authorName} IS NULL OR :#{#query.authorName} = '' OR p.name = :#{#query.authorName}) " +
+            "(:#{#query.authorName} IS NULL OR :#{#query.authorName} = '' OR p.name LIKE %:#{#query.authorName}%) " +
             // gender
             "AND (:#{#query.gender} IS NULL OR :#{#query.gender == null ? '' : #query.gender.name()} = '' " +
             "OR p.gender = :#{#query.gender})" +

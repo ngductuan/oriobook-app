@@ -4,9 +4,10 @@ import com.project.oriobook.common.constants.CommonConst;
 import com.project.oriobook.common.constants.RoleConst;
 import com.project.oriobook.common.exceptions.ValidationException;
 import com.project.oriobook.core.pagination.base.PageResponse;
-import com.project.oriobook.modules.author.dto.AuthorDTO;
+import com.project.oriobook.modules.author.dto.CreateAuthorDTO;
 import com.project.oriobook.modules.author.dto.FindAllAuthorQueryDTO;
 import com.project.oriobook.modules.author.entities.Author;
+import com.project.oriobook.modules.author.responses.AuthorResponse;
 import com.project.oriobook.modules.author.services.AuthorService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,10 +31,14 @@ public class AuthorController {
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public PageResponse<Author> getAllAuthors(@ParameterObject @ModelAttribute FindAllAuthorQueryDTO query) {
+    public PageResponse<AuthorResponse> getAllAuthors(@ParameterObject @ModelAttribute FindAllAuthorQueryDTO query) {
         Page<Author> authorsList = authorService.getAllAuthors(query);
 
-        return new PageResponse<>(authorsList);
+        modelMapper.typeMap(Author.class, AuthorResponse.class);
+        Page<AuthorResponse> authorResponse = authorsList.map(product ->
+                modelMapper.map(product, AuthorResponse.class));
+
+        return new PageResponse<>(authorResponse);
     }
 
     @GetMapping("/{id}")
@@ -47,7 +52,7 @@ public class AuthorController {
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.CREATED)
-    public Boolean createAuthor(@Valid @RequestBody AuthorDTO authorDTO, BindingResult result) throws Exception {
+    public Boolean createAuthor(@Valid @RequestBody CreateAuthorDTO authorDTO, BindingResult result) throws Exception {
         if(result.hasErrors()) {
             throw new ValidationException(result);
         }
@@ -60,7 +65,7 @@ public class AuthorController {
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.OK)
-    public Boolean updateAuthor(@PathVariable String id, @Valid @RequestBody AuthorDTO authorDTO, BindingResult result)
+    public Boolean updateAuthor(@PathVariable String id, @Valid @RequestBody CreateAuthorDTO authorDTO, BindingResult result)
             throws Exception {
         if(result.hasErrors()) {
             throw new ValidationException(result);

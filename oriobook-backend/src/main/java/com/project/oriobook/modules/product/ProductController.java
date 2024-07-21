@@ -5,7 +5,7 @@ import com.project.oriobook.common.constants.RoleConst;
 import com.project.oriobook.common.exceptions.ValidationException;
 import com.project.oriobook.core.pagination.base.PageResponse;
 import com.project.oriobook.modules.product.dto.FindAllProductQueryDTO;
-import com.project.oriobook.modules.product.dto.ProductDTO;
+import com.project.oriobook.modules.product.dto.CreateProductDTO;
 import com.project.oriobook.modules.product.entities.Product;
 import com.project.oriobook.modules.product.responses.ProductResponse;
 import com.project.oriobook.modules.product.services.ProductService;
@@ -53,7 +53,7 @@ public class ProductController {
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.CREATED)
-    public Boolean createProduct(@Valid @RequestBody ProductDTO productDTO, BindingResult result) throws Exception {
+    public Boolean createProduct(@Valid @RequestBody CreateProductDTO productDTO, BindingResult result) throws Exception {
         if(result.hasErrors()) {
             throw new ValidationException(result);
         }
@@ -66,7 +66,7 @@ public class ProductController {
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.OK)
-    public Boolean updateProduct(@PathVariable String id, @Valid @RequestBody ProductDTO productDTO, BindingResult result)
+    public Boolean updateProduct(@PathVariable String id, @Valid @RequestBody CreateProductDTO productDTO, BindingResult result)
             throws Exception {
         if(result.hasErrors()) {
             throw new ValidationException(result);

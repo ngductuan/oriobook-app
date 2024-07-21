@@ -17,19 +17,12 @@ public class QueryFilterBase {
     @Schema(example = "10")
     protected int limit = 10;
 
-    // @JsonDeserialize(using = DateTimeDTODeserializer.class)
-    // protected LocalDateTime startDate;
-    // @JsonDeserialize(using = DateDTODeserializer.class)
-    // protected LocalDate startDate;
     @Schema(example = CommonConst.DATE_EXAMPLE, format = "date")
     @Pattern(regexp = CommonConst.DATE_BOND_REGEX, message = CommonConst.DATE_BOND_MSG)
-    // @DateTimeFormat(pattern = "dd/MM/yyyy")
     protected String startDate;
 
     @Schema(example = CommonConst.DATE_EXAMPLE_2, format = "date")
     @Pattern(regexp = CommonConst.DATE_BOND_REGEX, message = CommonConst.DATE_BOND_MSG)
-    // @JsonDeserialize(using = DateDTODeserializer.class)
-    // protected LocalDate endDate;
     protected String endDate;
 
     protected CommonEnum.SortEnum sortByDate;

@@ -2,7 +2,7 @@ package com.project.oriobook.modules.author.services;
 
 import com.project.oriobook.common.exceptions.AuthorException;
 import com.project.oriobook.common.utils.QueryUtil;
-import com.project.oriobook.modules.author.dto.AuthorDTO;
+import com.project.oriobook.modules.author.dto.CreateAuthorDTO;
 import com.project.oriobook.modules.author.dto.FindAllAuthorQueryDTO;
 import com.project.oriobook.modules.author.entities.Author;
 import com.project.oriobook.modules.author.repository.AuthorRepository;
@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -45,22 +46,25 @@ public class AuthorService implements IAuthorService{
     }
 
     @Override
-    public Author createAuthor(AuthorDTO authorDTO) throws Exception {
-        modelMapper.typeMap(AuthorDTO.class, Author.class);
+    @Transactional
+    public Author createAuthor(CreateAuthorDTO authorDTO) throws Exception {
+        modelMapper.typeMap(CreateAuthorDTO.class, Author.class);
         Author author = modelMapper.map(authorDTO, Author.class);
         return authorRepository.save(author);
     }
 
     @Override
-    public Author updateAuthor(String id, AuthorDTO authorDTO) throws Exception {
+    @Transactional
+    public Author updateAuthor(String id, CreateAuthorDTO authorDTO) throws Exception {
         Author author = authorRepository.findById(id)
                 .orElseThrow(AuthorException.NotFound::new);
-        modelMapper.typeMap(AuthorDTO.class, Author.class);
+        modelMapper.typeMap(CreateAuthorDTO.class, Author.class);
         modelMapper.map(authorDTO, author);
         return authorRepository.save(author);
     }
 
     @Override
+    @Transactional
     public void deleteAuthor(String id) throws Exception {
         Author author = authorRepository.findById(id)
                 .orElseThrow(AuthorException.NotFound::new);
@@ -68,6 +72,7 @@ public class AuthorService implements IAuthorService{
     }
 
     @Override
+    @Transactional
     public Boolean adjustPublishedBooks(String id, int publishedBooks) throws Exception {
         if(publishedBooks < 0){
             throw new AuthorException.InvalidBookQuantity();
