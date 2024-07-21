@@ -13,8 +13,7 @@ public interface ICategoryService {
     Category updateMainCategory(String id, CreateMainCategoryDTO category) throws Exception;
     Category createSubCategory(CreateSubCategoryDTO category) throws Exception;
     Category updateSubCategory(String id, CreateSubCategoryDTO category) throws Exception;
+    void deleteCategory(String id) throws Exception;
 
-    // Boolean checkMainExisting(String id, CreateMainCategoryDTO dto) throws Exception;
-    // Boolean checkSubExisting(String id, CreateSubCategoryDTO dto) throws Exception;
     boolean isExistingByName(String name) throws Exception;
 }

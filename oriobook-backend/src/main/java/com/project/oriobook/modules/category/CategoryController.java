@@ -99,11 +99,12 @@ public class CategoryController {
         return newCategory != null;
     }
 
-    // @DeleteMapping("/{id}")
-    // @SecurityRequirement(name = CommonConst.BEARER_KEY)
-    // @PreAuthorize(RoleConst.ROLE_ADMIN)
-    // @ResponseStatus(HttpStatus.OK)
-    // public Boolean deleteCategory(@PathVariable String id) throws Exception {
-    //     return categoryService.deleteCategory(id);
-    // }
+    @DeleteMapping("/{id}")
+    @SecurityRequirement(name = CommonConst.BEARER_KEY)
+    @PreAuthorize(RoleConst.ROLE_ADMIN)
+    @ResponseStatus(HttpStatus.OK)
+    public Boolean deleteCategory(@PathVariable String id) throws Exception {
+        categoryService.deleteCategory(id);
+        return true;
+    }
 }

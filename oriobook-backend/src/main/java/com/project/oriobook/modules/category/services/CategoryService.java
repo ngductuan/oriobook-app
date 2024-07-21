@@ -138,6 +138,13 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
+    @Transactional
+    public void deleteCategory(String id) throws Exception {
+        Category category = getCategoryById(id);
+        categoryRepository.delete(category);
+    }
+
+    @Override
     public boolean isExistingByName(String name) throws Exception{
         boolean existsByName = categoryRepository.existsByName(name);
 
