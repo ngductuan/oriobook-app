@@ -5,6 +5,7 @@ import com.project.oriobook.common.constants.RoleConst;
 import com.project.oriobook.common.exceptions.UploadFileException;
 import com.project.oriobook.modules.upload_file.entities.CloudinaryEntity;
 import com.project.oriobook.modules.upload_file.services.UploadFileService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ public class UploadFileController {
     private final UploadFileService uploadFileService;
 
     @PostMapping(value = "/image", consumes = "multipart/form-data")
+    @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.OK)
     public CloudinaryEntity uploadImage(@RequestParam("file") MultipartFile file) throws Exception{

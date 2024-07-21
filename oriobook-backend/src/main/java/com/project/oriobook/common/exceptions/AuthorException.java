@@ -14,4 +14,13 @@ public class AuthorException {
             super(404, message, new ErrorDetails(code.toString(), message));
         }
     }
+
+    public static class InvalidBookQuantity extends LogicExceptionBase {
+        private static final ErrorCodeEnum code = ErrorCodeEnum.AUTHOR_INVALID_BOOK_QUANTITY;
+        private static final String message = ErrorMessage.get(code);
+
+        public InvalidBookQuantity() {
+            super(400, message, new ErrorDetails(code.toString(), message));
+        }
+    }
 }

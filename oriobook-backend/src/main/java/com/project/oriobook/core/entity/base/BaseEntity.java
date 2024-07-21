@@ -1,7 +1,9 @@
 package com.project.oriobook.core.entity.base;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.project.oriobook.common.constants.CommonConst;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,15 +19,17 @@ import java.util.UUID;
 public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    protected String id;
+    private String id;
 
     @Column(name = "created_at")
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=CommonConst.DATETIME_FORMAT, timezone=CommonConst.TIME_ZONE)
-    protected LocalDateTime createdAt;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=CommonConst.DATETIME_FORMAT, timezone=CommonConst.TIME_ZONE)
-    protected LocalDateTime updatedAt;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    private LocalDateTime updatedAt;
 
     @PrePersist
     private void onCreate() {

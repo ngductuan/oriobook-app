@@ -1,12 +1,12 @@
 package com.project.oriobook.common.annotations.validator;
 
-import com.project.oriobook.common.annotations.UUIDValid;
+import com.project.oriobook.common.annotations.ValidUUID;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 import java.util.regex.Pattern;
 
-public class UUIDValidator implements ConstraintValidator<UUIDValid, String> {
+public class UUIDValidator implements ConstraintValidator<ValidUUID, String> {
     private static final Pattern UUID_PATTERN =
             Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
 

@@ -14,4 +14,31 @@ public class CategoryException {
             super(404, message, new ErrorDetails(code.toString(), message));
         }
     }
+
+    public static class DuplicateName extends LogicExceptionBase {
+        private static final ErrorCodeEnum code = ErrorCodeEnum.CATEGORY_DUPLICATE_NAME;
+        private static final String message = ErrorMessage.get(code);
+
+        public DuplicateName() {
+            super(400, message, new ErrorDetails(code.toString(), message));
+        }
+    }
+
+    public static class InvalidType extends LogicExceptionBase {
+        private static final ErrorCodeEnum code = ErrorCodeEnum.CATEGORY_INVALID_TYPE;
+        private static final String message = ErrorMessage.get(code);
+
+        public InvalidType() {
+            super(400, message, new ErrorDetails(code.toString(), message));
+        }
+    }
+
+    public static class InvalidParent extends LogicExceptionBase {
+        private static final ErrorCodeEnum code = ErrorCodeEnum.CATEGORY_INVALID_PARENT;
+        private static final String message = ErrorMessage.get(code);
+
+        public InvalidParent() {
+            super(400, message, new ErrorDetails(code.toString(), message));
+        }
+    }
 }

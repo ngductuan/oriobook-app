@@ -1,5 +1,6 @@
 package com.project.oriobook.common.configs;
 
+import com.project.oriobook.common.constants.CommonConst;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -20,7 +21,8 @@ import org.springframework.context.annotation.Configuration;
 )
 
 @SecurityScheme(
-        name = "bearer-key", // Can be any name, used to reference this scheme in the @SecurityRequirement annotation
+        // Can be any name, used to reference this scheme in the @SecurityRequirement annotation
+        name = CommonConst.BEARER_KEY,
         type = SecuritySchemeType.HTTP,
         scheme = "bearer",
         bearerFormat = "JWT",
@@ -28,5 +30,4 @@ import org.springframework.context.annotation.Configuration;
 )
 @Configuration
 public class OpenApiConfig {
-
 }

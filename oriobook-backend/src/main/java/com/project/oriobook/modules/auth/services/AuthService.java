@@ -61,7 +61,7 @@ public class AuthService implements IAuthService {
             throw new AuthException.WrongCredentials();
         }
 
-        // Authenticate with Spring Security
+        // Create authentication account with Spring Security
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginDTO.getEmail(), loginDTO.getPassword()
         );

@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = UUIDValidator.class)
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UUIDValid {
+public @interface ValidUUID {
     String message() default "invalid UUID format";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

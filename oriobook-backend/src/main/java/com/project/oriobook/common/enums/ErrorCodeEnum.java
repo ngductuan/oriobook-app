@@ -3,6 +3,9 @@ package com.project.oriobook.common.enums;
 public enum ErrorCodeEnum {
     // COMMON
     COMMON_ERROR_ENUM_TYPE("COM_0010"),
+    COMMON_GET_REDIS_DATA("COM_0011"),
+    COMMON_INVALID_DATE_DTO_FORMAT("COM_0012"),
+
     // AUTH
     AUTH_EMAIL_EXISTED("AUTH_0010"),
     AUTH_EMAIL_NOT_EXISTED("AUTH_0011"),
@@ -22,16 +25,26 @@ public enum ErrorCodeEnum {
     // ORDER
     // AUTHOR
     AUTHOR_NOT_FOUND("AUT_0010"),
+    AUTHOR_INVALID_BOOK_QUANTITY("AUT_0011"),
+
     // CATEGORY
     CATEGORY_NOT_FOUND("CAT_0010"),
+    CATEGORY_DUPLICATE_NAME("CAT_0011"),
+    CATEGORY_INVALID_TYPE("CAT_0012"),
+    CATEGORY_INVALID_PARENT("CAT_0013"),
+
     // REVIEW
     // UPLOAD FILE
     UPLOAD_NOT_EMPTY("UPL_0011"),
     UPLOAD_ONLY_IMAGE("UPL_0010"),
 
+    // CART
+    CART_ITEM_NOT_FOUND("CRT_0010"),
+    CART_INVALID_ACTION("CRT_0011"),
+
 
     // DEFAULT
-    DEFAULT_SEMICOLON("DEF_0000");
+    DEFAULT_ERROR("DEF_0000");
     private final String value;
 
     ErrorCodeEnum(String value) {

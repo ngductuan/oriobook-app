@@ -9,6 +9,8 @@ public class ErrorMessage {
     static {
         // COMMON
         errorMessages.put(ErrorCodeEnum.COMMON_ERROR_ENUM_TYPE.toString(), "Unknown enum type");
+        errorMessages.put(ErrorCodeEnum.COMMON_GET_REDIS_DATA.toString(), "Error when converting redis data");
+        errorMessages.put(ErrorCodeEnum.COMMON_INVALID_DATE_DTO_FORMAT.toString(), "Invalid date DTO format");
 
         // AUTH
         errorMessages.put(ErrorCodeEnum.AUTH_EMAIL_EXISTED.toString(), "Email already exists");
@@ -29,14 +31,22 @@ public class ErrorMessage {
         // ORDER
         // AUTHOR
         errorMessages.put(ErrorCodeEnum.AUTHOR_NOT_FOUND.toString(), "Author not found");
+
         // CATEGORY
         errorMessages.put(ErrorCodeEnum.CATEGORY_NOT_FOUND.toString(), "Category not found");
+        errorMessages.put(ErrorCodeEnum.CATEGORY_DUPLICATE_NAME.toString(), "Category name already exists");
+        errorMessages.put(ErrorCodeEnum.CATEGORY_INVALID_TYPE.toString(), "Invalid category type");
+        errorMessages.put(ErrorCodeEnum.CATEGORY_INVALID_PARENT.toString(), "Invalid parent category");
 
         // REVIEW
 
         // UPLOAD FILE
         errorMessages.put(ErrorCodeEnum.UPLOAD_NOT_EMPTY.toString(), "File is not empty");
         errorMessages.put(ErrorCodeEnum.UPLOAD_ONLY_IMAGE.toString(), "Only upload image (png, jpg, jpeg)");
+
+        // CART
+        errorMessages.put(ErrorCodeEnum.CART_ITEM_NOT_FOUND.toString(), "Cart item not found");
+        errorMessages.put(ErrorCodeEnum.CART_INVALID_ACTION.toString(), "Invalid action");
     }
 
     public static String get(ErrorCodeEnum code) {

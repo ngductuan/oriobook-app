@@ -1,5 +1,6 @@
 package com.project.oriobook.modules.product.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.project.oriobook.core.entity.base.BaseEntity;
 import com.project.oriobook.modules.author.entities.Author;
 import com.project.oriobook.modules.category.entities.Category;
@@ -14,9 +15,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Product extends BaseEntity{
-    @Id
-    private String id;
-
     private String name;
 
     private String image;
@@ -33,5 +31,6 @@ public class Product extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "author_id")
+    @JsonBackReference
     private Author authorNode;
 }

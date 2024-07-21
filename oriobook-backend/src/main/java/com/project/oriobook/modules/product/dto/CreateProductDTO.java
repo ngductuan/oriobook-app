@@ -1,13 +1,13 @@
 package com.project.oriobook.modules.product.dto;
 
-import com.project.oriobook.common.annotations.UUIDValid;
+import com.project.oriobook.common.annotations.ValidUUID;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
 @Data
-public class ProductDTO {
+public class CreateProductDTO {
     @NotNull
     @NotBlank
     private String name;
@@ -29,10 +29,10 @@ public class ProductDTO {
     private int stock;
 
     @NotNull
-    @UUIDValid
+    @ValidUUID
     private String categoryId;
 
     @NotNull
-    @UUIDValid
+    @ValidUUID
     private String authorId;
 }

@@ -1,13 +1,15 @@
 package com.project.oriobook.modules.product;
 
+import com.project.oriobook.common.constants.CommonConst;
 import com.project.oriobook.common.constants.RoleConst;
 import com.project.oriobook.common.exceptions.ValidationException;
 import com.project.oriobook.core.pagination.base.PageResponse;
 import com.project.oriobook.modules.product.dto.FindAllProductQueryDTO;
-import com.project.oriobook.modules.product.dto.ProductDTO;
+import com.project.oriobook.modules.product.dto.CreateProductDTO;
 import com.project.oriobook.modules.product.entities.Product;
 import com.project.oriobook.modules.product.responses.ProductResponse;
 import com.project.oriobook.modules.product.services.ProductService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,10 +42,18 @@ public class ProductController {
         return new PageResponse<>(productResponse);
     }
 
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ProductResponse getProductById(@PathVariable String id) throws Exception {
+        Product product = productService.getProductById(id);
+        return modelMapper.map(product, ProductResponse.class);
+    }
+
     @PostMapping("")
+    @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.CREATED)
-    public Boolean createProduct(@Valid @RequestBody ProductDTO productDTO, BindingResult result) throws Exception {
+    public Boolean createProduct(@Valid @RequestBody CreateProductDTO productDTO, BindingResult result) throws Exception {
         if(result.hasErrors()) {
             throw new ValidationException(result);
         }
@@ -53,9 +63,11 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.OK)
-    public Boolean updateProduct(@PathVariable String id, @Valid @RequestBody ProductDTO productDTO, BindingResult result) throws Exception {
+    public Boolean updateProduct(@PathVariable String id, @Valid @RequestBody CreateProductDTO productDTO, BindingResult result)
+            throws Exception {
         if(result.hasErrors()) {
             throw new ValidationException(result);
         }
@@ -65,6 +77,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.OK)
     public Boolean deleteProduct(@PathVariable String id) throws Exception {

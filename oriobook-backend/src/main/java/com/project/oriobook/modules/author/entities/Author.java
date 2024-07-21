@@ -1,9 +1,14 @@
 package com.project.oriobook.modules.author.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.oriobook.common.enums.CommonEnum;
 import com.project.oriobook.core.entity.base.BaseEntity;
+import com.project.oriobook.modules.product.entities.Product;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "authors")
@@ -13,6 +18,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Author extends BaseEntity {
+    @Column(unique = true)
     private String name;
 
     private String image;
@@ -31,4 +37,8 @@ public class Author extends BaseEntity {
 
     @JoinColumn(name = "published_book")
     private int publishedBook;
+
+    @OneToMany(mappedBy = "authorNode", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Product> products = new ArrayList<>();
 }

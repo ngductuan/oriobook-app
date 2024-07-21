@@ -1,12 +1,12 @@
 package com.project.oriobook.common.annotations.validator;
 
-import com.project.oriobook.common.annotations.EmailValid;
+import com.project.oriobook.common.annotations.ValidEmail;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 import java.util.regex.Pattern;
 
-public class EmailValidator implements ConstraintValidator<EmailValid, String> {
+public class EmailValidator implements ConstraintValidator<ValidEmail, String> {
     private static final Pattern EMAIL_PATTERN =
             Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
 

@@ -18,5 +18,6 @@ public class OriobookApplication {
     public static void main(String[] args) {
         SpringApplication.run(OriobookApplication.class, args);
         System.out.println("OriobookApplication is running at: " + instance.swaggerPath);
+
     }
 }

@@ -16,6 +16,12 @@ public class CommonEnum {
         FEMALE
     }
 
+    public enum AdjustCartEnum {
+        ADD,
+        SUBTRACT,
+        DELETE
+    }
+
     public enum StarEnum {
         ONE(1),
         TWO(2),

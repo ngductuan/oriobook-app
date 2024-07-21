@@ -1,7 +1,5 @@
 package com.project.oriobook.common.exceptions.base;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.project.oriobook.common.constants.CommonConst;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,8 +22,6 @@ public class JwtExceptionBase extends Exception {
 
     private String path;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING,
-            pattern= CommonConst.DATETIME_FORMAT, timezone=CommonConst.TIME_ZONE)
     private LocalDateTime time = LocalDateTime.now();
 
     public JwtExceptionBase(int statusCode, String message, ErrorDetails errorDetails, String path) {

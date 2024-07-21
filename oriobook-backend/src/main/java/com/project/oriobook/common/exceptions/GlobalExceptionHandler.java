@@ -15,15 +15,6 @@ import java.util.Map;
 // Handle global exceptions
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGlobalException(Exception exception) {
-        if (exception instanceof LogicExceptionBase logicException) {
-            return ResponseEntity.status(logicException.getStatusCode()).body(logicException.getErrorResponse());
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
-        }
-    }
-
     @ExceptionHandler(BusinessExceptionBase.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, Object> handleBusinessException(BusinessExceptionBase exception) {
@@ -38,5 +29,14 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         )).getErrorResponse();
         return responseDetails;
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleGlobalException(Exception exception) {
+        if (exception instanceof LogicExceptionBase logicException) {
+            return ResponseEntity.status(logicException.getStatusCode()).body(logicException.getErrorResponse());
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
+        }
     }
 }

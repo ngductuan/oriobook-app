@@ -1,5 +1,6 @@
 server:
-  port: 8088
+  host: ${HOST:localhost}
+  port: ${PORT:8088}
 spring:
   application:
     name: oriobook
@@ -28,9 +29,21 @@ spring:
       max-request-size: 10MB
   jackson: # redundant
     date-format: yyyy-MM-dd'T'HH:mm:ss'Z'
-    time-zone: GMT
-    serialization:
-      write-dates-as-timestamps: false
+    time-zone: UTC
+#    serialization:
+#      write-dates-as-timestamps: false
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
+  #  timeout: 3000
+  #  max-active: 8
+  #  max-idle: 8
+  #  min-idle: 0
+  #  max-wait: -1
+  #  test-on-borrow: true
+  cache:
+    type: redis
 
 # Prefix for API
 api:
@@ -57,3 +70,4 @@ cloudinary:
   cloud-name: ${CLOUDINARY_CLOUD_NAME}
   api-key: ${CLOUDINARY_API_KEY}
   api-secret: ${CLOUDINARY_API_SECRET}
+

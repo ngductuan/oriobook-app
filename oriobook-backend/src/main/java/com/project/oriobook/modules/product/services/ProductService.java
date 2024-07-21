@@ -8,7 +8,7 @@ import com.project.oriobook.modules.author.services.AuthorService;
 import com.project.oriobook.modules.category.entities.Category;
 import com.project.oriobook.modules.category.services.CategoryService;
 import com.project.oriobook.modules.product.dto.FindAllProductQueryDTO;
-import com.project.oriobook.modules.product.dto.ProductDTO;
+import com.project.oriobook.modules.product.dto.CreateProductDTO;
 import com.project.oriobook.modules.product.entities.Product;
 import com.project.oriobook.modules.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService implements IProductService{
+public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
     private final AuthorService authorService;
@@ -33,17 +33,17 @@ public class ProductService implements IProductService{
 
     @Override
     public Page<Product> getAllProducts(FindAllProductQueryDTO query) {
-        if(query == null){
+        if (query == null) {
             return productRepository.findAll(new FindAllProductQueryDTO(), Pageable.unpaged());
         }
 
         List<Sort.Order> orders = QueryUtil.parseSortBase(query);
 
-        if(ValidationUtil.isNullOrBlank(query.getSortByRating())){
+        if (ValidationUtil.diffNullOrBlankStr(query.getSortByRating())) {
             orders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByRating().toString().toLowerCase()), "rating"));
         }
 
-        if(ValidationUtil.isNullOrBlank(query.getSortByPrice())){
+        if (ValidationUtil.diffNullOrBlankStr(query.getSortByPrice())) {
             orders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByPrice().toString().toLowerCase()), "price"));
         }
 
@@ -54,12 +54,22 @@ public class ProductService implements IProductService{
     }
 
     @Override
+    public Product getProductById(String id) throws Exception {
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(ProductException.NotFound::new);
+
+        return existingProduct;
+    }
+
+    @Override
     @Transactional
-    public Product createProduct(ProductDTO createProductDTO) throws Exception{
+    public Product createProduct(CreateProductDTO createProductDTO) throws Exception {
+        // Check foreign keys
         Category existingCategory = categoryService.getCategoryById(createProductDTO.getCategoryId());
         Author existingAuthor = authorService.getAuthorById(createProductDTO.getAuthorId());
 
-        modelMapper.typeMap(ProductDTO.class, Product.class);
+        // Add new product
+        modelMapper.typeMap(CreateProductDTO.class, Product.class);
 
         Product newProduct = new Product();
         modelMapper.map(createProductDTO, newProduct);
@@ -67,19 +77,23 @@ public class ProductService implements IProductService{
         newProduct.setCategoryNode(existingCategory);
         newProduct.setAuthorNode(existingAuthor);
 
+        // increase book for author
+        authorService.adjustPublishedBooks(existingAuthor.getId(),
+                existingAuthor.getPublishedBook() + 1);
+
         return productRepository.save(newProduct);
     }
 
     @Override
     @Transactional
-    public Product updateProduct(String id, ProductDTO updateProductDTO) throws Exception {
+    public Product updateProduct(String id, CreateProductDTO updateProductDTO) throws Exception {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(ProductException.NotFound::new);
 
         Category existingCategory = categoryService.getCategoryById(updateProductDTO.getCategoryId());
         Author existingAuthor = authorService.getAuthorById(updateProductDTO.getAuthorId());
 
-        modelMapper.typeMap(ProductDTO.class, Product.class);
+        modelMapper.typeMap(CreateProductDTO.class, Product.class);
         modelMapper.map(updateProductDTO, existingProduct);
 
         existingProduct.setCategoryNode(existingCategory);
