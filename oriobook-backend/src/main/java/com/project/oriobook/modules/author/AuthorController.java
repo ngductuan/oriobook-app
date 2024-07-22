@@ -9,6 +9,7 @@ import com.project.oriobook.modules.author.dto.FindAllAuthorQueryDTO;
 import com.project.oriobook.modules.author.entities.Author;
 import com.project.oriobook.modules.author.responses.AuthorResponse;
 import com.project.oriobook.modules.author.services.AuthorService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -49,6 +50,7 @@ public class AuthorController {
     }
 
     @PostMapping("")
+    @Operation(summary = RoleConst.OP_ADMIN)
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.CREATED)
@@ -62,6 +64,7 @@ public class AuthorController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = RoleConst.OP_ADMIN)
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.OK)
@@ -76,6 +79,7 @@ public class AuthorController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = RoleConst.OP_ADMIN)
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.OK)

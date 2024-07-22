@@ -3,11 +3,14 @@ package com.project.oriobook.common.constants;
 import lombok.Getter;
 import org.springframework.data.util.Pair;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Getter
 public class RouteConst {
+    // not accept "user" role
+    public static final List<String> ROUTE_ROLES = List.of("admin");
     private final String apiPrefix;
 
     private List<Pair<String, String>> bypassRoutes;

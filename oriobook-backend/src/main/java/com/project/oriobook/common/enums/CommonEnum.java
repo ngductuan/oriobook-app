@@ -22,6 +22,12 @@ public class CommonEnum {
         DELETE
     }
 
+    public enum OrderStatusEnum {
+        SUCCESSFUL,
+        CANCELLED,
+        PENDING
+    }
+
     public enum StarEnum {
         ONE(1),
         TWO(2),

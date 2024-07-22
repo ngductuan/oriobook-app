@@ -19,5 +19,6 @@ public class Cart {
     @Data
     public static class CartItem extends ProductResponse {
         private int quantity;
+        private Double itemTotalPrice;
     }
 }

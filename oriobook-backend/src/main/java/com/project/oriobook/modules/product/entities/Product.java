@@ -27,6 +27,7 @@ public class Product extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @JsonBackReference
     private Category categoryNode;
 
     @ManyToOne

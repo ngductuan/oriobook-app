@@ -9,6 +9,7 @@ import com.project.oriobook.modules.product.dto.CreateProductDTO;
 import com.project.oriobook.modules.product.entities.Product;
 import com.project.oriobook.modules.product.responses.ProductResponse;
 import com.project.oriobook.modules.product.services.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -50,6 +51,7 @@ public class ProductController {
     }
 
     @PostMapping("")
+    @Operation(summary = RoleConst.OP_ADMIN)
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.CREATED)
@@ -63,6 +65,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = RoleConst.OP_ADMIN)
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.OK)
@@ -77,6 +80,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = RoleConst.OP_ADMIN)
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.OK)

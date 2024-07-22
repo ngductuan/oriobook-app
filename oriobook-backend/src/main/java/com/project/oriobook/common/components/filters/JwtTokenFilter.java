@@ -94,7 +94,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             String method = token.getSecond();
             // Check if the request "path" and "method" match any pair in the bypassTokens list
             // ** in api route, *. stands for /** in matches function => Replace
-            if (requestPath.matches(path.replace("**", ".*"))
+            boolean contains = RouteConst.ROUTE_ROLES.stream().anyMatch(path::contains);
+
+            if (!contains && requestPath.matches(path.replace("**", ".*"))
                     && requestMethod.equalsIgnoreCase(method)) {
                 return true;
             }
