@@ -3,7 +3,6 @@ package com.project.oriobook.common.constants;
 import lombok.Getter;
 import org.springframework.data.util.Pair;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

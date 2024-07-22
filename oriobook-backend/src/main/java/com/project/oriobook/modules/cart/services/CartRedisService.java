@@ -6,13 +6,9 @@ import com.project.oriobook.common.exceptions.CartException;
 import com.project.oriobook.common.exceptions.CommonException;
 import com.project.oriobook.common.utils.MapperUtil;
 import com.project.oriobook.common.utils.RedisUtil;
-import com.project.oriobook.common.utils.ValidationUtil;
-import com.project.oriobook.modules.cart.entities.Cart;
 import com.project.oriobook.modules.cart.entities.CartRedisItem;
-import com.project.oriobook.modules.product.entities.Product;
 import com.project.oriobook.modules.product.services.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 

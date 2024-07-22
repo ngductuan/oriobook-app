@@ -2,14 +2,11 @@ package com.project.oriobook.modules.category.services;
 
 import com.project.oriobook.common.exceptions.CategoryException;
 import com.project.oriobook.common.utils.QueryUtil;
-import com.project.oriobook.common.utils.ValidationUtil;
 import com.project.oriobook.modules.category.dto.CreateMainCategoryDTO;
 import com.project.oriobook.modules.category.dto.CreateSubCategoryDTO;
 import com.project.oriobook.modules.category.dto.FindAllCategoryQueryDTO;
 import com.project.oriobook.modules.category.entities.Category;
 import com.project.oriobook.modules.category.repository.CategoryRepository;
-import com.project.oriobook.modules.product.dto.FindAllProductQueryDTO;
-import com.project.oriobook.modules.product.entities.Product;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;

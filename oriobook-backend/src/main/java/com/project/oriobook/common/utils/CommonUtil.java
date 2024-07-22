@@ -1,10 +1,8 @@
 package com.project.oriobook.common.utils;
 
-import com.project.oriobook.OriobookApplication;
 import com.project.oriobook.common.constants.CommonConst;
 import com.project.oriobook.common.exceptions.base.JwtExceptionBase;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.boot.SpringApplication;
 
 import java.io.IOException;
 import java.math.BigDecimal;
