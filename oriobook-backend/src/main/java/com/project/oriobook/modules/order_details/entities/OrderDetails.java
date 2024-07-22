@@ -1,5 +1,6 @@
 package com.project.oriobook.modules.order_details.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.project.oriobook.core.entity.base.BaseEntity;
 import com.project.oriobook.modules.order.entities.Order;
 import com.project.oriobook.modules.product.entities.Product;
@@ -19,6 +20,7 @@ import lombok.*;
 public class OrderDetails extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "order_id")
+    @JsonBackReference
     private Order orderNode;
 
     @ManyToOne
@@ -31,5 +33,5 @@ public class OrderDetails extends BaseEntity {
     private Double itemTotalPrice;
 
     @JoinColumn(name = "is_review")
-    private Boolean isReview;
+    private boolean isReview = false;
 }

@@ -9,4 +9,5 @@ import java.util.List;
 public interface ICartRedisService {
     List<CartRedisItem> getCart(String userId) throws Exception;
     boolean adjustProductToCart(String userId, String productId, CommonEnum.AdjustCartEnum mode) throws Exception;
+    void deleteCart(String userId) throws Exception;
 }

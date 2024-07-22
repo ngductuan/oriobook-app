@@ -3,6 +3,7 @@ package com.project.oriobook.modules.cart.services;
 import com.project.oriobook.common.constants.RedisConst;
 import com.project.oriobook.common.enums.CommonEnum;
 import com.project.oriobook.common.exceptions.CartException;
+import com.project.oriobook.common.exceptions.CommonException;
 import com.project.oriobook.common.utils.MapperUtil;
 import com.project.oriobook.common.utils.RedisUtil;
 import com.project.oriobook.common.utils.ValidationUtil;
@@ -34,31 +35,13 @@ public class CartRedisService implements ICartRedisService {
         String cachePattern = String.format(RedisConst.CART_GET_CACHE, userId);
         Set<String> keys = redisTemplate.keys(cachePattern);
 
-        if(ValidationUtil.isNullOrEmptyList(keys)) return new ArrayList<>();
+        if(keys == null) throw new CommonException.ConvertRedisData("getCart");
 
         List<CartRedisItem> redisItems = new ArrayList<>();
         for (String key : keys){
             Map<Object, Object> entry = redisTemplate.opsForHash().entries(key);
             redisItems.add(redisUtil.convertRedisToObject(entry, CartRedisItem.class));
         }
-
-        // modelMapper.typeMap(Product.class, Cart.CartItem.class);
-        // Cart cart = new Cart();
-        // cart.setData(new ArrayList<>());
-        // double totalPrice = 0;
-        //
-        // for (CartRedisItem item : redisItems) {
-        //     Product product = productService.getProductById(item.getProductId());
-        //
-        //     Cart.CartItem cartItem = modelMapper.map(product, Cart.CartItem.class);
-        //     cartItem.setQuantity(item.getQuantity());
-        //
-        //     totalPrice += product.getPrice() * item.getQuantity();
-        //
-        //     cart.getData().add(cartItem);
-        // }
-        //
-        // cart.setTotalPrice(totalPrice);
 
         return redisItems;
     }
@@ -106,5 +89,17 @@ public class CartRedisService implements ICartRedisService {
             redisTemplate.delete(cacheString);
         }
         return true;
+    }
+
+    @Override
+    public void deleteCart(String userId) throws Exception {
+        String cachePattern = String.format(RedisConst.CART_GET_CACHE, userId);
+        Set<String> keys = redisTemplate.keys(cachePattern);
+
+        if(keys == null) throw new CommonException.ConvertRedisData("deleteCart");
+
+        for (String key : keys){
+            redisTemplate.delete(key);
+        }
     }
 }

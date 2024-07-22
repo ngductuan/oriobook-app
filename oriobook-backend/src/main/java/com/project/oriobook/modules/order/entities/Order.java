@@ -1,11 +1,16 @@
 package com.project.oriobook.modules.order.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.oriobook.common.enums.CommonEnum;
 import com.project.oriobook.core.entity.base.BaseEntity;
+import com.project.oriobook.modules.order_details.entities.OrderDetails;
 import com.project.oriobook.modules.user.entities.User;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -27,4 +32,8 @@ public class Order extends BaseEntity {
 
     @JoinColumn(name = "total_price")
     private Double totalPrice;
+
+    @OneToMany(mappedBy = "orderNode", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<OrderDetails> detailsList = new ArrayList<>();
 }

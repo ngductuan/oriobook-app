@@ -29,6 +29,10 @@ public class ErrorMessage {
         // PRODUCT
         errorMessages.put(ErrorCodeEnum.PRODUCT_NOT_FOUND.toString(), "Product not found");
         // ORDER
+        errorMessages.put(ErrorCodeEnum.ORDER_EMPTY_CART.toString(), "Cart is empty");
+        errorMessages.put(ErrorCodeEnum.ORDER_DETAILS_CREATE_FAILED.toString(), "Failed to create order details");
+        errorMessages.put(ErrorCodeEnum.ORDER_NOT_FOUND.toString(), "Order not found");
+
         // AUTHOR
         errorMessages.put(ErrorCodeEnum.AUTHOR_NOT_FOUND.toString(), "Author not found");
 

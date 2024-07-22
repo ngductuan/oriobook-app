@@ -3,7 +3,6 @@ package com.project.oriobook.modules.cart;
 import com.project.oriobook.common.constants.CommonConst;
 import com.project.oriobook.common.constants.RoleConst;
 import com.project.oriobook.common.enums.CommonEnum;
-import com.project.oriobook.modules.cart.entities.Cart;
 import com.project.oriobook.modules.cart.entities.CartRedisItem;
 import com.project.oriobook.modules.cart.services.CartRedisService;
 import com.project.oriobook.modules.user.entities.User;
