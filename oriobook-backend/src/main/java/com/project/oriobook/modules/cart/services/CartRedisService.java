@@ -3,15 +3,12 @@ package com.project.oriobook.modules.cart.services;
 import com.project.oriobook.common.constants.RedisConst;
 import com.project.oriobook.common.enums.CommonEnum;
 import com.project.oriobook.common.exceptions.CartException;
+import com.project.oriobook.common.exceptions.CommonException;
 import com.project.oriobook.common.utils.MapperUtil;
 import com.project.oriobook.common.utils.RedisUtil;
-import com.project.oriobook.common.utils.ValidationUtil;
-import com.project.oriobook.modules.cart.entities.Cart;
 import com.project.oriobook.modules.cart.entities.CartRedisItem;
-import com.project.oriobook.modules.product.entities.Product;
 import com.project.oriobook.modules.product.services.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -26,16 +23,15 @@ public class CartRedisService implements ICartRedisService {
     private final ProductService productService;
 
     private final RedisTemplate<String, Object> redisTemplate;
-    private final ModelMapper modelMapper;
     private final MapperUtil mapperUtil;
     private final RedisUtil redisUtil;
 
     @Override
-    public Cart getCart(String userId) throws Exception {
+    public List<CartRedisItem> getCart(String userId) throws Exception {
         String cachePattern = String.format(RedisConst.CART_GET_CACHE, userId);
         Set<String> keys = redisTemplate.keys(cachePattern);
 
-        if(!ValidationUtil.diffNullOrEmptyList(keys)) return new Cart();
+        if(keys == null) throw new CommonException.ConvertRedisData("getCart");
 
         List<CartRedisItem> redisItems = new ArrayList<>();
         for (String key : keys){
@@ -43,29 +39,14 @@ public class CartRedisService implements ICartRedisService {
             redisItems.add(redisUtil.convertRedisToObject(entry, CartRedisItem.class));
         }
 
-        modelMapper.typeMap(Product.class, Cart.CartItem.class);
-        Cart cart = new Cart();
-        cart.setData(new ArrayList<>());
-        double totalPrice = 0;
-
-        for (CartRedisItem item : redisItems) {
-            Product product = productService.getProductById(item.getProductId());
-
-            Cart.CartItem cartItem = modelMapper.map(product, Cart.CartItem.class);
-            cartItem.setQuantity(item.getQuantity());
-
-            totalPrice += product.getPrice() * item.getQuantity();
-
-            cart.getData().add(cartItem);
-        }
-
-        cart.setTotalPrice(totalPrice);
-
-        return cart;
+        return redisItems;
     }
 
     @Override
     public boolean adjustProductToCart(String userId, String productId, CommonEnum.AdjustCartEnum mode) throws Exception {
+        // Check valid product id
+        productService.getProductById(productId);
+
         String cacheString = String.format(RedisConst.CART_SET_CACHE, userId, productId);
         boolean isExist = redisTemplate.hasKey(cacheString) == Boolean.TRUE;
         Integer prodQuantity = 0;
@@ -104,5 +85,17 @@ public class CartRedisService implements ICartRedisService {
             redisTemplate.delete(cacheString);
         }
         return true;
+    }
+
+    @Override
+    public void deleteCart(String userId) throws Exception {
+        String cachePattern = String.format(RedisConst.CART_GET_CACHE, userId);
+        Set<String> keys = redisTemplate.keys(cachePattern);
+
+        if(keys == null) throw new CommonException.ConvertRedisData("deleteCart");
+
+        for (String key : keys){
+            redisTemplate.delete(key);
+        }
     }
 }

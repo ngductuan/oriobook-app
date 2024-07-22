@@ -7,8 +7,8 @@ import com.project.oriobook.modules.author.entities.Author;
 import com.project.oriobook.modules.author.services.AuthorService;
 import com.project.oriobook.modules.category.entities.Category;
 import com.project.oriobook.modules.category.services.CategoryService;
-import com.project.oriobook.modules.product.dto.FindAllProductQueryDTO;
 import com.project.oriobook.modules.product.dto.CreateProductDTO;
+import com.project.oriobook.modules.product.dto.FindAllProductQueryDTO;
 import com.project.oriobook.modules.product.entities.Product;
 import com.project.oriobook.modules.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,11 +39,11 @@ public class ProductService implements IProductService {
 
         List<Sort.Order> orders = QueryUtil.parseSortBase(query);
 
-        if (ValidationUtil.diffNullOrBlankStr(query.getSortByRating())) {
+        if (!ValidationUtil.isNullOrBlankStr(query.getSortByRating())) {
             orders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByRating().toString().toLowerCase()), "rating"));
         }
 
-        if (ValidationUtil.diffNullOrBlankStr(query.getSortByPrice())) {
+        if (!ValidationUtil.isNullOrBlankStr(query.getSortByPrice())) {
             orders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByPrice().toString().toLowerCase()), "price"));
         }
 

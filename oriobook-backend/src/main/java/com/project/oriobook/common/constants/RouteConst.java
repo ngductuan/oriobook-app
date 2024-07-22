@@ -8,6 +8,8 @@ import java.util.List;
 
 @Getter
 public class RouteConst {
+    // not accept "user" role
+    public static final List<String> ROUTE_ROLES = List.of("admin");
     private final String apiPrefix;
 
     private List<Pair<String, String>> bypassRoutes;

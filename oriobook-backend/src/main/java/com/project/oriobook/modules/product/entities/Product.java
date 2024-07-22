@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.project.oriobook.core.entity.base.BaseEntity;
 import com.project.oriobook.modules.author.entities.Author;
 import com.project.oriobook.modules.category.entities.Category;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.*;
 
 @Entity
@@ -27,6 +30,7 @@ public class Product extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @JsonBackReference
     private Category categoryNode;
 
     @ManyToOne

@@ -1,8 +1,10 @@
 package com.project.oriobook.modules.user.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.oriobook.common.enums.CommonEnum;
 import com.project.oriobook.core.entity.base.BaseEntity;
+import com.project.oriobook.modules.order.entities.Order;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -17,39 +19,42 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @Data
-@Getter
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class User extends BaseEntity implements UserDetails {
     @Column(name = "first_name")
-    String firstName;
+    private String firstName;
 
     @Column(name = "last_name")
-    String lastName;
+    private String lastName;
 
     @NotNull
     @Column(unique = true)
-    String email;
+    private String email;
 
     @JsonIgnore
-    String password;
+    private String password;
 
-    String phone;
+    private String phone;
 
-    String address;
+    private String address;
 
-    String image;
+    private String image;
 
     @Enumerated(EnumType.STRING)
-    CommonEnum.RoleEnum role = CommonEnum.RoleEnum.USER;
+    private CommonEnum.RoleEnum role = CommonEnum.RoleEnum.USER;
 
     @Column(name = "google_account_id")
-    String googleAccountId;
+    private String googleAccountId;
 
     @Column(name = "facebook_account_id")
-    String facebookAccountId;
+    private String facebookAccountId;
+
+    @OneToMany(mappedBy = "userNode", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Order> orders = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

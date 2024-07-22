@@ -10,6 +10,7 @@ import com.project.oriobook.modules.category.dto.FindAllCategoryQueryDTO;
 import com.project.oriobook.modules.category.entities.Category;
 import com.project.oriobook.modules.category.responses.CategoryResponse;
 import com.project.oriobook.modules.category.services.CategoryService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -43,6 +44,7 @@ public class CategoryController {
     }
 
     @PostMapping("/main")
+    @Operation(summary = RoleConst.OP_ADMIN)
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.CREATED)
@@ -57,6 +59,7 @@ public class CategoryController {
     }
 
     @PutMapping("/main/{id}")
+    @Operation(summary = RoleConst.OP_ADMIN)
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.CREATED)
@@ -72,6 +75,7 @@ public class CategoryController {
 
 
     @PostMapping("/sub")
+    @Operation(summary = RoleConst.OP_ADMIN)
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.CREATED)
@@ -86,6 +90,7 @@ public class CategoryController {
     }
 
     @PutMapping("/sub/{id}")
+    @Operation(summary = RoleConst.OP_ADMIN)
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.CREATED)
@@ -100,6 +105,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = RoleConst.OP_ADMIN)
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.OK)
