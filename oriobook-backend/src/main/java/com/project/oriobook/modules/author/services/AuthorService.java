@@ -1,7 +1,7 @@
 package com.project.oriobook.modules.author.services;
 
 import com.project.oriobook.common.exceptions.AuthorException;
-import com.project.oriobook.common.utils.QueryUtil;
+import com.project.oriobook.common.utils.PaginationUtil;
 import com.project.oriobook.modules.author.dto.CreateAuthorDTO;
 import com.project.oriobook.modules.author.dto.FindAllAuthorQueryDTO;
 import com.project.oriobook.modules.author.entities.Author;
@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,9 +31,7 @@ public class AuthorService implements IAuthorService{
             return authorRepository.findAll(new FindAllAuthorQueryDTO(), Pageable.unpaged());
         }
 
-        List<Sort.Order> orders = QueryUtil.parseSortBase(query);
-
-        PageRequest pageRequest = PageRequest.of(query.getPage(), query.getLimit(), Sort.by(orders));
+        PageRequest pageRequest = PaginationUtil.generatePageRequest(query, new ArrayList<>());
         Page<Author> authorPaging = authorRepository.findAll(query, pageRequest);
 
         return authorPaging;

@@ -38,7 +38,9 @@ public class JwtTokenHelper {
     public String generateToken(User user, String mode) throws Exception {
         long tokenTime = mode.equals(CommonConst.REFRESH) ? refreshTokenTime : accessTokenTime;
         Map<String, Object> claims = new HashMap<>();
-        claims.put("email", user.getEmail());
+        claims.put(CommonConst.CLAIM_ID, user.getId());
+        claims.put(CommonConst.CLAIM_EMAIL, user.getEmail());
+        claims.put(CommonConst.CLAIM_ROLE, user.getRole());
 
         try {
             String token = Jwts.builder()
@@ -74,6 +76,10 @@ public class JwtTokenHelper {
 
     public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public String extractAnyClaim(String token, String claim) {
+        return extractClaim(token, claims -> claims.get(claim, String.class));
     }
 
     public boolean isTokenExpired(String token, HttpServletRequest request) throws Exception {

@@ -69,7 +69,6 @@ public class AuthService implements IAuthService {
 
         // Response for client
         LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setUserId(existingUser.getId());
         loginResponse.setAccessToken(jwtTokenHelper.generateToken(existingUser, CommonConst.ACCESS));
         loginResponse.setRefreshToken(jwtTokenHelper.generateToken(existingUser, CommonConst.REFRESH));
 

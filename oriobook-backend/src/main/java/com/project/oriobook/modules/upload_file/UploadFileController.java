@@ -24,9 +24,9 @@ public class UploadFileController {
     @PostMapping(value = "/image", consumes = "multipart/form-data")
     @Operation(summary = RoleConst.OP_ADMIN_USER)
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
-    @PreAuthorize(RoleConst.ROLE_ADMIN)
+    @PreAuthorize(RoleConst.ROLE_ADMIN_USER)
     @ResponseStatus(HttpStatus.OK)
-    public CloudinaryEntity uploadImage(@RequestParam("file") MultipartFile file) throws Exception{
+    public CloudinaryEntity uploadImage(@RequestParam("image") MultipartFile file) throws Exception{
         if(file == null){
             throw new UploadFileException.NotEmpty();
         }

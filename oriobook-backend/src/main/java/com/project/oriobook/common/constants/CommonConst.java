@@ -13,6 +13,9 @@ public class CommonConst {
     public static final String ACCESS = "access"; // mode
     public static final String REFRESH = "refresh"; // mode
     public static final String BEARER_KEY = "Bearer";
+    public static final String CLAIM_ID = "id";
+    public static final String CLAIM_EMAIL = "email";
+    public static final String CLAIM_ROLE = "role";
 
     // Validation DTO
     public static final String DATE_BOND_MSG = "invalid date format, expected dd/MM/yyyy";

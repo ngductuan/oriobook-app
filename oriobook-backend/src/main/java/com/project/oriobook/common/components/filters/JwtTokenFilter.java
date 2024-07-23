@@ -1,6 +1,7 @@
 package com.project.oriobook.common.components.filters;
 
 import com.project.oriobook.common.components.helpers.JwtTokenHelper;
+import com.project.oriobook.common.constants.CommonConst;
 import com.project.oriobook.common.constants.RouteConst;
 import com.project.oriobook.common.exceptions.AuthException;
 import com.project.oriobook.common.utils.CommonUtil;
@@ -54,11 +55,18 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             }
 
             final String extractEmail = jwtTokenHelper.extractEmail(token);
+
             if (extractEmail != null
                     && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User userDetails = (User) userDetailsService.loadUserByUsername(extractEmail);
 
                 if (userDetails == null) {
+                    throw new AuthException.TokenInvalid(request.getRequestURI());
+                }
+
+                String roleClaim = jwtTokenHelper.extractAnyClaim(token, CommonConst.CLAIM_ROLE);
+
+                if(roleClaim != null && !roleClaim.equals(userDetails.getRole().toString())){
                     throw new AuthException.TokenInvalid(request.getRequestURI());
                 }
 

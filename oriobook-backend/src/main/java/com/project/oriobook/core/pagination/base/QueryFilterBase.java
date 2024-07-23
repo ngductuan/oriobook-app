@@ -12,10 +12,10 @@ import java.time.LocalDateTime;
 @Data
 public class QueryFilterBase {
     @Schema(example = "0")
-    protected int page = 0;
+    protected Integer page;
 
     @Schema(example = "10")
-    protected int limit = 10;
+    protected Integer limit;
 
     @Schema(example = CommonConst.DATE_EXAMPLE, format = "date")
     @Pattern(regexp = CommonConst.DATE_BOND_REGEX, message = CommonConst.DATE_BOND_MSG)
