@@ -100,33 +100,37 @@ export default {
     });
 
     const v$ = useVuelidate(rules, formData);
+    console.log("CHECK", `${process.env.MAIN_URL}/auth/login`);
 
     async function SaveData() {
       const result = await v$.value.$validate();
-      console.log("CHECK");
       if (result) {
-        console.log("OKE");
-        const response = await axios.post(
-          `${process.env.MAIN_URL}/account/signIn`,
-          formData
-        );
-        console.log("OKE");
+        try {
+          const response = await axios.post(
+            `${process.env.MAIN_URL}/auth/login`,
+            formData
+          );
 
-        console.log(response.data.accessToken);
-        localStorage.setItem("token", response.data.accessToken);
+          localStorage.setItem("token", response.data.accessToken);
 
-        if (response.data == "email error") {
-          toast.error("Your email is not in use yet.", {
+          if (response.data == "email error") {
+            toast.error("Your email is not in use yet.", {
+              autoClose: 2000,
+              position: "top-center",
+            });
+          } else if (response.data == "password error") {
+            toast.error("Your password is wrong.", {
+              autoClose: 2000,
+              position: "top-center",
+            });
+          } else {
+            window.location.href = "/account-details";
+          }
+        } catch (error) {
+          toast.error(error.response.data.message, {
             autoClose: 2000,
             position: "top-center",
           });
-        } else if (response.data == "password error") {
-          toast.error("Your password is wrong.", {
-            autoClose: 2000,
-            position: "top-center",
-          });
-        } else {
-          window.location.href = "/account-details";
         }
       }
     }

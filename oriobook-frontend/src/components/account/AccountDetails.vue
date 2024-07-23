@@ -130,9 +130,15 @@ export default {
     });
 
     onMounted(async () => {
+      console.log("localStorage", localStorage.getItem("token"));
       try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          throw new Error("Token not found in localStorage");
+        }
+
         const response = await axios.get(
-          `${process.env.MAIN_URL}/account/getAccountDetail`
+          `${process.env.MAIN_URL}/users/profile`
         );
         formData.account_first_name = response.data.firstName;
         formData.account_last_name = response.data.lastName;
@@ -164,18 +170,25 @@ export default {
       const result = await v$.value.$validate();
       if (result) {
         // alert(`Account details changed successfully.`);
-        const response = await axios.post(
-          `${process.env.MAIN_URL}/account/updateAccountDetail`,
-          {
-            ...formData,
-          }
-        );
+        try {
+          const response = await axios.put(
+            `${process.env.MAIN_URL}/users/profile`,
+            {
+              ...formData,
+            }
+          );
 
-        if (response.data.status == true) {
-          toast.success("Saved successfully!", {
+          if (response.data.status == true) {
+            toast.success("Saved successfully!", {
+              autoClose: 2000,
+            });
+            router.push("/account-details");
+          }
+        } catch (error) {
+          toast.error(error.response.data.message, {
             autoClose: 2000,
+            position: "top-center",
           });
-          router.push("/account-details");
         }
       }
     }
