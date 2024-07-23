@@ -131,7 +131,7 @@ export default {
         let url = `${process.env.MAIN_URL}/products?page=${page}&limit=${perPage}`;
         if (searchQuery) url += `&search=${searchQuery.value}`;
         const response = await axios.get(url);
-        console.log(url);
+        // console.log(url);
         curPage.value = page;
         products.value = response.data.data;
         products.value.forEach((product) => {

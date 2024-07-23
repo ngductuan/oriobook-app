@@ -73,11 +73,11 @@
           <div class="edit-product-form col">
             <div class="product-category mb-3">
               <label class="product-category-label"> Category </label>
-              <select class="edit-product-select" name="id_category">
+              <select class="edit-product-select" name="categoryId">
                 <option
                   v-for="category in categories"
                   :key="category"
-                  :value="category._id"
+                  :value="category.id"
                   :selected="isSelected(category.id, product?.categoryNode?.id)"
                 >
                   {{ category.name }}
@@ -86,12 +86,12 @@
             </div>
             <div class="product-category">
               <label class="product-category-label"> Author </label>
-              <select class="edit-product-select" name="id_author">
+              <select class="edit-product-select" name="authorId">
                 <option
                   v-for="author in authors"
-                  :key="author"
-                  :value="author._id"
-                  :selected="isSelected(author.id, authorName)"
+                  :key="author.id"
+                  :value="author.id"
+                  :selected="isSelected2(author.id, product?.authorNode?.id)"
                 >
                   {{ author.name }}
                 </option>
@@ -129,20 +129,17 @@ export default {
     const route = useRoute();
     const router = useRouter();
     const id = ref(route.params.id);
-    const product = ref({
-      id: "",
-      name: "",
-      price: "",
-      description: "",
-      stock: "",
-      categoryNode: "",
-    });
+    const product = ref({}); // product
     const categories = ref([]);
     const categoryList = ref([]);
-    const authors = ref({});
+    const authors = ref([]);
     const authorName = ref("");
     const isSelected = (option, productOption) => {
-      return option == productOption;
+      return option === productOption;
+    };
+
+    const isSelected2 = (option, authorOption) => {
+      return option === authorOption;
     };
 
     // Refs for validation error messages
@@ -215,7 +212,7 @@ export default {
         descriptionError.value = "";
       }
 
-      console.log("Values: ", values);
+      // console.log("Values: ", values);
 
       return isValid;
     };
@@ -233,7 +230,7 @@ export default {
       }
 
       try {
-        const idProduct = product.value._id ? product.value._id : "";
+        const idProduct = product.value.id ? product.value.id : "";
         // Hiển thị hiệu ứng loading
         $(".edit-product-forms").html(`
           <div class="w-100 text-center mt-5">
@@ -242,15 +239,39 @@ export default {
             </div>
           </div>
         `);
-        const response = await axios.post(
-          `${process.env.MAIN_URL}/product/edit/save/${idProduct}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
+
+        const { image, ...productInfo } = values;
+
+        // console.log(image, productInfo);
+        const token = localStorage.getItem("token");
+        // console.log("token", token);
+
+        const formData = new FormData();
+        formData.append("image", image); // 'image' là đối tượng file bạn muốn upload
+
+        const response = await fetch(`${process.env.MAIN_URL}/upload/image`, {
+          method: "POST",
+          body: formData,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // Không cần thiết phải chỉ định 'Content-Type': 'multipart/form-data' với fetch,
+            // vì trình duyệt sẽ tự động thiết lập nó khi gửi FormData.
+          },
+        });
+
+        const imageRes = await response.json();
+
+        // console.log(imageRes);
+
+        productInfo.image = imageRes.secureUrl ?? product.value.image;
+
+        // console.log("productInfo", productInfo);
+
+        const response2 = await axios.put(
+          `${process.env.MAIN_URL}/products/${idProduct}`,
+          productInfo
         );
+
         router.push("/admin/manage");
       } catch (error) {
         console.error("Error submitting form:", error);
@@ -269,41 +290,51 @@ export default {
       try {
         // Lấy tất cả category
         let response = await axios.get(`${process.env.MAIN_URL}/categories`);
-        categoryList.value = response.data;
+        categoryList.value = response.data.data;
         for (let cate of categoryList.value) {
-          console.log(cate);
+          // console.log(cate);
           categories.value.push({
-            _id: cate._id,
+            id: cate.id,
             name: cate.name,
           });
-          for (let subCate of cate.sub_category) {
+          for (let subCate of cate.children) {
             // console.log(subCate);
             categories.value.push({
-              _id: subCate._id._id,
-              name: cate.name + " / " + subCate._id.name,
+              id: subCate.id,
+              name: cate.name + " / " + subCate.name,
             });
           }
         }
         // Lấy tất cả author
-        response = await axios.get(`${process.env.MAIN_URL}/authors`);
-        authors.value = response.data;
+        let res2 = await axios.get(`${process.env.MAIN_URL}/authors`);
+        authors.value = res2.data.data;
 
-        console.log("route", route);
+        // console.log("authors", authors.value);
+
+        // console.log("route", route.name);
         if (route.name == "EditForUpdate") {
           response = await axios.get(
             `${process.env.MAIN_URL}/products/${id.value}`
           );
-          console.log("response for product", response);
+
           if (response.status == 200) {
             product.value = response.data;
-            authorName.value = product.authorNode.name;
+
+            // console.log(
+            //   "response for product",
+            //   response.data,
+            //   product.value.authorNode.name
+            // );
+
+            authorName.value = product.value?.authorNode.id;
+
             // Hiển thị hình ảnh preview
             $(() => {
               $(".file-drop-zone-title").css({
                 padding: "0px",
               });
               $(".file-drop-zone-title").html(`
-            <img src="${product.value.image}"/>
+            <img src="${product.value?.image}"/>
           `);
             });
           } else
@@ -321,6 +352,7 @@ export default {
       product,
       categories,
       isSelected,
+      isSelected2,
       authors,
       authorName,
       addOrUpdateProduct,

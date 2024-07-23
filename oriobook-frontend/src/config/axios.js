@@ -19,6 +19,8 @@ instances.interceptors.request.use(
       Authorization: "Bearer " + token,
     };
 
+    // console.log("Content-Type", newHeaders);
+
     // Đính header mới vào lại request trước khi được gửi đi
     request = {
       ...request,
