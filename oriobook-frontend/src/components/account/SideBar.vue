@@ -104,6 +104,7 @@ import { getTokenInfo } from "../../helpers/helperFunctions";
 import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "../../config/axios";
+import { RoleEnum } from "@/types/enum.type";
 export default {
   name: "SideBar",
 
@@ -114,22 +115,32 @@ export default {
 
     let admin = ref(false);
     async function LogOut() {
-      const response = await axios.post(
-        `${process.env.MAIN_URL}/account/logout`
-      );
-      let res = response.data;
+      // const response = await axios.post(
+      //   `${process.env.MAIN_URL}/account/logout`
+      // );
+      // let res = response.data;
 
-      if (res.result === "success") {
-        localStorage.removeItem("token");
-        localStorage.removeItem("sidebar");
+      // if (res.result === "success") {
+      //   localStorage.removeItem("token");
+      //   localStorage.removeItem("sidebar");
 
-        window.location.href = "/login";
-      }
+      //   window.location.href = "/login";
+      // }
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("sidebar");
+
+      window.location.href = "/login";
     }
 
     async function checkAdmin() {
-      const { isAdmin = false } = await getTokenInfo();
-      admin.value = isAdmin;
+      try {
+        const { role } = await getTokenInfo();
+        admin.value = role === RoleEnum.ADMIN;
+        // console.log("admin.value", role, RoleEnum.ADMIN);
+      } catch (error) {
+        console.log("error", error);
+      }
     }
 
     function directPage(element) {

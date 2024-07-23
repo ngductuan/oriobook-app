@@ -78,7 +78,7 @@
                   v-for="category in categories"
                   :key="category"
                   :value="category._id"
-                  :selected="isSelected(category._id, product.id_category)"
+                  :selected="isSelected(category.id, product?.categoryNode?.id)"
                 >
                   {{ category.name }}
                 </option>
@@ -91,7 +91,7 @@
                   v-for="author in authors"
                   :key="author"
                   :value="author._id"
-                  :selected="isSelected(author._id, authorName)"
+                  :selected="isSelected(author.id, authorName)"
                 >
                   {{ author.name }}
                 </option>
@@ -130,12 +130,12 @@ export default {
     const router = useRouter();
     const id = ref(route.params.id);
     const product = ref({
-      _id: "",
+      id: "",
       name: "",
       price: "",
       description: "",
       stock: "",
-      id_category: "",
+      categoryNode: "",
     });
     const categories = ref([]);
     const categoryList = ref([]);
@@ -268,7 +268,7 @@ export default {
     onMounted(async () => {
       try {
         // Lấy tất cả category
-        let response = await axios.get(`${process.env.MAIN_URL}/category/all`);
+        let response = await axios.get(`${process.env.MAIN_URL}/categories`);
         categoryList.value = response.data;
         for (let cate of categoryList.value) {
           console.log(cate);
@@ -285,16 +285,18 @@ export default {
           }
         }
         // Lấy tất cả author
-        response = await axios.get(`${process.env.MAIN_URL}/author/all`);
+        response = await axios.get(`${process.env.MAIN_URL}/authors`);
         authors.value = response.data;
 
+        console.log("route", route);
         if (route.name == "EditForUpdate") {
           response = await axios.get(
-            `${process.env.MAIN_URL}/product/edit/${id.value}`
+            `${process.env.MAIN_URL}/products/${id.value}`
           );
+          console.log("response for product", response);
           if (response.status == 200) {
             product.value = response.data;
-            authorName.value = product.value.id_author._id;
+            authorName.value = product.authorNode.name;
             // Hiển thị hình ảnh preview
             $(() => {
               $(".file-drop-zone-title").css({

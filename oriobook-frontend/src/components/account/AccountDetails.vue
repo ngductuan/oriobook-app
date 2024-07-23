@@ -39,9 +39,7 @@
     <div class="clear"></div>
 
     <p class="woocommerce-form-row">
-      <label for="account_address"
-        >Address&nbsp;<span class="required"></span
-      ></label>
+      <label for="account_address">Address&nbsp;<span class="required"></span></label>
       <input
         type="text"
         id="account_address"
@@ -57,9 +55,7 @@
       </span>
     </p>
     <p class="woocommerce-form-row">
-      <label for="account_phone"
-        >Phone number&nbsp;<span class="required"></span
-      ></label>
+      <label for="account_phone">Phone number&nbsp;<span class="required"></span></label>
       <input
         type="tel"
         id="account_phone"
@@ -137,9 +133,7 @@ export default {
           throw new Error("Token not found in localStorage");
         }
 
-        const response = await axios.get(
-          `${process.env.MAIN_URL}/users/profile`
-        );
+        const response = await axios.get(`${process.env.MAIN_URL}/users/profile`);
         formData.account_first_name = response.data.firstName;
         formData.account_last_name = response.data.lastName;
         formData.account_address = response.data.address;
@@ -171,12 +165,9 @@ export default {
       if (result) {
         // alert(`Account details changed successfully.`);
         try {
-          const response = await axios.put(
-            `${process.env.MAIN_URL}/users/profile`,
-            {
-              ...formData,
-            }
-          );
+          const response = await axios.put(`${process.env.MAIN_URL}/users/profile`, {
+            ...formData,
+          });
 
           if (response.data.status == true) {
             toast.success("Saved successfully!", {

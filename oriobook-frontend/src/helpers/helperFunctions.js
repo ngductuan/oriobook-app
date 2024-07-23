@@ -1,3 +1,4 @@
+import { RoleEnum } from "@/types/enum.type";
 import VueJwtDecode from "vue-jwt-decode";
 
 export function convertDateFormat(inputDate) {
@@ -35,8 +36,12 @@ export async function getTokenInfo() {
   }
   try {
     const verified = await VueJwtDecode.decode(token);
-    const { payload = {} } = verified || {};
-    return payload;
+    // console.log("verified", verified);
+    return {
+      id: verified.id,
+      email: verified.email,
+      role: verified.role,
+    };
   } catch (err) {
     return null;
   }
@@ -50,11 +55,10 @@ export async function isAdmin() {
   }
   try {
     const verified = await VueJwtDecode.decode(token);
-    const { payload = {} } = verified || {};
-    if (payload == null) {
+    if (verified == null) {
       return false;
     } else {
-      if (payload.isAdmin == true) {
+      if (verified.role == RoleEnum.ADMIN) {
         return true;
       } else {
         return false;
