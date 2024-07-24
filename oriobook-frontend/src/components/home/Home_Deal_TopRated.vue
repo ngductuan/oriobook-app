@@ -1,7 +1,7 @@
 <template>
   <section class="deals">
     <div class="container">
-      <DealsOfTheWeek />
+      <DealsOfTheWeek @reloadcart="addCart" />
       <TopRatedAuthor :author="author" />
     </div>
   </section>
@@ -28,17 +28,22 @@ export default {
     onMounted(async () => {
       try {
         const response = await axios.get(
-          `${process.env.MAIN_URL}/author/getAuthorListTopRated`
+          `${process.env.MAIN_URL}/authors?page=0&limit=6`
         );
         // console.log(response.data);
-        author.value = response.data;
+        author.value = response.data.data;
       } catch (error) {
         console.error("Lỗi khi gọi API:", error);
       }
     });
 
+    const addCart = () => {
+      emit("reloadcart");
+    };
+
     return {
       author,
+      addCart,
     };
   },
 };

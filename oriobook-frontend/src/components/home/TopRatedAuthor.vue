@@ -27,7 +27,7 @@
                 >
               </h2>
               <div class="item-count">
-                {{ item.published_book }}<span> Published Book</span>
+                {{ item.publishedBook }}<span> Published Book</span>
               </div>
             </div>
           </div>

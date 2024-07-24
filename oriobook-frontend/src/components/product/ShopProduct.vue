@@ -5,41 +5,41 @@
       <div
         class="form-group form-check"
         v-for="category in categories"
-        :key="category._id"
+        :key="category.id"
       >
         <input
           type="radio"
           class="form-check-input js-category-option"
-          :id="category._id"
-          @click="selectCategory(category.name, category._id)"
+          :id="category.id"
+          @click="selectCategory(category.name, category.id)"
         />
         <div class="d-flex align-items-center justify-content-between">
-          <label class="form-check-label" :for="category._id"
-            >{{ category.name }} ({{ category.num_product }})</label
+          <label class="form-check-label" :for="category.id"
+            >{{ category.name }} ({{ category.numProducts }})</label
           >
           <i
             class="fa-regular fa-chevron-down"
-            :id="'sub-container-btn-' + category._id"
+            :id="'sub-container-btn-' + category.id"
             data-v-9d9a21ac=""
-            :class="category.sub_category.length > 0 ? '' : 'd-none'"
+            :class="category?.children?.length > 0 ? '' : 'd-none'"
             role="button"
-            @click="showSubCategory(category._id)"
+            @click="showSubCategory(category.id)"
           ></i>
         </div>
-        <div :id="'sub-container-' + category._id" class="sub-container d-none">
+        <div :id="'sub-container-' + category.id" class="sub-container d-none">
           <div
             class="form-group form-check ml-4"
-            v-for="subCate in category.sub_category"
-            :key="subCate._id._id"
+            v-for="subCate in category?.children"
+            :key="subCate.id"
           >
             <input
               type="radio"
               class="form-check-input js-category-option"
-              :id="subCate._id._id"
-              @click="selectCategory(subCate._id.name, subCate._id._id)"
+              :id="subCate.id"
+              @click="selectCategory(subCate.name, subCate.id)"
             />
-            <label class="form-check-label" :for="subCate._id._id">
-              {{ subCate._id.name }} ({{ subCate._id.num_product }})
+            <label class="form-check-label" :for="subCate.id">
+              {{ subCate.name }} ({{ subCate.numProducts }})
             </label>
           </div>
         </div>
@@ -51,16 +51,16 @@
       <div
         class="form-group form-check"
         v-for="author in authors"
-        :key="author._id"
+        :key="author.id"
       >
         <input
           type="radio"
           class="form-check-input js-author-option"
-          :id="author._id"
-          @click="selectAuthor(author.name, author._id)"
+          :id="author.id"
+          @click="selectAuthor(author.name, author.id)"
         />
-        <label class="form-check-label" :for="author._id"
-          >{{ author.name }} ({{ author.published_book }})</label
+        <label class="form-check-label" :for="author.id"
+          >{{ author.name }} ({{ author.publishedBook }})</label
         >
       </div>
 
@@ -105,9 +105,9 @@
           class="mt-3"
           :class="author_page ? 'm-20' : 'col-3'"
           v-for="product in products"
-          :key="product._id"
+          :key="product.id"
         >
-          <HomeProductCard :product="product" @add-cart="addCart" />
+          <HomeProductCard :product="product" @reloadcart="addCart" />
         </div>
         <div
           class="d-flex mt-5 justify-content-center"
@@ -131,6 +131,7 @@ import HomeProductCard from "./HomeProductCard.vue";
 import { displayLoading, removeLoading } from "@/helpers/loadingScreen";
 import { scrollToTop } from "@/helpers/helperFunctions";
 import Pagination from "@/components/Pagination.vue";
+import { SortEnum } from "@/types/enum.type";
 
 export default {
   name: "ShopProduct",
@@ -146,11 +147,19 @@ export default {
     const route = useRoute();
     const toggleMenu = ref(false);
     const sortingOptions = [
-      { value: "default", label: "Default sorting" },
-      { value: "rating", label: "Sort by average rating" },
-      { value: "latest", label: "Sort by latest" },
-      { value: "price", label: "Sort by price: low to high" },
-      { value: "price-desc", label: "Sort by price: high to low" },
+      { value: "", label: "Default sorting" },
+      // { value: "rating", label: "Sort by average rating" },
+      { value: SortEnum.DESC, label: "Sort by latest", key: "sortByDate" },
+      {
+        value: SortEnum.ASC,
+        label: "Sort by price: low to high",
+        key: "sortByPrice",
+      },
+      {
+        value: SortEnum.DESC,
+        label: "Sort by price: high to low",
+        key: "sortByPrice",
+      },
     ];
     // Sidebar shop
     const categories = ref([]);
@@ -171,10 +180,12 @@ export default {
     const searchQuery = ref(route.query.search || "");
 
     const queryObject = {
-      search: searchQuery.value,
-      category: "",
-      author: "",
-      sort: sort.value.value,
+      productName: searchQuery.value,
+      categoryId: "",
+      authorId: "",
+      // sort: sort.value.value,
+      sortByPrice: "",
+      sortByDate: "",
     };
 
     // watch(routeQuery, (newVal, oldVal) => {
@@ -192,11 +203,12 @@ export default {
     };
 
     const selectCategory = async (newCategory, newCategoryID) => {
-      if (queryObject.category == newCategory) {
+      console.log("Select category:", newCategory, newCategoryID);
+      if (queryObject.categoryId == newCategoryID) {
         $(`#${newCategoryID}`).prop("checked", false);
-        queryObject.category = "";
+        queryObject.categoryId = "";
       } else {
-        queryObject.category = newCategory;
+        queryObject.categoryId = newCategoryID;
       }
       $(`.js-category-option:not(#${newCategoryID})`).prop("checked", false);
       page = 1;
@@ -205,11 +217,12 @@ export default {
     };
 
     const selectAuthor = async (newAuthor, newAuthorID) => {
-      if (queryObject.author == newAuthor) {
+      if (queryObject.authorId == newAuthorID) {
         $(`#${newAuthorID}`).prop("checked", false);
-        queryObject.author = "";
+        queryObject.authorId = "";
       } else {
-        queryObject.author = newAuthor;
+        queryObject.authorId = newAuthorID;
+        $(`#${newAuthorID}`).prop("checked", true);
       }
       $(`.js-author-option:not(#${newAuthorID})`).prop("checked", false);
       page = 1;
@@ -218,9 +231,17 @@ export default {
     };
 
     const selectSorting = async (option) => {
-      sort.value = option;
+      // sort.value = option;
       toggleMenu.value = false;
-      queryObject.sort = option.value;
+      // queryObject.sort = option.value;
+
+      queryObject.sortByDate = "";
+      queryObject.sortByPrice = "";
+
+      if (option.key) {
+        queryObject[option.key] = option.value;
+      }
+
       page = 1;
       await requestPage();
       paginationControl();
@@ -232,12 +253,14 @@ export default {
         displayLoading(".js-product-wrapper", -32);
         const params = new URLSearchParams(queryObject).toString();
         const response = await axios.get(
-          `${process.env.MAIN_URL}/product/shop?page=${page}&perPage=${perPage}&${params}`
+          `${process.env.MAIN_URL}/products?page=${
+            page - 1
+          }&limit=${perPage}&${params}`
         );
-        console.log(page);
+        // console.log(page);
         curPage.value = page;
-        products.value = response.data.products;
-        console.log(products.value);
+        products.value = response.data.data;
+        // console.log("products.value", response.data);
         totalPages.value = response.data.totalPages;
         removeLoading();
       } catch (error) {
@@ -269,12 +292,13 @@ export default {
 
     onMounted(async () => {
       try {
-        let response = await axios.get(`${process.env.MAIN_URL}/category/all`);
-        categories.value = response.data;
+        let response = await axios.get(`${process.env.MAIN_URL}/categories`);
+        categories.value = response.data.data;
+        // console.log("categories", categories.value);
 
         // Lấy tất cả tác giả
-        response = await axios.get(`${process.env.MAIN_URL}/author/all`);
-        authors.value = response.data;
+        response = await axios.get(`${process.env.MAIN_URL}/authors`);
+        authors.value = response.data.data;
         await requestPage();
         paginationControl();
       } catch (error) {
@@ -283,7 +307,7 @@ export default {
     });
 
     const addCart = () => {
-      emit("add-cart");
+      emit("reloadcart");
     };
 
     return {

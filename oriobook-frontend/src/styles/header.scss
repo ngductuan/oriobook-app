@@ -43,18 +43,22 @@
   .cart-btn {
     position: relative;
     #lblCartCount {
-      font-size: 10px;
+      padding: 4px;
+      text-align: center;
+      width: 25px;
+      height: 21px;
+      font-size: 12px;
       background: #eb5e38;
       color: #fff;
       text-align: center;
       display: inline-block;
-      width: 15px;
-      height: 15px;
+      /* width: 15px; */
+      /* height: 15px; */
       border-radius: 50%;
       line-height: 15px;
       position: absolute;
-      bottom: -5%;
-      left: -5%;
+      top: -46%;
+      right: 44%;
     }
   }
 }

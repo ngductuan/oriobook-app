@@ -2,7 +2,7 @@
   <div class="product-card" style="position: relative">
     <div class="image-container">
       <a
-        :href="'/products/' + product._id"
+        :href="'/products/' + product.id"
         class="img-1"
         @click="handleLinkClick('/products')"
       >
@@ -10,20 +10,20 @@
       </a>
       <button
         class="add-to-cart"
-        @click="AddProduct(product._id, product.stock)"
+        @click="AddProduct(product.id, product.stock)"
       >
         <i class="fa-solid fa-cart-plus"></i>
       </button>
     </div>
     <div class="product-info">
-      <a class="author-name" href="#">{{ product.id_author.name }} </a>
+      <a class="author-name" href="#">{{ product?.authorNode?.name }} </a>
       <div class="product-name-box">
         <a class="product-name ellipsis-custom-1 me-2" href="#">{{
           product.name
         }}</a>
       </div>
       <p style="font-size: 16px; font-weight: 800">
-        ${{ product.price.toFixed(2) }}
+        ${{ product?.price?.toFixed(2) }}
       </p>
     </div>
     <div class="overlay d-none">
@@ -45,34 +45,49 @@ import { ref } from "vue";
 import axios from "../../config/axios";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+import { CartActionEnum } from "@/types/enum.type";
 
 export default {
   name: "HomeProductCard",
   inject: ["eventBus"],
   props: ["product"],
 
-  methods: {
-    async AddProduct(id, stock) {
+  methods: {},
+
+  setup(props, { emit }) {
+    const imgHover = ref(true);
+
+    function handleLinkClick(to) {
+      localStorage.setItem("activeLink", to);
+    }
+
+    const AddProduct = async (id, stock) => {
       if (stock > 0) {
         try {
           console.log(id);
           const quantity = 1;
-          const response = await axios.post(
-            `${process.env.MAIN_URL}/account/addToCart/${id}/${quantity}`
+          const response = await axios.put(
+            `${process.env.MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.ADD}`
           );
-          if (response.data.status == true) {
-            const response1 = await axios.get(
-              `${process.env.MAIN_URL}/account/getCart`
-            );
-            let newquantity = ref(0);
-            for (let i = 0; i < response1.data.length; i++) {
-              newquantity.value += response1.data[i].quantities;
-            }
-            this.eventBus.emit("reload", newquantity.value);
-            toast.success("Added Product!", {
-              autoClose: 1000,
-            });
-          }
+          emit("reloadcart");
+          console.log("response", response);
+          // if (response.data.status == true) {
+          //   const response1 = await axios.get(
+          //     `${process.env.MAIN_URL}/carts/total-quantity`
+          //   );
+          //   let newquantity = ref(0);
+          //   // for (let i = 0; i < response1.data.length; i++) {
+          //   //   newquantity.value += response1.data[i].quantities;
+          //   // }
+          //   newquantity.value = response1.data;
+          //   this.eventBus.emit("reload", newquantity.value);
+          //   toast.success("Added Product!", {
+          //     autoClose: 1000,
+          //   });
+          // }
+          toast.success("Added Product!", {
+            autoClose: 1000,
+          });
         } catch (error) {
           console.error("Lỗi khi gọi API", error);
           window.location.href = "/login";
@@ -82,19 +97,12 @@ export default {
           autoClose: 1000,
         });
       }
-    },
-  },
-
-  setup() {
-    const imgHover = ref(true);
-
-    function handleLinkClick(to) {
-      localStorage.setItem("activeLink", to);
-    }
+    };
 
     return {
       imgHover,
       handleLinkClick,
+      AddProduct,
     };
   },
 };

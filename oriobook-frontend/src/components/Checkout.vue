@@ -41,7 +41,7 @@
                 type="text"
                 id="coupon-code"
                 placeholder="Coupon code..."
-                style=":width: 300px; padding-left: 10px"
+                style="width: 300px; padding-left: 10px"
               />
               <button
                 @click="applyCoupon"
@@ -238,7 +238,7 @@ import axios from "../config/axios";
 export default {
   name: "checkout",
   // inject: ["eventBus"],
-  setup() {
+  setup(props, { emit }) {
     const router = useRouter();
     const accountData = ref({});
     const note = ref("");
@@ -319,7 +319,8 @@ export default {
         document.getElementById("place-success").innerHTML =
           "* Place order successfully";
 
-        eventBus.emit("reload", 0);
+        // eventBus.emit("reload", 0);
+        emit("reloadcart");
 
         setTimeout(() => {
           router.push({ name: "MyWallet" });

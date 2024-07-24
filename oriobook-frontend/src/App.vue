@@ -2,7 +2,9 @@
   <Nav />
   <Header />
   <Cart />
-  <router-view />
+  <router-view v-slot="{ Component }">
+    <component :is="Component" @reloadcart="handleMyEvent" />
+  </router-view>
   <Footer />
 </template>
 
@@ -33,29 +35,58 @@ export default {
     },
   },
   setup() {
-    onMounted(async () => {
+    let quantityTemp = ref(0);
+
+    const fetchCart = async () => {
       try {
         const response = await axios.get(
-          `${process.env.MAIN_URL}/account/getCart`
+          `${process.env.MAIN_URL}/carts/total-quantity`
         );
 
-        for (let i = 0; i < response.data.length; i++) {
-          quantity.value += response.data[i].quantities;
-        }
+        // for (let i = 0; i < response.data.length; i++) {
+        //   quantity.value += response.data[i].quantity;
+        // }
+        quantityTemp.value = response.data;
       } catch (error) {
         console.error("Lỗi khi gọi API", error);
       }
+    };
+
+    onMounted(() => {
+      fetchCart();
     });
 
-    provide("quantity", quantity);
+    const handleMyEvent = () => {
+      console.log("da nghe");
+      fetchCart();
+    };
+
+    provide("quantity", quantityTemp);
+
+    return {
+      handleMyEvent,
+    };
   },
 
   mounted() {
-    this.eventBus.on("reload", (newquantity) => {
-      console.log("newquantity " + newquantity);
-      // Cập nhật giá trị mới cho quantity
-      quantity.value = newquantity;
-    });
+    // this.eventBus.on("reload", (newquantity) => {
+    //   console.log("newquantity " + newquantity);
+    //   // Cập nhật giá trị mới cho quantity
+    //   quantity.value = newquantity;
+    // });
+    // this.eventBus.on("reload", async () => {
+    //   try {
+    //     const response = await axios.get(
+    //       `${process.env.MAIN_URL}/carts/total-quantity`
+    //     );
+    //     console.log("newquantity ", response.data);
+    //     quantity.value = response.data;
+    //   } catch (error) {
+    //     console.error("Lỗi khi gọi API reload quantity", error);
+    //   }
+    //   // Cập nhật giá trị mới cho quantity
+    //   // quantity.value = newquantity;
+    // });
   },
 };
 </script>
