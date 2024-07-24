@@ -4,10 +4,12 @@ server:
 spring:
   application:
     name: oriobook
+  client-url:
+    web: ${WEB_CLIENT_URL}
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
+    username: ${MYSQL_ROOT_USERNAME}
     password: ${MYSQL_ROOT_PASSWORD}
   jpa:
     show-sql: true

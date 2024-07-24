@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -35,6 +36,12 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .headers(headers ->
+                        headers.xssProtection(
+                                xss -> xss.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK)
+                        ).contentSecurityPolicy(
+                                cps -> cps.policyDirectives("script-src 'self'")
+                        ))
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(requests -> {
@@ -51,4 +58,10 @@ public class WebSecurityConfig {
 
         return http.build();
     }
+
+    // Cookie Same-site configuration
+    // @Bean
+    // public CookieSameSiteSupplier applicationCookiesSameSiteSupplier() {
+    //     return CookieSameSiteSupplier.ofStrict();
+    // }
 }

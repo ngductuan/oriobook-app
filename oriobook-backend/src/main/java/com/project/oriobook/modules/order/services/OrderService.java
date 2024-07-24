@@ -39,7 +39,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public Page<Order> getAllOrders(FindAllOrderQueryDTO query) {
-        if (query == null) {
+        if (query == null || query.isGetAll()) {
             return orderRepository.findAll(new FindAllOrderQueryDTO(), Pageable.unpaged());
         }
 
@@ -61,7 +61,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public Page<Order> getAllMyOrders(String userId, FindAllOrderQueryDTO query) {
-        if (query == null) {
+        if (query == null || query.isGetAll()) {
             return orderRepository.findAllMyOrders(userId, new FindAllOrderQueryDTO(), Pageable.unpaged());
         }
 

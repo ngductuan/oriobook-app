@@ -34,10 +34,9 @@ public class ProductService implements IProductService {
 
     @Override
     public Page<Product> getAllProducts(FindAllProductQueryDTO query) {
-        if (query == null) {
+        if (query == null || query.isGetAll()) {
             return productRepository.findAll(new FindAllProductQueryDTO(), Pageable.unpaged());
         }
-
         List<Sort.Order> orders = new ArrayList<>();
 
         if (!ValidationUtil.isNullOrBlankStr(query.getSortByRating())) {

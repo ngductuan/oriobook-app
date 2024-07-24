@@ -20,6 +20,10 @@ public class CommonConst {
     // Validation DTO
     public static final String DATE_BOND_MSG = "invalid date format, expected dd/MM/yyyy";
 
+    // Pagination params
+    public static final int DEFAULT_PAGE = 0;
+    public static final int DEFAULT_LIMIT = 10;
+
     // Date format
     public static final String DATE_BOND_REGEX = "\\d{2}/\\d{2}/\\d{4}";
     public static final String DATE_DTO_FORMAT = "dd/MM/yyyy";
