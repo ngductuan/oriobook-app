@@ -14,6 +14,7 @@ spring:
     username: ${MYSQL_ROOT_USERNAME}
     password: ${MYSQL_ROOT_PASSWORD}
   jpa:
+    open-in-view: false
     show-sql: true
     hibernate:
       ddl-auto: none #chỗ này mà sửa thành drop-create thì rất nguy
