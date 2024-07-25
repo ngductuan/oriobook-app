@@ -2,6 +2,8 @@ server:
   host: ${HOST:localhost}
   port: ${PORT:8088}
 spring:
+  config:
+    import: optional:file:.env[.properties]
   application:
     name: oriobook
   client-url:
