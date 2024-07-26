@@ -24,8 +24,8 @@ spring:
       #Nếu có sự khác biệt giữa cấu trúc cơ sở dữ liệu và các entity class
       #lỗi sẽ được hiển thị và yêu cầu sửa đổi cấu trúc cơ sở dữ liệu một cách thủ công
     properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect #driver
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQLDialect #driver
       format_sql: true
   servlet:
     multipart:
@@ -58,8 +58,13 @@ spring:
 logging:
   level:
     org:
-      hibernate: DEBUG
-      springframework.security: DEBUG
+#      hibernate: DEBUG
+#      springframework.security: DEBUG
+#        springframework:
+#            security: DEBUG
+#            data: DEBUG
+#    file:
+#        name: ${LOG_FILE:logs/app.log}
 
 # Prefix for API
 api:
