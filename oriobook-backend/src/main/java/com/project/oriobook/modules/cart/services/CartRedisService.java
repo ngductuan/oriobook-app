@@ -7,7 +7,6 @@ import com.project.oriobook.common.exceptions.CommonException;
 import com.project.oriobook.common.utils.MapperUtil;
 import com.project.oriobook.common.utils.RedisUtil;
 import com.project.oriobook.modules.cart.entities.CartRedisItem;
-import com.project.oriobook.modules.cart.repository.CartRedisRepository;
 import com.project.oriobook.modules.product.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,7 +21,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class CartRedisService implements ICartRedisService {
     private final ProductService productService;
-    private final CartRedisRepository cartRedisRepository;
 
     private final RedisTemplate<String, Object> redisTemplate;
     private final MapperUtil mapperUtil;
