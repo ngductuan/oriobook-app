@@ -1,6 +1,5 @@
 package com.project.oriobook.common.configs;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.oriobook.common.components.filters.JwtTokenFilter;
 import com.project.oriobook.common.constants.RouteConst;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +12,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.List;
 
@@ -21,14 +22,21 @@ import java.util.List;
 // @EnableWebSecurity(debug = true)
 @RequiredArgsConstructor
 public class WebSecurityConfig {
+    private final CorsConfigurationSource corsConfigurationSource;
+
     @Value("${api.prefix}")
     private String apiPrefix;
     private final JwtTokenFilter jwtTokenFilter;
-    private final ObjectMapper objectMapper;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .headers(headers -> headers
+                        .xssProtection(xss -> xss.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK))
+                        .contentSecurityPolicy(csp -> csp.policyDirectives("script-src 'self'"))
+                )
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+                .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(requests -> {
                     RouteConst routeConst = new RouteConst(apiPrefix);
@@ -39,9 +47,14 @@ public class WebSecurityConfig {
                     });
 
                     requests.anyRequest().authenticated();
-                })
-                .csrf(AbstractHttpConfigurer::disable);
+                });
 
         return http.build();
     }
+
+    // Cookie Same-site configuration
+    // @Bean
+    // public CookieSameSiteSupplier applicationCookiesSameSiteSupplier() {
+    //     return CookieSameSiteSupplier.ofStrict();
+    // }
 }

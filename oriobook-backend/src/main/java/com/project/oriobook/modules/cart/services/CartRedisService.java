@@ -65,7 +65,7 @@ public class CartRedisService implements ICartRedisService {
                 // If the key was already present, increment the value by 1
                 redisTemplate.opsForHash().increment(cacheString, prodQuantityName, 1);
             } else {
-                CartRedisItem cartItem = new CartRedisItem(productId, 1);
+                CartRedisItem cartItem = new CartRedisItem(cacheString, productId, 1);
                 Map<String, Object> map = mapperUtil.convertObjectToMap(cartItem);
                 redisTemplate.opsForHash().putAll(cacheString, map);
             }

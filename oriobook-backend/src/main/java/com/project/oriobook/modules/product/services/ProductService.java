@@ -1,7 +1,7 @@
 package com.project.oriobook.modules.product.services;
 
 import com.project.oriobook.common.exceptions.ProductException;
-import com.project.oriobook.common.utils.QueryUtil;
+import com.project.oriobook.common.utils.PaginationUtil;
 import com.project.oriobook.common.utils.ValidationUtil;
 import com.project.oriobook.modules.author.entities.Author;
 import com.project.oriobook.modules.author.services.AuthorService;
@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,11 +34,10 @@ public class ProductService implements IProductService {
 
     @Override
     public Page<Product> getAllProducts(FindAllProductQueryDTO query) {
-        if (query == null) {
+        if (query == null || query.isGetAll()) {
             return productRepository.findAll(new FindAllProductQueryDTO(), Pageable.unpaged());
         }
-
-        List<Sort.Order> orders = QueryUtil.parseSortBase(query);
+        List<Sort.Order> orders = new ArrayList<>();
 
         if (!ValidationUtil.isNullOrBlankStr(query.getSortByRating())) {
             orders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByRating().toString().toLowerCase()), "rating"));
@@ -47,7 +47,7 @@ public class ProductService implements IProductService {
             orders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByPrice().toString().toLowerCase()), "price"));
         }
 
-        PageRequest pageRequest = PageRequest.of(query.getPage(), query.getLimit(), Sort.by(orders));
+        PageRequest pageRequest = PaginationUtil.generatePageRequest(query, orders);
         Page<Product> productPaging = productRepository.findAll(query, pageRequest);
 
         return productPaging;

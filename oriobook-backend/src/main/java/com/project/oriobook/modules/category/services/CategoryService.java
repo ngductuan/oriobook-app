@@ -1,7 +1,7 @@
 package com.project.oriobook.modules.category.services;
 
 import com.project.oriobook.common.exceptions.CategoryException;
-import com.project.oriobook.common.utils.QueryUtil;
+import com.project.oriobook.common.utils.PaginationUtil;
 import com.project.oriobook.modules.category.dto.CreateMainCategoryDTO;
 import com.project.oriobook.modules.category.dto.CreateSubCategoryDTO;
 import com.project.oriobook.modules.category.dto.FindAllCategoryQueryDTO;
@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,13 +28,11 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public Page<Category> getAllMainCategories(FindAllCategoryQueryDTO query) {
-        if (query == null) {
+        if (query == null || query.isGetAll()) {
             return categoryRepository.findAllMain(new FindAllCategoryQueryDTO(), Pageable.unpaged());
         }
 
-        List<Sort.Order> orders = QueryUtil.parseSortBase(query);
-
-        PageRequest pageRequest = PageRequest.of(query.getPage(), query.getLimit(), Sort.by(orders));
+        PageRequest pageRequest = PaginationUtil.generatePageRequest(query, new ArrayList<>());
         Page<Category> categoryPaging = categoryRepository.findAllMain(query, pageRequest);
 
         return categoryPaging;

@@ -14,6 +14,7 @@ public class FindAllProductQueryDTO extends QueryFilterBase {
 
     private String authorId;
 
+    // chưa làm
     private CommonEnum.SortEnum sortByRating;
 
     private CommonEnum.SortEnum sortByPrice;

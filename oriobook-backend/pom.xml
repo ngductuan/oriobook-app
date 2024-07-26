@@ -60,6 +60,12 @@
 			<scope>test</scope>
 		</dependency>
 <!-- _____________________________________________ -->
+<!--		MySql-->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.32</version>
+		</dependency>
 <!--		Spring security-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

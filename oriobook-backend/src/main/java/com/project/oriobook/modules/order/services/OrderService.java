@@ -2,7 +2,7 @@ package com.project.oriobook.modules.order.services;
 
 import com.project.oriobook.common.exceptions.OrderException;
 import com.project.oriobook.common.utils.CommonUtil;
-import com.project.oriobook.common.utils.QueryUtil;
+import com.project.oriobook.common.utils.PaginationUtil;
 import com.project.oriobook.common.utils.ValidationUtil;
 import com.project.oriobook.modules.cart.entities.CartRedisItem;
 import com.project.oriobook.modules.cart.services.CartRedisService;
@@ -24,6 +24,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,13 +39,11 @@ public class OrderService implements IOrderService {
 
     @Override
     public Page<Order> getAllOrders(FindAllOrderQueryDTO query) {
-        if (query == null) {
+        if (query == null || query.isGetAll()) {
             return orderRepository.findAll(new FindAllOrderQueryDTO(), Pageable.unpaged());
         }
 
-        List<Sort.Order> orders = QueryUtil.parseSortBase(query);
-
-        PageRequest pageRequest = PageRequest.of(query.getPage(), query.getLimit(), Sort.by(orders));
+        PageRequest pageRequest = PaginationUtil.generatePageRequest(query, new ArrayList<>());
         Page<Order> orderPaging = orderRepository.findAll(query, pageRequest);
 
         return orderPaging;
@@ -62,13 +61,11 @@ public class OrderService implements IOrderService {
 
     @Override
     public Page<Order> getAllMyOrders(String userId, FindAllOrderQueryDTO query) {
-        if (query == null) {
+        if (query == null || query.isGetAll()) {
             return orderRepository.findAllMyOrders(userId, new FindAllOrderQueryDTO(), Pageable.unpaged());
         }
 
-        List<Sort.Order> orders = QueryUtil.parseSortBase(query);
-
-        PageRequest pageRequest = PageRequest.of(query.getPage(), query.getLimit(), Sort.by(orders));
+        PageRequest pageRequest = PaginationUtil.generatePageRequest(query, new ArrayList<>());
         Page<Order> orderPaging = orderRepository.findAllMyOrders(userId, query, pageRequest);
 
         return orderPaging;
