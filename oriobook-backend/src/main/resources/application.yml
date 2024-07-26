@@ -25,7 +25,7 @@ spring:
       #lỗi sẽ được hiển thị và yêu cầu sửa đổi cấu trúc cơ sở dữ liệu một cách thủ công
     properties:
       hibernate:
-      dialect: org.hibernate.dialect.MySQL8Dialect #driver
+        dialect: org.hibernate.dialect.MySQL8Dialect #driver
       format_sql: true
   servlet:
     multipart:
@@ -53,6 +53,13 @@ spring:
   #  test-on-borrow: true
   cache:
     type: redis
+
+#logging
+logging:
+  level:
+    org:
+      hibernate: DEBUG
+      springframework.security: DEBUG
 
 # Prefix for API
 api:
