@@ -43,9 +43,6 @@ export default {
           `${process.env.MAIN_URL}/carts/total-quantity`
         );
 
-        // for (let i = 0; i < response.data.length; i++) {
-        //   quantity.value += response.data[i].quantity;
-        // }
         quantityTemp.value = response.data;
       } catch (error) {
         console.error("Lỗi khi gọi API", error);
