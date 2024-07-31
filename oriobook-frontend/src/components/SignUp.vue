@@ -28,10 +28,10 @@
               class="input-text"
               placeholder="First name*"
               name="firstname"
-              v-model="formData.firstname"
+              v-model="formData.firstName"
             />
             <span
-              v-for="error in v$.firstname.$errors"
+              v-for="error in v$.firstName.$errors"
               :key="error.$uid"
               style="color: red"
             >
@@ -45,10 +45,10 @@
               class="input-text"
               placeholder="Last name*"
               name="lastname"
-              v-model="formData.lastname"
+              v-model="formData.lastName"
             />
             <span
-              v-for="error in v$.lastname.$errors"
+              v-for="error in v$.lastName.$errors"
               :key="error.$uid"
               style="color: red"
             >
@@ -146,8 +146,8 @@ export default {
 
     const formData = reactive({
       email: "",
-      firstname: "",
-      lastname: "",
+      firstName: "",
+      lastName: "",
       address: "",
       phone: "",
       password: "",
@@ -156,8 +156,8 @@ export default {
     const rules = computed(() => {
       return {
         email: { required, minLength: minLength(12), email },
-        firstname: { required, minLength: minLength(3) },
-        lastname: { required, minLength: minLength(3) },
+        firstName: { required, minLength: minLength(3) },
+        lastName: { required, minLength: minLength(3) },
         address: { minLength: minLength(5) },
         phone: {
           minLength: minLength(10),
@@ -172,20 +172,23 @@ export default {
 
     async function SaveData() {
       const result = await v$.value.$validate();
+      console.log("data", formData);
       if (result) {
-        // alert(`Account details changed successfully.`);
-        const response = await axios.post(
-          `${process.env.MAIN_URL}/account/signUp/`,
-          {
-            ...formData,
-          }
-        );
-        console.log(response.data.accessToken);
-        localStorage.setItem("token", response.data.accessToken);
-        if (response.data.status == true) {
-          router.push("/account-details");
-        } else {
-          toast.error("Your email has been used.", {
+        try {
+          const response = await axios.post(
+            `${process.env.MAIN_URL}/auth/sign-up`,
+            {
+              ...formData,
+            }
+          );
+
+          console.log(response.data);
+          toast.success("Register successfully. Please login", {
+            autoClose: 2000,
+            position: "top-center",
+          });
+        } catch (error) {
+          toast.error(error.response.data.message , {
             autoClose: 2000,
             position: "top-center",
           });

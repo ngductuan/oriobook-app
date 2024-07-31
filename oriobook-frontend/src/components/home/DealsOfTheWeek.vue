@@ -11,7 +11,7 @@
           v-for="group in productGroups"
           :key="group"
         >
-          <HomeProductDeal :group="group" />
+          <HomeProductDeal :group="group" @reloadcart="addCart" />
           <!-- v-for="item in group" :key="item" :item="item" -->
         </div>
       </div>
@@ -39,8 +39,10 @@ export default {
     const productGroups = ref([]);
     onMounted(async () => {
       try {
-        const response = await axios.get(`${process.env.MAIN_URL}/product/hot`);
-        const products = response.data.products; // Access 'products' property
+        const response = await axios.get(
+          `${process.env.MAIN_URL}/products?page=2&limit=4`
+        );
+        const products = response.data.data; // Access 'products' property
 
         // Ensure products is an array
         if (Array.isArray(products)) {
@@ -59,9 +61,15 @@ export default {
         console.error("Lỗi khi gọi API:", error);
       }
     });
+
+    const addCart = () => {
+      emit("reloadcart");
+    };
+
     return {
       productGroups,
       number,
+      addCart,
     };
   },
 };

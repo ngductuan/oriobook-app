@@ -46,10 +46,10 @@
                 <input
                   class="manage-product-checkbox col-1"
                   type="checkbox"
-                  :value="product._id"
+                  :value="product.id"
                 />
                 <a
-                  :href="'/admin/edit/' + product._id"
+                  :href="'/admin/edit/' + product.id"
                   class="manage-product-item-link col"
                 >
                   <ul
@@ -70,7 +70,7 @@
                     <li
                       class="manage-product-info text-center col-2 me-2 ellipsis-custom-2"
                     >
-                      {{ product.category_name }}
+                      {{ product?.categoryNode?.name }}
                     </li>
                     <li class="manage-product-info text-center col-2 me-2">
                       {{ product.stock }}
@@ -128,14 +128,14 @@ export default {
     const requestPage = async () => {
       try {
         displayLoading(".manage-product-list", -32, -32);
-        let url = `${process.env.MAIN_URL}/product/manage?page=${page}&perPage=${perPage}`;
+        let url = `${process.env.MAIN_URL}/products?page=${page}&limit=${perPage}`;
         if (searchQuery) url += `&search=${searchQuery.value}`;
         const response = await axios.get(url);
-        console.log(url);
+        // console.log(url);
         curPage.value = page;
-        products.value = response.data.products;
+        products.value = response.data.data;
         products.value.forEach((product) => {
-          product.category_name = product.id_category.name;
+          product.category_name = product.categoryNode.name;
         });
         totalPages.value = response.data.totalPages;
         removeLoading();

@@ -8,7 +8,7 @@
           </div>
           <div class="product-thumb-hover">
             <a
-              :href="'/products/' + item._id"
+              :href="'/products/' + item.id"
               class="woocommerce-LoopProduct-link"
               @click="handleLinkClick('/products')"
             >
@@ -21,7 +21,7 @@
               />
             </a>
           </div>
-          <button class="add-to-cart" @click="AddProduct(item._id, item.stock)">
+          <button class="add-to-cart" @click="AddProduct(item.id, item.stock)">
             <i class="fa-solid fa-cart-plus"></i>
           </button>
         </div>
@@ -32,16 +32,16 @@
           <div class="list-author">
             <p>
               <a
-                :href="'/authors/' + item.id_author._id"
+                :href="'/authors/' + item?.authorNode?.id"
                 class="item-author"
                 @click="handleLinkClick('/authors')"
-                >{{ item.id_author.name }}</a
+                >{{ item?.authorNode?.name }}</a
               >
             </p>
           </div>
           <h3>
             <a
-              :href="'/products/' + item._id"
+              :href="'/products/' + item.id"
               class="product-title ellipsis-custom-3"
               >{{ item.name }}
             </a>
@@ -74,28 +74,38 @@ export default {
   inject: ["eventBus"],
   props: ["group"],
 
-  methods: {
-    async AddProduct(id, stock) {
+  methods: {},
+
+  setup(props, { emit }) {
+    const number = ref(2);
+
+    function handleLinkClick(to) {
+      localStorage.setItem("activeLink", to);
+    }
+
+    const AddProduct = async (id, stock) => {
       if (stock > 0) {
         try {
           console.log(id);
-          const quantity = 1;
-          const response = await axios.post(
-            `${process.env.MAIN_URL}/account/addToCart/${id}/${quantity}`
+          const response = await axios.put(
+            `${process.env.MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.ADD}`
           );
-          if (response.data.status == true) {
-            const response1 = await axios.get(
-              `${process.env.MAIN_URL}/account/getCart`
-            );
-            let newquantity = ref(0);
-            for (let i = 0; i < response1.data.length; i++) {
-              newquantity.value += response1.data[i].quantities;
-            }
-            this.eventBus.emit("reload", newquantity.value);
-            toast.success("Added to cart!", {
-              autoClose: 1000,
-            });
-          }
+          emit("reloadcart");
+          console.log("response", response);
+          // if (response.data.status == true) {
+          //   const response1 = await axios.get(
+          //     `${process.env.MAIN_URL}/carts/total-quantity`
+          //   );
+          //   let newquantity = ref(0);
+          //   // for (let i = 0; i < response1.data.length; i++) {
+          //   //   newquantity.value += response1.data[i].quantities;
+          //   // }
+          //   newquantity.value = response1.data;
+          //   this.eventBus.emit("reload", newquantity.value);
+          //   toast.success("Added Product!", {
+          //     autoClose: 1000,
+          //   });
+          // }
         } catch (error) {
           console.error("Lỗi khi gọi API", error);
           window.location.href = "/login";
@@ -105,18 +115,11 @@ export default {
           autoClose: 1000,
         });
       }
-    },
-  },
-
-  setup() {
-    const number = ref(2);
-
-    function handleLinkClick(to) {
-      localStorage.setItem("activeLink", to);
-    }
+    };
 
     return {
       number,
+      AddProduct,
       handleLinkClick,
     };
   },

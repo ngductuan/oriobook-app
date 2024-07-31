@@ -1,10 +1,10 @@
 <template>
   <div class="authorlist-page">
     <div class="img-cover d-flex align-items-center justify-content-center">
-      <h1 class="title-heading">List Athors</h1>
+      <h1 class="title-heading">List Authors</h1>
     </div>
 
-    <Authors :author="authors" />
+    <Authors :authors="authors" />
     <div class="container mt-0 justify-content-end">
       <Pagination :totalPages="totalPages" :curPage="curPage" />
     </div>
@@ -54,10 +54,13 @@ export default {
       try {
         displayLoading(".js-author-container", -64, 0);
         const response = await axios.get(
-          `${process.env.MAIN_URL}/author/list?page=${page}&perPage=${perPage}`
+          `${process.env.MAIN_URL}/authors?page=${page - 1}&limit=${perPage}`
         );
         curPage.value = page;
-        authors.value = response.data.authors;
+        authors.value = response.data.data;
+
+        console.log("authors", response.data);
+
         totalPages.value = response.data.totalPages;
         removeLoading();
       } catch (error) {

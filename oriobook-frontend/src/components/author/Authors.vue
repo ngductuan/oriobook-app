@@ -1,21 +1,21 @@
 <template>
   <div class="container js-author-container">
-    <div class="row" v-for="item in author" :key="item">
+    <div class="row" v-for="item in authors" :key="item">
       <div class="item">
         <div class="image-position-top">
           <div class="item-image">
-            <a :href="'/authors/' + item._id"
+            <a :href="'/authors/' + item.id"
               ><img decoding="async" :src="item.image" :alt="item.name"
             /></a>
           </div>
           <div class="content">
             <h2 class="item-title">
-              <a :href="'/authors/' + item._id"
+              <a :href="'/authors/' + item.id"
                 ><span>{{ item.name }}</span></a
               >
             </h2>
             <div class="item-count">
-              {{ item.published_book }}<span> Published Book</span>
+              {{ item.publishedBook }}<span> Published Book</span>
             </div>
           </div>
         </div>
@@ -29,7 +29,7 @@ import { ref } from "vue";
 
 export default {
   name: "Authors",
-  props: ["author"],
+  props: ["authors"],
 
   setup() {
     return {};

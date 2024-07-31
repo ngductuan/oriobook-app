@@ -16,8 +16,10 @@ instances.interceptors.request.use(
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE",
       "Access-Control-Allow-Headers": "*",
       "Content-Type": request.headers["Content-Type"] || "application/json",
-      Authorization: token,
+      Authorization: "Bearer " + token,
     };
+
+    // console.log("Content-Type", newHeaders);
 
     // Đính header mới vào lại request trước khi được gửi đi
     request = {

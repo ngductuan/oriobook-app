@@ -2,7 +2,7 @@
   <Hero />
   <featureRow />
   <!-- <Category /> -->
-  <Deal_TopRated />
+  <Deal_TopRated @reloadcart="addCart" />
   <HomeProduct :topRatedProducts="topRatedProducts" :bestSeller="bestSeller" />
   <br />
   <br />
@@ -30,6 +30,7 @@ import { ref, onMounted } from "vue";
 import axios from "../config/axios";
 
 import { scrollToTop } from "@/helpers/helperFunctions";
+import { SortEnum } from "@/types/enum.type";
 export default {
   name: "Home",
   components: {
@@ -62,20 +63,28 @@ export default {
     onMounted(async () => {
       try {
         let response = await axios.get(
-          `${process.env.MAIN_URL}/product/best-seller`
+          `${process.env.MAIN_URL}/products?page=0&limit=5&sortByDate=${SortEnum.DESC}`
         );
-        bestSeller.value = response.data;
-        response = await axios.get(`${process.env.MAIN_URL}/product/top-rated`);
-        topRatedProducts.value = response.data;
+        bestSeller.value = response.data.data;
+        response = await axios.get(
+          `${process.env.MAIN_URL}/products?page=3&limit=5&sortByDate=${SortEnum.DESC}`
+        );
+        topRatedProducts.value = response.data.data;
         displayBackToTop();
       } catch (error) {
         console.error("Lỗi khi gọi API:", error);
       }
     });
+
+    const addCart = () => {
+      emit("reloadcart");
+    };
+
     return {
       bestSeller,
       topRatedProducts,
       scrollToTop,
+      addCart,
     };
   },
 };

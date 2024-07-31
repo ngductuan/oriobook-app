@@ -19,7 +19,7 @@
               }}</router-link>
               <p class="product-price">{{ element.price }}$</p>
               <div class="product-quantity row gx-0">
-                <button class="col" @click="minus(element._id)">
+                <button class="col" @click="minus(element.id)">
                   <i class="fa-light fa-minus"></i>
                 </button>
                 <input
@@ -27,11 +27,11 @@
                   class="col text-center"
                   id="quantity"
                   disabled
-                  :value="element.quantities"
+                  :value="element.quantity"
                 />
                 <button
                   class="col"
-                  @click="plus(element._id, element.stock)"
+                  @click="plus(element.id, element.stock)"
                   :disabled="isDisabled(element.quantities, element.stock)"
                 >
                   <i class="fa-light fa-plus"></i>
@@ -39,7 +39,7 @@
               </div>
               <button
                 class="fa-regular fa-trash-can product-remove-btn"
-                @click="RemoveProduct(element._id)"
+                @click="RemoveProduct(element.id)"
               ></button>
             </div>
           </li>
@@ -55,10 +55,7 @@
       <template v-if="cart.length === 0">
         <div class="empty">
           <span>No products in the cart.</span>
-          <a
-            class="go-shop underline-animation"
-            href="/products"
-          >
+          <a class="go-shop underline-animation" href="/products">
             Shop all products
           </a>
         </div>
@@ -72,13 +69,14 @@ import axios from "../config/axios";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import { ref, computed } from "vue";
+import { CartActionEnum } from "@/types/enum.type";
 
 export default {
   name: "Cart",
 
   inject: ["eventBus"],
 
-  setup() {
+  setup(props, { emit }) {
     const cart = ref([]);
     let price = ref(0);
 
@@ -86,17 +84,16 @@ export default {
       let sum = 0;
       try {
         console.log("cart");
-        const response = await axios.get(
-          `${process.env.MAIN_URL}/account/getCart`
-        );
-        cart.value = response.data;
+        const response = await axios.get(`${process.env.MAIN_URL}/carts`);
+        cart.value = response.data.data;
         cart.value.forEach((item) => {
-          sum += item.quantities * 1 * item.price * 1;
+          sum += item.quantity * 1 * item.price * 1;
         });
+        // return sum.toFixed(2);
+        return response.data.totalPrice;
       } catch (error) {
         console.error("Lỗi khi gọi API", error);
       }
-      return sum.toFixed(2);
     }
     const isDisabled = computed(() => {
       return (quantities, stock) => {
@@ -107,10 +104,8 @@ export default {
     async function update() {
       try {
         console.log("cart");
-        const response = await axios.get(
-          `${process.env.MAIN_URL}/account/getCart`
-        );
-        cart.value = response.data;
+        const response = await axios.get(`${process.env.MAIN_URL}/carts`);
+        cart.value = response.data.data;
         console.log(response.data);
       } catch (error) {
         console.error("Lỗi khi gọi API", error);
@@ -121,11 +116,11 @@ export default {
     const minus = async (id) => {
       // console.log(id);
 
-      const response = await axios.post(
-        `${process.env.MAIN_URL}/account/minusToCart/${id}`
+      const response = await axios.put(
+        `${process.env.MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.SUBTRACT}`
       );
 
-      if (response.data.status == true) {
+      if (response.data.statusCode == 200) {
         await update();
       }
     };
@@ -134,11 +129,11 @@ export default {
       if (stock > 0) {
         console.log(id);
         const quantity = 1;
-        const response = await axios.post(
-          `${process.env.MAIN_URL}/account/addToCart/${id}/${quantity}`
+        const response = await axios.put(
+          `${process.env.MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.ADD}`
         );
 
-        if (response.data.status == true) {
+        if (response.data.statusCode == 200) {
           await update();
         }
       } else {
@@ -151,11 +146,11 @@ export default {
     const RemoveProduct = async (id) => {
       // console.log(id);
 
-      const response = await axios.delete(
-        `${process.env.MAIN_URL}/account/removeFromCart/${id}`
+      const response = await axios.put(
+        `${process.env.MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.DELETE}`
       );
 
-      if (response.data.status == true) {
+      if (response.data.statusCode == 200) {
         toast.success("Removed Product!", {
           autoClose: 1000,
         });
@@ -228,14 +223,13 @@ export default {
         console.log("close");
         $(".cart").removeClass("enable");
         try {
-          const response = await axios.get(
-            `${process.env.MAIN_URL}/account/getCart`
-          );
+          const response = await axios.get(`${process.env.MAIN_URL}/carts`);
           let newquantity = ref(0);
-          for (let i = 0; i < response.data.length; i++) {
-            newquantity.value += response.data[i].quantities;
+          for (let i = 0; i < response.data.data.length; i++) {
+            newquantity.value += response.data[i].quantity;
           }
-          this.eventBus.emit("reload", newquantity.value);
+          // this.eventBus.emit("reload", newquantity.value);
+          emit("reloadcart");
         } catch (error) {
           console.error("Lỗi khi gọi API", error);
           window.location.href = "/login";
@@ -245,14 +239,13 @@ export default {
         console.log("close");
         $(".cart").removeClass("enable");
         try {
-          const response = await axios.get(
-            `${process.env.MAIN_URL}/account/getCart`
-          );
+          const response = await axios.get(`${process.env.MAIN_URL}/carts`);
           let newquantity = ref(0);
-          for (let i = 0; i < response.data.length; i++) {
-            newquantity.value += response.data[i].quantities;
+          for (let i = 0; i < response.data.data.length; i++) {
+            newquantity.value += response.data[i].quantity;
           }
-          this.eventBus.emit("reload", newquantity.value);
+          // this.eventBus.emit("reload", newquantity.value);
+          emit("reloadcart");
         } catch (error) {
           console.error("Lỗi khi gọi API", error);
           window.location.href = "/login";

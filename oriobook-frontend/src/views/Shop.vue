@@ -8,7 +8,7 @@
     </div>
     <div class="product-section container">
       <div class="row">
-        <ShopProduct />
+        <ShopProduct @reloadcart="addCart" />
       </div>
     </div>
   </div>
@@ -25,7 +25,7 @@ export default {
   },
   setup(props, { emit }) {
     const addCart = () => {
-      emit("add-cart");
+      emit("reloadcart");
     };
 
     return {

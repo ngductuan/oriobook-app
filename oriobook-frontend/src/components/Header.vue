@@ -87,6 +87,7 @@ export default {
     const init = async () => {
       try {
         cart.value = inject("quantity");
+        // console.log("da nhan quantity", cart.value);
       } catch (error) {
         console.error("Lỗi khi gọi API", error);
       }
@@ -96,7 +97,7 @@ export default {
       await init();
       const urlParams = new URLSearchParams(window.location.search);
       const searchParam = urlParams.get("search");
-      console.log(searchParam);
+      // console.log(searchParam);
       if (searchParam) {
         searchQuery.value = searchParam;
       }
