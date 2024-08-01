@@ -16,7 +16,6 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class OrderDetails extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "order_id")

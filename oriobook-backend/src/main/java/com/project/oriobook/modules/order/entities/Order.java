@@ -18,7 +18,6 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Order extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private CommonEnum.OrderStatusEnum status = CommonEnum.OrderStatusEnum.PENDING;
