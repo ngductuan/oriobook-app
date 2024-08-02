@@ -28,15 +28,15 @@ pipeline {
                     git branch: 'develop', credentialsId: 'jenkins-gitlab-user-account', url: 'http://gitlab.orio-studio.com/ngductuan/oriobook-app'
                     
                     GIT_COMMIT = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-                    
-                    DOCKER_IMAGE_FE = "${DOCKER_REPO_BASE}-fe:${IMAGE_TAG}-${GIT_COMMIT}"
-                    DOCKER_IMAGE_BE = "${DOCKER_REPO_BASE}-be:${IMAGE_TAG}-${GIT_COMMIT}"
 
                     TAG_NAME = sh(returnStdout: true, script: "git tag --points-at HEAD").trim()
                     IMAGE_TAG = "${TAG_NAME ?: 'build'}"
 
                     echo "TAG_NAME: ${TAG_NAME}"
                     echo "IMAGE_TAG: ${IMAGE_TAG}"
+                    
+                    DOCKER_IMAGE_FE = "${DOCKER_REPO_BASE}-fe:${IMAGE_TAG}-${GIT_COMMIT}"
+                    DOCKER_IMAGE_BE = "${DOCKER_REPO_BASE}-be:${IMAGE_TAG}-${GIT_COMMIT}"
                 }
             }
         }
