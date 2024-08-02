@@ -14,7 +14,7 @@ pipeline {
         FE_FOLDER = "oriobook-frontend"
         BE_FOLDER = "oriobook-backend"
 
-        IMAGE_TAG = "${GIT_TAG ?: 'build'}"
+        IMAGE_TAG = "${env.TAG_NAME ?: 'build'}"
     }
     stages {
         stage('cleanup') {
