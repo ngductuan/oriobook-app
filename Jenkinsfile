@@ -25,7 +25,7 @@ pipeline {
         stage('clone') {
             steps {
                 script {
-                    git branch: 'develop', credentialsId: 'jenkins-gitlab-user-account', url: 'http://gitlab.orio-studio.com/ngductuan/oriobook-app'
+                    git branch: 'main', credentialsId: 'jenkins-gitlab-user-account', url: 'http://gitlab.orio-studio.com/ngductuan/oriobook-app'
                     
                     GIT_COMMIT = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
                     
@@ -34,7 +34,7 @@ pipeline {
                 }
             }
         }
-        stage('build') {
+        stage('build_and_push') {
             steps {
                 script {
                     withDockerRegistry(credentialsId: DOCKERHUB_CREDENTIALS_ID, url: 'https://index.docker.io/v1/') {
@@ -54,22 +54,34 @@ pipeline {
         stage('deploy') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: DOCKERHUB_CREDENTIALS_ID, url: 'https://index.docker.io/v1/') {
-                        withCredentials([file(credentialsId: 'FE_ENV', variable: 'FE_ENV_PATH')]) {
-                            sh """
-                                docker pull ${DOCKER_IMAGE_FE}
-                                docker rm -f orio-fe || true
-                                docker run --name orio-fe --env-file \$FE_ENV_PATH -dp 5001:8080 ${DOCKER_IMAGE_FE}
-                            """
+                    try {
+                        timeout(time: 5, unit: 'MINUTES'){
+                            env.useChoice = input message: "Can it be deployed?",
+                            parameters: [choice(name: 'deploy', choices: 'no\nyes', description: 'Choose "yes" if you want to deploy')]
                         }
+                        if (env.useChoice == 'yes') {
+                           withDockerRegistry(credentialsId: DOCKERHUB_CREDENTIALS_ID, url: 'https://index.docker.io/v1/') {
+                                withCredentials([file(credentialsId: 'FE_ENV', variable: 'FE_ENV_PATH')]) {
+                                    sh """
+                                        docker pull ${DOCKER_IMAGE_FE}
+                                        docker rm -f orio-fe || true
+                                        docker run --name orio-fe --env-file \$FE_ENV_PATH -dp 5001:8080 ${DOCKER_IMAGE_FE}
+                                    """
+                                }
 
-                        withCredentials([file(credentialsId: 'BE_ENV', variable: 'BE_ENV_PATH')]) {
-                            sh """
-                                docker pull ${DOCKER_IMAGE_BE}
-                                docker rm -f orio-be || true
-                                docker run --name orio-be --env-file \$BE_ENV_PATH -dp 5002:8080 ${DOCKER_IMAGE_BE}
-                            """
+                                withCredentials([file(credentialsId: 'BE_ENV', variable: 'BE_ENV_PATH')]) {
+                                    sh """
+                                        docker pull ${DOCKER_IMAGE_BE}
+                                        docker rm -f orio-be || true
+                                        docker run --name orio-be --env-file \$BE_ENV_PATH -dp 5002:8080 ${DOCKER_IMAGE_BE}
+                                    """
+                                }
+                            }
+                        } else {
+                            echo "Deployment is skipped"
                         }
+                    } catch (Exception err){
+                        echo "Timeout to deploy or error occurred: ${err}"
                     }
                 }
             }
