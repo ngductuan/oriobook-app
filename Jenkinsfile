@@ -14,7 +14,7 @@ pipeline {
         FE_FOLDER = "oriobook-frontend"
         BE_FOLDER = "oriobook-backend"
 
-        IMAGE_TAG = "${GIT_TAG ?: 'build'}"
+        IMAGE_TAG = ''
     }
     stages {
         stage('cleanup') {
@@ -31,6 +31,12 @@ pipeline {
                     
                     DOCKER_IMAGE_FE = "${DOCKER_REPO_BASE}-fe:${IMAGE_TAG}-${GIT_COMMIT}"
                     DOCKER_IMAGE_BE = "${DOCKER_REPO_BASE}-be:${IMAGE_TAG}-${GIT_COMMIT}"
+
+                    TAG_NAME = sh(returnStdout: true, script: "git tag --points-at HEAD").trim()
+                    IMAGE_TAG = "${TAG_NAME ?: 'build'}"
+
+                    echo "TAG_NAME: ${TAG_NAME}"
+                    echo "IMAGE_TAG: ${IMAGE_TAG}"
                 }
             }
         }
