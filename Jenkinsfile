@@ -25,7 +25,7 @@ pipeline {
         stage('clone') {
             steps {
                 script {
-                    git branch: 'main', credentialsId: 'jenkins-gitlab-user-account', url: 'http://gitlab.orio-studio.com/ngductuan/oriobook-app'
+                    git branch: 'develop', credentialsId: 'jenkins-gitlab-user-account', url: 'http://gitlab.orio-studio.com/ngductuan/oriobook-app'
                     
                     GIT_COMMIT = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
                     
