@@ -19,7 +19,6 @@ import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
-// @EnableWebSecurity(debug = true)
 @RequiredArgsConstructor
 public class WebSecurityConfig {
     private final CorsConfigurationSource corsConfigurationSource;

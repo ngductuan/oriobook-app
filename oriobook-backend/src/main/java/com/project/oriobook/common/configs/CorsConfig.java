@@ -8,15 +8,16 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 public class CorsConfig {
-    @Value("${spring.client-url.web}")
-    private String webClientUrl;
+    // @Value("${spring.client-url.web}")
+    // private String webClientUrl;
 
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin(webClientUrl); // Adjust this to your frontend URL
+        // config.addAllowedOrigin(webClientUrl); // Adjust this to your frontend URL
+        config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);

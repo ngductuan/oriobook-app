@@ -7,8 +7,8 @@ spring:
     import: optional:file:.env[.properties]
   application:
     name: oriobook
-  client-url:
-    web: ${WEB_CLIENT_URL}
+#  client-url:
+#    web: ${WEB_CLIENT_URL}
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     driver-class-name: com.mysql.cj.jdbc.Driver
