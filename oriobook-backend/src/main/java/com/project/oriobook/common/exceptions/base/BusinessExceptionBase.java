@@ -11,7 +11,6 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class BusinessExceptionBase extends RuntimeException{
     private Map<String, List<String>> errorDetails;
     private int statusCode;

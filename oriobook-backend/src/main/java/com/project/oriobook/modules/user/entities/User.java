@@ -22,7 +22,6 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class User extends BaseEntity implements UserDetails {
     @Column(name = "first_name")
     private String firstName;

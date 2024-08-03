@@ -16,7 +16,6 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Author extends BaseEntity {
     @Column(unique = true)
     private String name;
