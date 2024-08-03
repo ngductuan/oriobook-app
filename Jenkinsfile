@@ -68,7 +68,7 @@ pipeline {
                                     sh """
                                         docker pull ${DOCKER_IMAGE_FE}
                                         docker rm -f orio-fe || true
-                                        docker run --name orio-fe --env-file \$FE_ENV_PATH -dp 5001:8080 ${DOCKER_IMAGE_FE}
+                                        docker run --name orio-fe --env-file \$FE_ENV_PATH -dp 5001:80 ${DOCKER_IMAGE_FE}
                                     """
                                 }
 
