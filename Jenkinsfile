@@ -66,6 +66,7 @@ pipeline {
                            withDockerRegistry(credentialsId: DOCKERHUB_CREDENTIALS_ID, url: 'https://index.docker.io/v1/') {
                                 withCredentials([file(credentialsId: 'FE_ENV', variable: 'FE_ENV_PATH')]) {
                                     sh """
+                                        echo "FE_ENV_PATH is: \$FE_ENV_PATH"
                                         docker pull ${DOCKER_IMAGE_FE}
                                         docker rm -f orio-fe || true
                                         docker run --name orio-fe --env-file \$FE_ENV_PATH -dp 5001:80 ${DOCKER_IMAGE_FE}
@@ -74,6 +75,7 @@ pipeline {
 
                                 withCredentials([file(credentialsId: 'BE_ENV', variable: 'BE_ENV_PATH')]) {
                                     sh """
+                                        echo "BE_ENV_PATH is: \$BE_ENV_PATH"
                                         docker pull ${DOCKER_IMAGE_BE}
                                         docker rm -f orio-be || true
                                         docker run --name orio-be --env-file \$BE_ENV_PATH -dp 5002:8080 ${DOCKER_IMAGE_BE}
