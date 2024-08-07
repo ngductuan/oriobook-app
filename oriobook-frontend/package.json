@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --port 3000",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "start:prod": "serve -s dist"
   },
   "dependencies": {
     "@vuelidate/core": "^2.0.3",
@@ -36,6 +37,7 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
-    "sass-loader": "^13.3.2"
+    "sass-loader": "^13.3.2",
+    "serve": "^14.2.3"
   }
 }

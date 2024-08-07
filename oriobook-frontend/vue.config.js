@@ -23,6 +23,9 @@ module.exports = defineConfig({
   //     },
   //   },
   // ],
+  publicPath: "./",
+  outputDir: "dist",
+  assetsDir: "static",
   configureWebpack: {
     plugins: [
       new Dotenv(),
