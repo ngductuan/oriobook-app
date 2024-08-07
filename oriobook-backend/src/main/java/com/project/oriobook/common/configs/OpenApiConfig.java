@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
         ),
         servers = {
                 @Server(url = "http://localhost:${server.port}", description = "Local Development Server"),
+                @Server(url = "https://stage.orio-studio.online", description = "Production Server"),
         }
 )
 

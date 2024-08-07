@@ -5,6 +5,8 @@ server:
 spring:
   config:
     import: optional:file:.env[.properties]
+  profiles:
+    active: ${SPRING_ENV:dev}
   application:
     name: oriobook
 #  client-url:
@@ -74,7 +76,7 @@ logging:
 
 # Prefix for API
 api:
-  prefix: /api/v1
+  prefix: /v1/api
 
 # Swagger open api
 springdoc:

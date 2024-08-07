@@ -4,6 +4,7 @@ import com.project.oriobook.common.components.filters.JwtTokenFilter;
 import com.project.oriobook.common.constants.RouteConst;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.server.CookieSameSiteSupplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.util.Pair;
@@ -51,7 +52,7 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    // Cookie Same-site configuration
+    // Cookie Same-site configuration (error when run)
     // @Bean
     // public CookieSameSiteSupplier applicationCookiesSameSiteSupplier() {
     //     return CookieSameSiteSupplier.ofStrict();
