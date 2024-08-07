@@ -13,6 +13,8 @@ RUN adduser -D orio-be
 WORKDIR /run
 COPY --from=build /app/target/oriobook-0.0.1-SNAPSHOT.jar /run/oriobook-0.0.1-SNAPSHOT.jar
 
+ENV SPRING_ENV=prod
+
 RUN chown -R orio-be: /run
 
 USER orio-be
