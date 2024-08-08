@@ -13,14 +13,10 @@ public class ProdCorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         System.out.println("ProdCorsConfig");
-        // registry.addMapping("/**")
-        //         .allowedOrigins("http://localhost:3000")
-        //         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-        //         .allowedHeaders("*")
-        //         .allowCredentials(true);
         registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedMethods("*")
-                .allowedHeaders("*");
+                .allowedOrigins("https://web.orio-studio.online")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true);
     }
 }
