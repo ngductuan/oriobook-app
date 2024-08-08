@@ -39,10 +39,6 @@ export default {
     const productGroups = ref([]);
     onMounted(async () => {
       try {
-        console.log(
-          "*** process.env.VUE_APP_MAIN_URL",
-          process.env.VUE_APP_MAIN_URL
-        );
         const response = await axios.get(
           `${process.env.VUE_APP_MAIN_URL}/products?page=2&limit=4`
         );
