@@ -64,13 +64,11 @@ pipeline {
                         }
                         if (env.useChoice == 'yes') {
                            withDockerRegistry(credentialsId: DOCKERHUB_CREDENTIALS_ID, url: 'https://index.docker.io/v1/') {
-                                withCredentials([file(credentialsId: 'FE_ENV', variable: 'FE_ENV_PATH')]) {
-                                    sh """
-                                        docker pull ${DOCKER_IMAGE_FE}
-                                        docker rm -f orio-fe || true
-                                        docker run --name orio-fe --env-file \$FE_ENV_PATH -dp 5001:80 ${DOCKER_IMAGE_FE}
-                                    """
-                                }
+                                sh """
+                                    docker pull ${DOCKER_IMAGE_FE}
+                                    docker rm -f orio-fe || true
+                                    docker run --name orio-fe -dp 5001:80 ${DOCKER_IMAGE_FE}
+                                """
 
                                 withCredentials([file(credentialsId: 'BE_ENV', variable: 'BE_ENV_PATH')]) {
                                     sh """
