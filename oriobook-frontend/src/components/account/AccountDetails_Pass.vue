@@ -111,7 +111,7 @@ export default {
       if (result) {
         // alert(`Account details changed successfully.`);
         const response = await axios.post(
-          `${process.env.MAIN_URL}/account/updateAccountPassword`,
+          `${process.env.VUE_APP_MAIN_URL}/account/updateAccountPassword`,
           {
             ...formData,
           }

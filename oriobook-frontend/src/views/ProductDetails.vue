@@ -172,7 +172,7 @@ export default {
       try {
         displayLoading(".js-related-product", -50, 0);
         const response = await axios.get(
-          `${process.env.MAIN_URL}/product/detail/${id.value}?page=${page}&perPage=${perPage}`
+          `${process.env.VUE_APP_MAIN_URL}/product/detail/${id.value}?page=${page}&perPage=${perPage}`
         );
 
         console.log(response.data.product);
@@ -225,13 +225,13 @@ export default {
           console.log(id);
           const quantity = 1;
           const response = await axios.put(
-            `${process.env.MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.ADD}`
+            `${process.env.VUE_APP_MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.ADD}`
           );
           emit("reloadcart");
           console.log("response", response);
           // if (response.data.status == true) {
           //   const response1 = await axios.get(
-          //     `${process.env.MAIN_URL}/carts/total-quantity`
+          //     `${process.env.VUE_APP_MAIN_URL}/carts/total-quantity`
           //   );
           //   let newquantity = ref(0);
           //   // for (let i = 0; i < response1.data.length; i++) {
@@ -275,13 +275,13 @@ export default {
           console.log(id);
           const quantity = 1;
           const response = await axios.put(
-            `${process.env.MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.ADD}`
+            `${process.env.VUE_APP_MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.ADD}`
           );
           emit("reloadcart");
           console.log("response", response);
           // if (response.data.status == true) {
           //   const response1 = await axios.get(
-          //     `${process.env.MAIN_URL}/carts/total-quantity`
+          //     `${process.env.VUE_APP_MAIN_URL}/carts/total-quantity`
           //   );
           //   let newquantity = ref(0);
           //   // for (let i = 0; i < response1.data.length; i++) {

@@ -88,13 +88,13 @@ export default {
         try {
           console.log(id);
           const response = await axios.put(
-            `${process.env.MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.ADD}`
+            `${process.env.VUE_APP_MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.ADD}`
           );
           emit("reloadcart");
           console.log("response", response);
           // if (response.data.status == true) {
           //   const response1 = await axios.get(
-          //     `${process.env.MAIN_URL}/carts/total-quantity`
+          //     `${process.env.VUE_APP_MAIN_URL}/carts/total-quantity`
           //   );
           //   let newquantity = ref(0);
           //   // for (let i = 0; i < response1.data.length; i++) {

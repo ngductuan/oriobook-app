@@ -40,7 +40,7 @@ export default {
     const fetchCart = async () => {
       try {
         const response = await axios.get(
-          `${process.env.MAIN_URL}/carts/total-quantity`
+          `${process.env.VUE_APP_MAIN_URL}/carts/total-quantity`
         );
 
         quantityTemp.value = response.data;
@@ -74,7 +74,7 @@ export default {
     // this.eventBus.on("reload", async () => {
     //   try {
     //     const response = await axios.get(
-    //       `${process.env.MAIN_URL}/carts/total-quantity`
+    //       `${process.env.VUE_APP_MAIN_URL}/carts/total-quantity`
     //     );
     //     console.log("newquantity ", response.data);
     //     quantity.value = response.data;

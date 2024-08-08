@@ -186,7 +186,7 @@ export default {
 
     const getMyWallet = async () => {
       const response = await axios.get(
-        `${process.env.MAIN_URL}/account/my-wallet?page=${page}&perPage=${perPage}`
+        `${process.env.VUE_APP_MAIN_URL}/account/my-wallet?page=${page}&perPage=${perPage}`
       );
 
       // console.log(response.data);

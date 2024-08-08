@@ -118,7 +118,7 @@ export default {
     const requestPage = async () => {
       try {
         displayLoading(".manage-product-list", -32, -32);
-        let url = `${process.env.MAIN_URL}/category/manage?page=${page}&perPage=${perPage}`;
+        let url = `${process.env.VUE_APP_MAIN_URL}/category/manage?page=${page}&perPage=${perPage}`;
         if (searchQuery) url += `&search=${searchQuery.value}`;
         const response = await axios.get(url);
         console.log(response.data);
@@ -199,7 +199,7 @@ export default {
               const id_product = $(checkbox).val();
               displayLoading(".manage-product-list", -32, -32);
               const response = await axios.delete(
-                `${process.env.MAIN_URL}/category/delete/${id_product}`
+                `${process.env.VUE_APP_MAIN_URL}/category/delete/${id_product}`
               );
               checkbox.parentElement.remove();
               removeLoading();

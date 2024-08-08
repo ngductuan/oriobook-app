@@ -76,7 +76,7 @@ export default {
       if (result) {
         try {
           const response = await axios.get(
-            `${process.env.MAIN_URL}/account/getAccountDetail`
+            `${process.env.VUE_APP_MAIN_URL}/account/getAccountDetail`
           );
           mail = response.data.email;
         } catch (error) {
@@ -85,7 +85,7 @@ export default {
         if (mail === formData.account_email) {
           try {
             const response1 = await axios.post(
-              `${process.env.MAIN_URL}/account/delete`,
+              `${process.env.VUE_APP_MAIN_URL}/account/delete`,
               formData
             );
 

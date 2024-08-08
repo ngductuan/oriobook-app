@@ -298,7 +298,7 @@ export default {
         // console.log(data);
 
         const response = await axios.post(
-          `${process.env.MAIN_URL}/product/handle-review/${idProduct.value}`,
+          `${process.env.VUE_APP_MAIN_URL}/product/handle-review/${idProduct.value}`,
           data
         );
         let res = response.data;
@@ -359,7 +359,7 @@ export default {
     const requestPage = async () => {
       displayLoading(".order-container", -48);
       const response = await axios.get(
-        `${process.env.MAIN_URL}/${pathRef.value}?page=${page}&perPage=${perPage}`
+        `${process.env.VUE_APP_MAIN_URL}/${pathRef.value}?page=${page}&perPage=${perPage}`
       );
 
       curPage.value = page;

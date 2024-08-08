@@ -20,19 +20,26 @@ module.exports = defineConfig({
   //   },
   //   hot: true,
   // },
-  configureWebpack: {
-    plugins: [
-      new Dotenv(),
-      new webpack.DefinePlugin({
-        "process.env.NODE_ENV": JSON.stringify(
-          process.env.NODE_ENV || "production"
-        ),
-      }),
-    ],
-    resolve: {
-      alias: {
-        "@": path.resolve(__dirname, "src"),
-      },
-    },
-  },
+  // configureWebpack: {
+  //   plugins: [
+  //     new Dotenv(),
+  //     // new webpack.DefinePlugin({
+  //     //   "process.env": {
+  //     //     NODE_ENV: JSON.stringify(process.env.NODE_ENV || "production"),
+  //     //     MAIN_URL: JSON.stringify(
+  //     //       process.env.MAIN_URL || "http://localhost:8080/v1/api"
+  //     //     ),
+  //     //     VUE_APP_ACCESS_TOKEN_SECRET: JSON.stringify(
+  //     //       process.env.VUE_APP_ACCESS_TOKEN_SECRET || "Access_Token_Secret"
+  //     //     ),
+  //     //     // Add other environment variables here
+  //     //   },
+  //     // }),
+  //   ],
+  //   resolve: {
+  //     alias: {
+  //       "@": path.resolve(__dirname, "src"),
+  //     },
+  //   },
+  // },
 });

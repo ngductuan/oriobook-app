@@ -251,7 +251,7 @@ export default {
           </div>
         `);
         const response = await axios.post(
-          `${process.env.MAIN_URL}/author/edit/save/${idAuthor}`,
+          `${process.env.VUE_APP_MAIN_URL}/author/edit/save/${idAuthor}`,
           formData,
           {
             headers: {
@@ -276,7 +276,7 @@ export default {
       onMounted(async () => {
         try {
           const response = await axios.get(
-            `${process.env.MAIN_URL}/author/edit/${id.value}`
+            `${process.env.VUE_APP_MAIN_URL}/author/edit/${id.value}`
           );
           if (response.status == 200) {
             author.value = response.data;

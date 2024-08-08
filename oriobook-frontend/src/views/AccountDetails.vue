@@ -28,7 +28,7 @@ export default {
     onMounted(async () => {
       try {
         const response = await axios.get(
-          `${process.env.MAIN_URL}/account/getAccountDetail`
+          `${process.env.VUE_APP_MAIN_URL}/account/getAccountDetail`
         );
 
         if (response.data.password == "") {

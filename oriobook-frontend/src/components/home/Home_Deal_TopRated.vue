@@ -28,7 +28,7 @@ export default {
     onMounted(async () => {
       try {
         const response = await axios.get(
-          `${process.env.MAIN_URL}/authors?page=0&limit=6`
+          `${process.env.VUE_APP_MAIN_URL}/authors?page=0&limit=6`
         );
         // console.log(response.data);
         author.value = response.data.data;
