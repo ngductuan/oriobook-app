@@ -6,7 +6,7 @@ spring:
   config:
     import: optional:file:.env[.properties]
   profiles:
-    active: ${SPRING_ENV:prod}
+    active: ${SPRING_ENV:dev}
   application:
     name: oriobook
 #  client-url:
