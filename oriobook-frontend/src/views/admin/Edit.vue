@@ -249,15 +249,18 @@ export default {
         const formData = new FormData();
         formData.append("image", image); // 'image' là đối tượng file bạn muốn upload
 
-        const response = await fetch(`${process.env.MAIN_URL}/upload/image`, {
-          method: "POST",
-          body: formData,
-          headers: {
-            Authorization: `Bearer ${token}`,
-            // Không cần thiết phải chỉ định 'Content-Type': 'multipart/form-data' với fetch,
-            // vì trình duyệt sẽ tự động thiết lập nó khi gửi FormData.
-          },
-        });
+        const response = await fetch(
+          `${process.env.VUE_APP_MAIN_URL}/upload/image`,
+          {
+            method: "POST",
+            body: formData,
+            headers: {
+              Authorization: `Bearer ${token}`,
+              // Không cần thiết phải chỉ định 'Content-Type': 'multipart/form-data' với fetch,
+              // vì trình duyệt sẽ tự động thiết lập nó khi gửi FormData.
+            },
+          }
+        );
 
         const imageRes = await response.json();
 
@@ -268,7 +271,7 @@ export default {
         // console.log("productInfo", productInfo);
 
         const response2 = await axios.put(
-          `${process.env.MAIN_URL}/products/${idProduct}`,
+          `${process.env.VUE_APP_MAIN_URL}/products/${idProduct}`,
           productInfo
         );
 
@@ -289,7 +292,9 @@ export default {
     onMounted(async () => {
       try {
         // Lấy tất cả category
-        let response = await axios.get(`${process.env.MAIN_URL}/categories`);
+        let response = await axios.get(
+          `${process.env.VUE_APP_MAIN_URL}/categories`
+        );
         categoryList.value = response.data.data;
         for (let cate of categoryList.value) {
           // console.log(cate);
@@ -306,7 +311,7 @@ export default {
           }
         }
         // Lấy tất cả author
-        let res2 = await axios.get(`${process.env.MAIN_URL}/authors`);
+        let res2 = await axios.get(`${process.env.VUE_APP_MAIN_URL}/authors`);
         authors.value = res2.data.data;
 
         // console.log("authors", authors.value);
@@ -314,7 +319,7 @@ export default {
         // console.log("route", route.name);
         if (route.name == "EditForUpdate") {
           response = await axios.get(
-            `${process.env.MAIN_URL}/products/${id.value}`
+            `${process.env.VUE_APP_MAIN_URL}/products/${id.value}`
           );
 
           if (response.status == 200) {

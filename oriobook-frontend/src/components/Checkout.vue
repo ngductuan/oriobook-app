@@ -264,7 +264,7 @@ export default {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.MAIN_URL}/product/checkout`
+          `${process.env.VUE_APP_MAIN_URL}/product/checkout`
         );
         accountData.value = response.data;
         console.log(accountData.value);
@@ -306,7 +306,7 @@ export default {
       };
 
       const response = await axios.post(
-        `${process.env.MAIN_URL}/order/place`,
+        `${process.env.VUE_APP_MAIN_URL}/order/place`,
         dataSend
       );
       let res = response.data;

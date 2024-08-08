@@ -39,9 +39,12 @@ export default {
     const productGroups = ref([]);
     onMounted(async () => {
       try {
-        console.log("*** process.env.MAIN_URL", process.env.MAIN_URL);
+        console.log(
+          "*** process.env.VUE_APP_MAIN_URL",
+          process.env.VUE_APP_MAIN_URL
+        );
         const response = await axios.get(
-          `${process.env.MAIN_URL}/products?page=2&limit=4`
+          `${process.env.VUE_APP_MAIN_URL}/products?page=2&limit=4`
         );
         const products = response.data.data; // Access 'products' property
 

@@ -176,7 +176,7 @@ export default {
       if (result) {
         try {
           const response = await axios.post(
-            `${process.env.MAIN_URL}/auth/sign-up`,
+            `${process.env.VUE_APP_MAIN_URL}/auth/sign-up`,
             {
               ...formData,
             }
@@ -188,7 +188,7 @@ export default {
             position: "top-center",
           });
         } catch (error) {
-          toast.error(error.response.data.message , {
+          toast.error(error.response.data.message, {
             autoClose: 2000,
             position: "top-center",
           });

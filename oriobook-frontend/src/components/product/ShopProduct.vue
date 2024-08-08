@@ -253,7 +253,7 @@ export default {
         displayLoading(".js-product-wrapper", -32);
         const params = new URLSearchParams(queryObject).toString();
         const response = await axios.get(
-          `${process.env.MAIN_URL}/products?page=${
+          `${process.env.VUE_APP_MAIN_URL}/products?page=${
             page - 1
           }&limit=${perPage}&${params}`
         );
@@ -292,12 +292,14 @@ export default {
 
     onMounted(async () => {
       try {
-        let response = await axios.get(`${process.env.MAIN_URL}/categories`);
+        let response = await axios.get(
+          `${process.env.VUE_APP_MAIN_URL}/categories`
+        );
         categories.value = response.data.data;
         // console.log("categories", categories.value);
 
         // Lấy tất cả tác giả
-        response = await axios.get(`${process.env.MAIN_URL}/authors`);
+        response = await axios.get(`${process.env.VUE_APP_MAIN_URL}/authors`);
         authors.value = response.data.data;
         await requestPage();
         paginationControl();

@@ -116,7 +116,7 @@ export default {
     let admin = ref(false);
     async function LogOut() {
       // const response = await axios.post(
-      //   `${process.env.MAIN_URL}/account/logout`
+      //   `${process.env.VUE_APP_MAIN_URL}/account/logout`
       // );
       // let res = response.data;
 

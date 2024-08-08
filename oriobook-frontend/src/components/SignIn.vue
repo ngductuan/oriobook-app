@@ -100,14 +100,14 @@ export default {
     });
 
     const v$ = useVuelidate(rules, formData);
-    console.log("CHECK", `${process.env.MAIN_URL}/auth/login`);
+    console.log("CHECK", `${process.env.VUE_APP_MAIN_URL}/auth/login`);
 
     async function SaveData() {
       const result = await v$.value.$validate();
       if (result) {
         try {
           const response = await axios.post(
-            `${process.env.MAIN_URL}/auth/login`,
+            `${process.env.VUE_APP_MAIN_URL}/auth/login`,
             formData
           );
 

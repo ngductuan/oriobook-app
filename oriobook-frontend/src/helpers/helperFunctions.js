@@ -29,7 +29,6 @@ export function scrollToTop(top = 0) {
 }
 
 export async function getTokenInfo() {
-  const secretKey = process.env.VUE_APP_ACCESS_TOKEN_SECRET;
   const token = localStorage.getItem("token");
   if (!token) {
     return null;
@@ -48,7 +47,6 @@ export async function getTokenInfo() {
 }
 
 export async function isAdmin() {
-  const secretKey = process.env.VUE_APP_ACCESS_TOKEN_SECRET;
   const token = localStorage.getItem("token");
   if (!token) {
     return false;

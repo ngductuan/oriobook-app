@@ -54,7 +54,9 @@ export default {
       try {
         displayLoading(".js-author-container", -64, 0);
         const response = await axios.get(
-          `${process.env.MAIN_URL}/authors?page=${page - 1}&limit=${perPage}`
+          `${process.env.VUE_APP_MAIN_URL}/authors?page=${
+            page - 1
+          }&limit=${perPage}`
         );
         curPage.value = page;
         authors.value = response.data.data;

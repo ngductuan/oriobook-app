@@ -103,7 +103,7 @@ export default {
       try {
         displayLoading(".js-container-author-product", -50, 0);
         const response = await axios.get(
-          `${process.env.MAIN_URL}/product/productAuthor/${id.value}?page=${page}&perPage=${perPage}`
+          `${process.env.VUE_APP_MAIN_URL}/product/productAuthor/${id.value}?page=${page}&perPage=${perPage}`
         );
         curPage.value = page;
         products.value = response.data.products;

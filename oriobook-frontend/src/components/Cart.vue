@@ -84,7 +84,9 @@ export default {
       let sum = 0;
       try {
         console.log("cart");
-        const response = await axios.get(`${process.env.MAIN_URL}/carts`);
+        const response = await axios.get(
+          `${process.env.VUE_APP_MAIN_URL}/carts`
+        );
         cart.value = response.data.data;
         cart.value.forEach((item) => {
           sum += item.quantity * 1 * item.price * 1;
@@ -104,7 +106,9 @@ export default {
     async function update() {
       try {
         console.log("cart");
-        const response = await axios.get(`${process.env.MAIN_URL}/carts`);
+        const response = await axios.get(
+          `${process.env.VUE_APP_MAIN_URL}/carts`
+        );
         cart.value = response.data.data;
         console.log(response.data);
       } catch (error) {
@@ -117,7 +121,7 @@ export default {
       // console.log(id);
 
       const response = await axios.put(
-        `${process.env.MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.SUBTRACT}`
+        `${process.env.VUE_APP_MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.SUBTRACT}`
       );
 
       if (response.data.statusCode == 200) {
@@ -130,7 +134,7 @@ export default {
         console.log(id);
         const quantity = 1;
         const response = await axios.put(
-          `${process.env.MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.ADD}`
+          `${process.env.VUE_APP_MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.ADD}`
         );
 
         if (response.data.statusCode == 200) {
@@ -147,7 +151,7 @@ export default {
       // console.log(id);
 
       const response = await axios.put(
-        `${process.env.MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.DELETE}`
+        `${process.env.VUE_APP_MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.DELETE}`
       );
 
       if (response.data.statusCode == 200) {
@@ -223,7 +227,9 @@ export default {
         console.log("close");
         $(".cart").removeClass("enable");
         try {
-          const response = await axios.get(`${process.env.MAIN_URL}/carts`);
+          const response = await axios.get(
+            `${process.env.VUE_APP_MAIN_URL}/carts`
+          );
           let newquantity = ref(0);
           for (let i = 0; i < response.data.data.length; i++) {
             newquantity.value += response.data[i].quantity;
@@ -239,7 +245,9 @@ export default {
         console.log("close");
         $(".cart").removeClass("enable");
         try {
-          const response = await axios.get(`${process.env.MAIN_URL}/carts`);
+          const response = await axios.get(
+            `${process.env.VUE_APP_MAIN_URL}/carts`
+          );
           let newquantity = ref(0);
           for (let i = 0; i < response.data.data.length; i++) {
             newquantity.value += response.data[i].quantity;

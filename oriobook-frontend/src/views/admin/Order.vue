@@ -322,7 +322,7 @@ export default {
       console.log(_orderId, _action);
 
       const response = await axios.post(
-        `${process.env.MAIN_URL}/order/handle-manage-order/${_orderId}`,
+        `${process.env.VUE_APP_MAIN_URL}/order/handle-manage-order/${_orderId}`,
         data
       );
       let res = response.data;
@@ -341,7 +341,7 @@ export default {
     const requestPage = async () => {
       displayLoading(".order-section", -48, 0);
       const response = await axios.get(
-        `${process.env.MAIN_URL}/order/manage-order?page=${page}&perPage=${perPage}`
+        `${process.env.VUE_APP_MAIN_URL}/order/manage-order?page=${page}&perPage=${perPage}`
       );
       curPage.value = page;
       orderData.value = response.data.orders;

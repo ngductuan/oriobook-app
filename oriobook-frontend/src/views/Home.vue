@@ -63,11 +63,11 @@ export default {
     onMounted(async () => {
       try {
         let response = await axios.get(
-          `${process.env.MAIN_URL}/products?page=0&limit=5&sortByDate=${SortEnum.DESC}`
+          `${process.env.VUE_APP_MAIN_URL}/products?page=0&limit=5&sortByDate=${SortEnum.DESC}`
         );
         bestSeller.value = response.data.data;
         response = await axios.get(
-          `${process.env.MAIN_URL}/products?page=3&limit=5&sortByDate=${SortEnum.DESC}`
+          `${process.env.VUE_APP_MAIN_URL}/products?page=3&limit=5&sortByDate=${SortEnum.DESC}`
         );
         topRatedProducts.value = response.data.data;
         displayBackToTop();
