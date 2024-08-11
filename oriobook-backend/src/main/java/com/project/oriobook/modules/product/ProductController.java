@@ -112,10 +112,12 @@ public class ProductController {
             RangeQuery.Builder rangeQueryBuilder = QueryBuilders.range().field("createdAt");
 
             if (query.getStartDate() != null) {
-                rangeQueryBuilder.gte(JsonData.of(query.getStartDate().format(CommonConst.DATE_TIME_FORMAT)));
+                rangeQueryBuilder.gte(JsonData.of(query.getStartDate().format(DateTimeFormatter
+                    .ofPattern(CommonConst.DATE_TIME_FORMAT_PATTERN))));
             }
             if (query.getEndDate() != null) {
-                rangeQueryBuilder.lte(JsonData.of(query.getEndDate().format(CommonConst.DATE_TIME_FORMAT)));
+                rangeQueryBuilder.lte(JsonData.of(query.getEndDate().format(DateTimeFormatter
+                    .ofPattern(CommonConst.DATE_TIME_FORMAT_PATTERN))));
             }
 
             filterQueryBuilder.filter(Query.of(q -> q.range(rangeQueryBuilder.build())));
