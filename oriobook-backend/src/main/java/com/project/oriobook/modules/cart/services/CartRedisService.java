@@ -23,7 +23,6 @@ public class CartRedisService implements ICartRedisService {
     private final ProductService productService;
 
     private final RedisTemplate<String, Object> redisTemplate;
-    private final MapperUtil mapperUtil;
     private final RedisUtil redisUtil;
 
     @Override
@@ -66,7 +65,7 @@ public class CartRedisService implements ICartRedisService {
                 redisTemplate.opsForHash().increment(cacheString, prodQuantityName, 1);
             } else {
                 CartRedisItem cartItem = new CartRedisItem(cacheString, productId, 1);
-                Map<String, Object> map = mapperUtil.convertObjectToMap(cartItem);
+                Map<String, Object> map = MapperUtil.convertObjectToMap(cartItem);
                 redisTemplate.opsForHash().putAll(cacheString, map);
             }
 

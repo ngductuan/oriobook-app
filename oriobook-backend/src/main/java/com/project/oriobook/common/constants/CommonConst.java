@@ -27,6 +27,8 @@ public class CommonConst {
     // Date format
     public static final String DATE_BOND_REGEX = "\\d{2}/\\d{2}/\\d{4}";
     public static final String DATE_DTO_FORMAT = "dd/MM/yyyy";
+    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    public static final String TIME_ZONE = "UTC";
 
     // Cloudinary folder
     public static final String CLOUDINARY_PRODUCTS_FOLDER = "products";

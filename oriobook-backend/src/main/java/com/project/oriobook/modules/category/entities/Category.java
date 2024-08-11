@@ -30,7 +30,6 @@ public class Category extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "parent_id")
     @JsonBackReference
-    // @JsonIgnore
     private Category parentNode;
 
     // for main (parent -> for children)
@@ -40,6 +39,6 @@ public class Category extends BaseEntity {
 
     // for products ref to category
     @OneToMany(mappedBy = "categoryNode", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonBackReference
     private List<Product> products = new ArrayList<>();
 }

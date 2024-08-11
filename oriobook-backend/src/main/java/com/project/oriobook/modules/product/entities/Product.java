@@ -1,6 +1,7 @@
 package com.project.oriobook.modules.product.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.oriobook.core.entity.base.BaseEntity;
 import com.project.oriobook.modules.author.entities.Author;
 import com.project.oriobook.modules.category.entities.Category;
@@ -29,11 +30,11 @@ public class Product extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    @JsonBackReference
+    @JsonManagedReference
     private Category categoryNode;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
-    @JsonBackReference
+    @JsonManagedReference
     private Author authorNode;
 }

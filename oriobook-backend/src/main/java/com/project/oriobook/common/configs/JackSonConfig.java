@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.project.oriobook.common.constants.CommonConst;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -18,33 +19,26 @@ import java.time.format.DateTimeFormatter;
 
 @Configuration
 public class JackSonConfig {
-    @Value("${spring.jackson.date-format}")
-    private String dateFormat;
-
-    @Value("${spring.jackson.time-zone}")
-    private String timeZone;
+    public static final ZoneId ZONE_ID = ZoneId.of(CommonConst.TIME_ZONE);
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter
+            .ofPattern("yyyy-MM-dd").withZone(ZONE_ID);
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
+            .ofPattern(CommonConst.DATE_TIME_FORMAT).withZone(ZONE_ID);
 
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
 
         return builder -> {
-            // Define ZoneId
-            ZoneId zoneId = ZoneId.of(timeZone);
-
-            // formatter
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(zoneId);
-            DateTimeFormatter dateTimeFormatter =  DateTimeFormatter.ofPattern(dateFormat).withZone(zoneId);
-
             // deserializers
-            builder.deserializers(new LocalDateDeserializer(dateFormatter));
-            builder.deserializers(new LocalDateTimeDeserializer(dateTimeFormatter));
+            builder.deserializers(new LocalDateDeserializer(DATE_FORMATTER));
+            builder.deserializers(new LocalDateTimeDeserializer(DATE_TIME_FORMATTER));
 
             // serializers
-            builder.serializers(new LocalDateSerializer(dateFormatter));
-            builder.serializers(new LocalDateTimeSerializer(dateTimeFormatter));
+            builder.serializers(new LocalDateSerializer(DATE_FORMATTER));
+            builder.serializers(new LocalDateTimeSerializer(DATE_TIME_FORMATTER));
 
             // Set default time zone for ObjectMapper
-            builder.timeZone(timeZone);
+            builder.timeZone(CommonConst.TIME_ZONE);
         };
     }
 

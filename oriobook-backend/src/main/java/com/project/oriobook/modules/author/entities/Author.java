@@ -1,5 +1,6 @@
 package com.project.oriobook.modules.author.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.oriobook.common.enums.CommonEnum;
 import com.project.oriobook.core.entity.base.BaseEntity;
@@ -38,6 +39,6 @@ public class Author extends BaseEntity {
     private int publishedBook;
 
     @OneToMany(mappedBy = "authorNode", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonBackReference
     private List<Product> products = new ArrayList<>();
 }

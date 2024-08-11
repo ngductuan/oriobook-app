@@ -3,6 +3,7 @@ package com.project.oriobook;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
 @SpringBootApplication() // exclude = {ReactiveSecurityAutoConfiguration.class}
 public class OriobookApplication {

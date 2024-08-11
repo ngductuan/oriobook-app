@@ -13,14 +13,13 @@ import java.time.format.DateTimeFormatter;
 
 public class CommonUtil {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(CommonConst.DATE_DTO_FORMAT);
-    private static final MapperUtil mapperUtil = new MapperUtil();
 
     public static void responseFilterException(Exception e, HttpServletResponse response) {
         try {
             response.setContentType("application/json");
             if (e instanceof JwtExceptionBase jwtE) {
                 response.setStatus(jwtE.getStatusCode());
-                response.getWriter().write(mapperUtil.convertMapToJson(jwtE.getErrorResponse()));
+                response.getWriter().write(MapperUtil.convertMapToJson(jwtE.getErrorResponse()));
             } else {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write(e.getMessage());
