@@ -39,26 +39,4 @@ public class MapperUtil {
     public static <T> T convertJsonToObject(String json, Class<T> clazz) throws JsonProcessingException {
         return objectMapper.readValue(json, clazz);
     }
-
-    public static ModelMapper createModelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
-
-        // Register the custom converter
-        Converter<String, LocalDateTime> toLocalDateTime = new LocalDateTimeConverter();
-
-        // Apply to BaseEntity and all its subclasses
-        modelMapper.getConfiguration().setSkipNullEnabled(true);
-
-        modelMapper.addConverter(toLocalDateTime);
-
-        // Create TypeMap for Map<String, Object> to BaseEntity
-        // TypeMap<Map<String, Object>, BaseEntity> typeMap = modelMapper.createTypeMap(Map.class, BaseEntity.class);
-        //
-        // typeMap.addMappings(mapper -> {
-        //     mapper.using(toLocalDateTime).map(src -> src.get("createdAt"), BaseEntity::setCreatedAt);
-        //     mapper.using(toLocalDateTime).map(src -> src.get("updatedAt"), BaseEntity::setUpdatedAt);
-        // });
-
-        return modelMapper;
-    }
 }

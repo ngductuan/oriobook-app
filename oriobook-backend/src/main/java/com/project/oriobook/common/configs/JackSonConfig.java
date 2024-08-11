@@ -15,14 +15,12 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.TimeZone;
 
 @Configuration
 public class JackSonConfig {
-    public static final ZoneId ZONE_ID = ZoneId.of(CommonConst.TIME_ZONE);
-    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter
-            .ofPattern("yyyy-MM-dd").withZone(ZONE_ID);
-    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
-            .ofPattern(CommonConst.DATE_TIME_FORMAT).withZone(ZONE_ID);
+    public static final DateTimeFormatter DATE_FORMATTER = CommonConst.DATE_FORMAT;
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = CommonConst.DATE_TIME_FORMAT;
 
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
@@ -37,7 +35,7 @@ public class JackSonConfig {
             builder.serializers(new LocalDateTimeSerializer(DATE_TIME_FORMATTER));
 
             // Set default time zone for ObjectMapper
-            builder.timeZone(CommonConst.TIME_ZONE);
+            builder.timeZone(TimeZone.getTimeZone(CommonConst.TIME_ZONE));
         };
     }
 

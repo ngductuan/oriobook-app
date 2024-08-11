@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.swing.text.DateFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,16 +34,16 @@ public class Category extends BaseEntity {
     // for sub (children -> ref parent)
     @ManyToOne
     @JoinColumn(name = "parent_id")
-    // @JsonBackReference
+    @JsonBackReference
     private Category parentNode;
 
     // for main (parent -> for children)
     @OneToMany(mappedBy = "parentNode", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    // @JsonManagedReference
+    @JsonManagedReference
     private List<Category> children = new ArrayList<>();
 
     // for products ref to category
     @OneToMany(mappedBy = "categoryNode", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    // @JsonBackReference
+    @JsonManagedReference
     private List<Product> products = new ArrayList<>();
 }
