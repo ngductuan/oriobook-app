@@ -32,6 +32,7 @@ public class CommonConst {
     public static final ZoneId TIME_ZONE = ZoneId.of("UTC");
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ISO_DATE.withZone(TIME_ZONE);
     public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ISO_DATE_TIME.withZone(TIME_ZONE);
+    public static final String DATE_TIME_FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
     // Cloudinary folder
     public static final String CLOUDINARY_PRODUCTS_FOLDER = "products";

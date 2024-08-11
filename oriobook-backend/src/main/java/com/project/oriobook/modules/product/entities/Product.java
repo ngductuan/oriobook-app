@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.oriobook.core.entity.base.BaseEntity;
 import com.project.oriobook.modules.author.entities.Author;
 import com.project.oriobook.modules.category.entities.Category;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,13 +28,13 @@ public class Product extends BaseEntity{
 
     private int stock;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
-    @JsonBackReference
+    @JsonManagedReference
     private Category categoryNode;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id")
-    @JsonBackReference
+    @JsonManagedReference
     private Author authorNode;
 }

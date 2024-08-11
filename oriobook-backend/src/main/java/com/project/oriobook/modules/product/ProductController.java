@@ -2,6 +2,7 @@ package com.project.oriobook.modules.product;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.SortOrder;
+import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
 import co.elastic.clients.json.JsonData;
@@ -42,7 +43,6 @@ import java.io.IOException;
 @RequestMapping("${api.prefix}/products")
 @RequiredArgsConstructor
 public class ProductController {
-    // private final ElasticProductRepository productElasticRepository;
     private final ProductService productService;
     private final ElasticsearchClient elasticClient;
     private final ElasticService elasticService;
@@ -70,48 +70,84 @@ public class ProductController {
         int from = (int) pageRequest.getOffset();
         int size = pageRequest.getPageSize();
 
-        SearchRequest searchRequest = new SearchRequest.Builder()
-            .index("products")
-            .query(q -> q
-                .bool(b -> b
-                    .must(m -> m
-                        .match(m1 -> m1
-                            .field("productName")
-                            .query(query.getProductName())
-                        )
-                    )
-                    .filter(f -> f
-                        .bool(b1 -> b1
-                            .must(m2 -> m2
-                                .term(t1 -> t1
-                                    .field("categoryId")
-                                    .value(query.getCategoryId())
-                                )
-                            )
-                            .must(m3 -> m3
-                                .term(t2 -> t2
-                                    .field("authorId")
-                                    .value(query.getAuthorId())
-                                )
-                            )
-                            .filter(f1 -> f1
-                                .range(r1 -> r1
-                                    .field("createdAt")
-                                    .gte(query.getStartDate() != null ?
-                                        JsonData.fromJson(query.getStartDate().toString()) : null)
-                                )
-                            )
-                            .filter(f2 -> f2
-                                .range(r2 -> r2
-                                    .field("updatedAt")
-                                    .lte(query.getEndDate() != null ?
-                                        JsonData.fromJson(query.getEndDate().toString()) : null)
-                                )
-                            )
-                        )
-                    )
+        SearchRequest.Builder searchRequestBuilder = new SearchRequest.Builder()
+            .index("products");
+
+        BoolQuery.Builder boolQueryBuilder = new BoolQuery.Builder();
+
+        // Add match query only if productName is not null
+        if (query.getProductName() != null) {
+            boolQueryBuilder.must(m -> m
+                .wildcard(wc -> wc
+                    .field("name")
+                    .value("*" + query.getProductName() + "*")
                 )
-            )
+            );
+        }
+
+        BoolQuery.Builder filterQueryBuilder = new BoolQuery.Builder();
+        if (query.getCategoryId() != null) {
+            TermQuery termQuery = new TermQuery.Builder()
+                .field("categoryNode.id.keyword")
+                .value(query.getCategoryId())
+                .build();
+
+            filterQueryBuilder.filter(f -> f
+                .term(termQuery));
+        }
+
+        if (query.getAuthorId() != null) {
+            TermQuery termQuery = new TermQuery.Builder()
+                .field("authorNode.id.keyword")
+                .value(query.getAuthorId())
+                .build();
+
+            filterQueryBuilder.filter(f -> f
+                .term(termQuery));
+        }
+
+        // Add range queries only if startDate or endDate are not null
+            // filterQueryBuilder.filter(f -> f
+            //     .range(r -> r
+            //         .field("createdAt")
+            //         .gte(JsonData.fromJson(query.getStartDate().toString()))
+            //     )
+            // );
+        if (query.getStartDate() != null) {
+            RangeQuery rangeQuery = new RangeQuery.Builder()
+                .field("createdAt")
+                .gte(JsonData.fromJson(query.getStartDate().format(CommonConst.DATE_TIME_FORMAT)))
+                .build();
+
+            boolQueryBuilder.filter(Query.of(q -> q.range(rangeQuery)));
+        }
+        if (query.getEndDate() != null) {
+            RangeQuery rangeQuery = new RangeQuery.Builder()
+                .field("createdAt")
+                .lte(JsonData.fromJson(query.getEndDate().format(CommonConst.DATE_TIME_FORMAT)))
+                .build();
+
+            boolQueryBuilder.filter(Query.of(q -> q.range(rangeQuery)));
+        }
+
+        // filterQueryBuilder.filter(f -> f
+        //     .range(r -> r
+        //         .field("createdAt")
+        //         .lte(JsonData.fromJson(query.getEndDate().toString()))
+        //     )
+        // );
+
+        // Build the filter query if there are any filters
+        BoolQuery filterQuery = filterQueryBuilder.build();
+        if (!filterQuery.must().isEmpty() || !filterQuery.filter().isEmpty()) {
+            boolQueryBuilder.filter(f -> f
+                .bool(filterQuery)
+            );
+        }
+
+        // Build the search request
+        SearchRequest searchRequest = searchRequestBuilder
+            .query(q -> q.bool(boolQueryBuilder.build()))
             .sort(s -> s
                 .field(f -> f
                     .field("price")
@@ -121,6 +157,7 @@ public class ProductController {
             .from(from)
             .size(size)
             .build();
+
 
         try {
             SearchResponse<ObjectNode> response = elasticClient.search(searchRequest, ObjectNode.class);

@@ -44,6 +44,6 @@ public class Category extends BaseEntity {
 
     // for products ref to category
     @OneToMany(mappedBy = "categoryNode", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonBackReference
     private List<Product> products = new ArrayList<>();
 }

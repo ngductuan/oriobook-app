@@ -44,7 +44,8 @@ public class ElasticService implements IElasticService{
 
             return !bulkResponse.errors();
         } catch (Exception e) {
-            throw new CommonException.SyncElasticData("SyncElastic (" + index + ")");
+            // throw new CommonException.SyncElasticData("SyncElastic (" + index + ")");
+            throw new CommonException.SyncElasticData(e.getMessage());
         }
     }
 }

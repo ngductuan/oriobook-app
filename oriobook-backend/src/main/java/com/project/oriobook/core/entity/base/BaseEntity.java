@@ -27,11 +27,13 @@ public class BaseEntity {
     @Column(name = "created_at")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = CommonConst.DATE_TIME_FORMAT_STRING)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = CommonConst.DATE_TIME_FORMAT_STRING)
     private LocalDateTime updatedAt;
 
     @PrePersist
