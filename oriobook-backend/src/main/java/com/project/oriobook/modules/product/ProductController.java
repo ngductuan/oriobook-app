@@ -15,6 +15,7 @@ import com.project.oriobook.common.constants.RoleConst;
 import com.project.oriobook.common.enums.CommonEnum;
 import com.project.oriobook.common.exceptions.CommonException;
 import com.project.oriobook.common.exceptions.ValidationException;
+import com.project.oriobook.common.utils.ElasticUtil;
 import com.project.oriobook.core.pagination.base.PageResponse;
 import com.project.oriobook.modules.elastic.services.ElasticService;
 import com.project.oriobook.modules.product.dto.CreateProductDTO;
@@ -72,9 +73,11 @@ public class ProductController {
         int size = pageRequest.getPageSize();
 
         SearchRequest.Builder searchRequestBuilder = new SearchRequest.Builder()
-            .index("products");
+            .index(ElasticIndexConst.PRODUCTS)
+            .from(from)
+            .size(size);
 
-        BoolQuery.Builder boolQueryBuilder = new BoolQuery.Builder();
+        BoolQuery.Builder boolQueryBuilder = ElasticUtil.generateBoolBaseQuery(query);
 
         // Add match query only if productName is not null
         if (query.getProductName() != null) {
@@ -86,14 +89,14 @@ public class ProductController {
             );
         }
 
-        BoolQuery.Builder filterQueryBuilder = new BoolQuery.Builder();
+        // BoolQuery.Builder filterQueryBuilder = new BoolQuery.Builder();
         if (query.getCategoryId() != null) {
             TermQuery termQuery = new TermQuery.Builder()
                 .field("categoryNode.id.keyword")
                 .value(query.getCategoryId())
                 .build();
 
-            filterQueryBuilder.filter(f -> f
+            boolQueryBuilder.filter(f -> f
                 .term(termQuery));
         }
 
@@ -103,58 +106,57 @@ public class ProductController {
                 .value(query.getAuthorId())
                 .build();
 
-            filterQueryBuilder.filter(f -> f
+            boolQueryBuilder.filter(f -> f
                 .term(termQuery));
         }
 
-        // Add range queries only if startDate or endDate are not null
-        if (query.getStartDate() != null || query.getEndDate() != null) {
-            RangeQuery.Builder rangeQueryBuilder = QueryBuilders.range().field("createdAt");
-
-            if (query.getStartDate() != null) {
-                rangeQueryBuilder.gte(JsonData.of(query.getStartDate().format(DateTimeFormatter
-                    .ofPattern(CommonConst.DATE_TIME_FORMAT_PATTERN))));
-            }
-            if (query.getEndDate() != null) {
-                rangeQueryBuilder.lte(JsonData.of(query.getEndDate().format(DateTimeFormatter
-                    .ofPattern(CommonConst.DATE_TIME_FORMAT_PATTERN))));
-            }
-
-            filterQueryBuilder.filter(Query.of(q -> q.range(rangeQueryBuilder.build())));
-        }
-
         // Build the filter query if there are any filters
-        BoolQuery filterQuery = filterQueryBuilder.build();
-        if (!filterQuery.must().isEmpty() || !filterQuery.filter().isEmpty()) {
-            boolQueryBuilder.filter(f -> f
-                .bool(filterQuery)
-            );
-        }
+        // BoolQuery filterQuery = filterQueryBuilder.build();
+        // if (!filterQuery.must().isEmpty() || !filterQuery.filter().isEmpty()) {
+        //     boolQueryBuilder.filter(f -> f
+        //         .bool(filterQuery)
+        //     );
+        // }
 
-        // Build the search request
-        SearchRequest searchRequest = searchRequestBuilder
-            .query(q -> q.bool(boolQueryBuilder.build()))
-            .sort(s -> s
+        // Add sort query only if sortByPrice is not null
+        if (query.getSortByPrice() != null) {
+            searchRequestBuilder.sort(s -> s
                 .field(f -> f
                     .field("price")
                     .order(query.getSortByPrice() == CommonEnum.SortEnum.ASC ? SortOrder.Asc : SortOrder.Desc)
                 )
-            )
-            .from(from)
-            .size(size)
-            .build();
-
-
-        try {
-            SearchResponse<ObjectNode> response = elasticClient.search(searchRequest, ObjectNode.class);
-
-            PageResponse<ProductResponse> pageResponse = new PageResponse<>();
-            pageResponse.setResponseForElastic(response, query.getPage(), query.getLimit(), ProductResponse.class);
-
-            return pageResponse;
-        } catch (IOException e) {
-            throw new CommonException.GetElasticData("getProducts");
+            );
         }
+
+        // Not do rating sort yet (apply for FindAllProductQueryDTO)
+        if (query.getSortByRating() != null) {
+            searchRequestBuilder.sort(s -> s
+                .field(f -> f
+                    .field("rating")
+                    .order(query.getSortByRating() == CommonEnum.SortEnum.ASC ? SortOrder.Asc : SortOrder.Desc)
+                )
+            );
+        }
+
+        // Build query for the search request
+        searchRequestBuilder
+            .query(q -> q.bool(boolQueryBuilder.build()));
+
+        return ElasticUtil.generatePageResponse(searchRequestBuilder, elasticClient,
+            query, ElasticIndexConst.PRODUCTS, ProductResponse.class);
+        //
+        // SearchRequest searchRequest = searchRequestBuilder.build();
+        //
+        // try {
+        //     SearchResponse<ObjectNode> response = elasticClient.search(searchRequest, ObjectNode.class);
+        //
+        //     PageResponse<ProductResponse> pageResponse = new PageResponse<>();
+        //     pageResponse.setResponseForElastic(response, query.getPage(), query.getLimit(), ProductResponse.class);
+        //
+        //     return pageResponse;
+        // } catch (IOException e) {
+        //     throw new CommonException.GetElasticData("getProducts");
+        // }
     }
 
     @PutMapping("/sync-elastic")
