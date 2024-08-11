@@ -29,10 +29,13 @@ public class CommonConst {
     // Date format
     public static final String DATE_BOND_REGEX = "\\d{2}/\\d{2}/\\d{4}";
     public static final String DATE_DTO_FORMAT = "dd/MM/yyyy";
+    public static final String DATE_TIME_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    public static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd";
     public static final ZoneId TIME_ZONE = ZoneId.of("UTC");
-    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ISO_DATE.withZone(TIME_ZONE);
-    public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ISO_DATE_TIME.withZone(TIME_ZONE);
-    public static final String DATE_TIME_FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_PATTERN)
+        .withZone(TIME_ZONE);
+    public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN)
+        .withZone(TIME_ZONE);
 
     // Cloudinary folder
     public static final String CLOUDINARY_PRODUCTS_FOLDER = "products";

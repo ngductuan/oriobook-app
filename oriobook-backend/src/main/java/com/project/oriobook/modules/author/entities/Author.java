@@ -43,7 +43,6 @@ public class Author extends BaseEntity {
     private int publishedBook;
 
     @OneToMany(mappedBy = "authorNode", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    // @JsonManagedReference
     @JsonBackReference
     private List<Product> products = new ArrayList<>();
 }

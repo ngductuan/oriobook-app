@@ -37,6 +37,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @Tag(name = "products")
@@ -107,35 +108,18 @@ public class ProductController {
         }
 
         // Add range queries only if startDate or endDate are not null
-            // filterQueryBuilder.filter(f -> f
-            //     .range(r -> r
-            //         .field("createdAt")
-            //         .gte(JsonData.fromJson(query.getStartDate().toString()))
-            //     )
-            // );
-        if (query.getStartDate() != null) {
-            RangeQuery rangeQuery = new RangeQuery.Builder()
-                .field("createdAt")
-                .gte(JsonData.fromJson(query.getStartDate().format(CommonConst.DATE_TIME_FORMAT)))
-                .build();
+        if (query.getStartDate() != null || query.getEndDate() != null) {
+            RangeQuery.Builder rangeQueryBuilder = QueryBuilders.range().field("createdAt");
 
-            boolQueryBuilder.filter(Query.of(q -> q.range(rangeQuery)));
+            if (query.getStartDate() != null) {
+                rangeQueryBuilder.gte(JsonData.of(query.getStartDate().format(CommonConst.DATE_TIME_FORMAT)));
+            }
+            if (query.getEndDate() != null) {
+                rangeQueryBuilder.lte(JsonData.of(query.getEndDate().format(CommonConst.DATE_TIME_FORMAT)));
+            }
+
+            filterQueryBuilder.filter(Query.of(q -> q.range(rangeQueryBuilder.build())));
         }
-        if (query.getEndDate() != null) {
-            RangeQuery rangeQuery = new RangeQuery.Builder()
-                .field("createdAt")
-                .lte(JsonData.fromJson(query.getEndDate().format(CommonConst.DATE_TIME_FORMAT)))
-                .build();
-
-            boolQueryBuilder.filter(Query.of(q -> q.range(rangeQuery)));
-        }
-
-        // filterQueryBuilder.filter(f -> f
-        //     .range(r -> r
-        //         .field("createdAt")
-        //         .lte(JsonData.fromJson(query.getEndDate().toString()))
-        //     )
-        // );
 
         // Build the filter query if there are any filters
         BoolQuery filterQuery = filterQueryBuilder.build();
