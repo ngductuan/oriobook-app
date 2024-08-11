@@ -48,4 +48,12 @@ public class BaseEntity {
     private void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+    //
+    // public void setCreatedAt(String createdAt) {
+    //     this.createdAt = LocalDateTime.parse(createdAt);
+    // }
+    //
+    // public void setUpdatedAt(String updatedAt) {
+    //     this.updatedAt = LocalDateTime.parse(updatedAt);
+    // }
 }

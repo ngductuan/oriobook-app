@@ -1,6 +1,7 @@
 package com.project.oriobook.modules.category.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.oriobook.core.entity.base.BaseEntity;
 import com.project.oriobook.modules.product.entities.Product;
@@ -32,16 +33,16 @@ public class Category extends BaseEntity {
     // for sub (children -> ref parent)
     @ManyToOne
     @JoinColumn(name = "parent_id")
-    @JsonBackReference
+    // @JsonBackReference
     private Category parentNode;
 
     // for main (parent -> for children)
     @OneToMany(mappedBy = "parentNode", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference
+    // @JsonManagedReference
     private List<Category> children = new ArrayList<>();
 
     // for products ref to category
     @OneToMany(mappedBy = "categoryNode", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonBackReference
+    // @JsonBackReference
     private List<Product> products = new ArrayList<>();
 }

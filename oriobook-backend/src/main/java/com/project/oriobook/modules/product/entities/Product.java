@@ -32,11 +32,11 @@ public class Product extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    @JsonManagedReference
+    // @JsonManagedReference
     private Category categoryNode;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
-    @JsonManagedReference
+    // @JsonManagedReference
     private Author authorNode;
 }

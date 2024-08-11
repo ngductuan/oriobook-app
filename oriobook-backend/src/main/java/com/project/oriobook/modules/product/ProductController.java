@@ -49,18 +49,17 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     public PageResponse<ProductResponse> getAllProducts(@ParameterObject @ModelAttribute FindAllProductQueryDTO query) {
         Page<Product> productsList = productService.getAllProducts(query);
-        // elasticClient.bulk(b -> b.index("products").add(objectMapper.valueToTree(productsList.getContent())));
 
         modelMapper.typeMap(Product.class, ProductResponse.class);
         Page<ProductResponse> productResponse = productsList.map(product ->
                 modelMapper.map(product, ProductResponse.class));
-        //
+
         return new PageResponse<>(productResponse);
     }
 
     @GetMapping("/custom")
     @ResponseStatus(HttpStatus.OK)
-    public PageResponse<ProductResponse> getAllProductsCustom(@ParameterObject @ModelAttribute FindAllProductQueryDTO query)
+    public PageResponse<Product> getAllProductsCustom(@ParameterObject @ModelAttribute FindAllProductQueryDTO query)
             throws Exception {
         PageRequest pageRequest = PageRequest.of(query.getPage(), query.getLimit());
         int from = (int) pageRequest.getOffset();
@@ -78,8 +77,8 @@ public class ProductController {
         try {
             SearchResponse<ObjectNode> response = elasticClient.search(searchRequest, ObjectNode.class);
 
-            PageResponse<ProductResponse> pageResponse = new PageResponse<>();
-            pageResponse.setResponseForElastic(response, query.getPage(), query.getLimit(), ProductResponse.class);
+            PageResponse<Product> pageResponse = new PageResponse<>();
+            pageResponse.setResponseForElastic(response, query.getPage(), query.getLimit(), Product.class);
 
             return pageResponse;
         } catch (IOException e) {
@@ -101,16 +100,6 @@ public class ProductController {
                     .query(q -> q.matchAll(m -> m))
             );
             elasticClient.deleteByQuery(deleteRequest);
-
-            // for (Product product : products.getContent()) {
-            //     IndexRequest<Product> request = new IndexRequest.Builder<Product>()
-            //             .index("products")
-            //             .id(String.valueOf(product.getId()))
-            //             .document(product)
-            //             .build();
-            //     elasticClient.index(request);
-            // }
-            // return true;
 
             BulkRequest.Builder bulkRequestBuilder = new BulkRequest.Builder();
 
