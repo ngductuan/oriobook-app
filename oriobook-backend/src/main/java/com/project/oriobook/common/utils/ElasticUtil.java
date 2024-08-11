@@ -42,18 +42,13 @@ public class ElasticUtil {
         return boolQueryBuilder;
     }
 
-    public static <T> PageResponse<T> generatePageResponse(SearchRequest.Builder searchRequestBuilder,
-        ElasticsearchClient client, QueryFilterBase query, String elasticIndex, Class<T> targetClass) throws Exception {
+    public static SearchResponse<ObjectNode> searchRequest(SearchRequest.Builder searchRequestBuilder,
+        ElasticsearchClient client, String elasticIndex) throws Exception {
 
         SearchRequest searchRequest = searchRequestBuilder.build();
 
         try {
-            SearchResponse<ObjectNode> response = client.search(searchRequest, ObjectNode.class);
-
-            PageResponse<T> pageResponse = new PageResponse<>();
-            pageResponse.setResponseForElastic(response, query.getPage(), query.getLimit(), targetClass);
-
-            return pageResponse;
+            return client.search(searchRequest, ObjectNode.class);
         } catch (IOException e) {
             throw new CommonException.GetElasticData("GetElasticData: (" + elasticIndex + ")");
         }

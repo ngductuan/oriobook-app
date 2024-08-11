@@ -110,14 +110,6 @@ public class ProductController {
                 .term(termQuery));
         }
 
-        // Build the filter query if there are any filters
-        // BoolQuery filterQuery = filterQueryBuilder.build();
-        // if (!filterQuery.must().isEmpty() || !filterQuery.filter().isEmpty()) {
-        //     boolQueryBuilder.filter(f -> f
-        //         .bool(filterQuery)
-        //     );
-        // }
-
         // Add sort query only if sortByPrice is not null
         if (query.getSortByPrice() != null) {
             searchRequestBuilder.sort(s -> s
@@ -142,21 +134,13 @@ public class ProductController {
         searchRequestBuilder
             .query(q -> q.bool(boolQueryBuilder.build()));
 
-        return ElasticUtil.generatePageResponse(searchRequestBuilder, elasticClient,
-            query, ElasticIndexConst.PRODUCTS, ProductResponse.class);
-        //
-        // SearchRequest searchRequest = searchRequestBuilder.build();
-        //
-        // try {
-        //     SearchResponse<ObjectNode> response = elasticClient.search(searchRequest, ObjectNode.class);
-        //
-        //     PageResponse<ProductResponse> pageResponse = new PageResponse<>();
-        //     pageResponse.setResponseForElastic(response, query.getPage(), query.getLimit(), ProductResponse.class);
-        //
-        //     return pageResponse;
-        // } catch (IOException e) {
-        //     throw new CommonException.GetElasticData("getProducts");
-        // }
+        SearchResponse<ObjectNode> searchResponse = ElasticUtil.searchRequest(searchRequestBuilder,
+            elasticClient, ElasticIndexConst.PRODUCTS);
+
+        PageResponse<ProductResponse> pageResponse = new PageResponse<>();
+        pageResponse.setResponseForElastic(searchResponse, query.getPage(), query.getLimit(), ProductResponse.class);
+
+        return pageResponse;
     }
 
     @PutMapping("/sync-elastic")
