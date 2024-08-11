@@ -1,7 +1,6 @@
 package com.project.oriobook.modules.upload_file.entities;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

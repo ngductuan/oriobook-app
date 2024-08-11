@@ -7,7 +7,10 @@ import com.project.oriobook.core.entity.base.BaseEntity;
 import com.project.oriobook.modules.order_details.entities.OrderDetails;
 import com.project.oriobook.modules.user.entities.User;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
