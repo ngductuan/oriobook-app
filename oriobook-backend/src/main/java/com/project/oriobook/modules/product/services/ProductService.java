@@ -1,6 +1,18 @@
 package com.project.oriobook.modules.product.services;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.SortOrder;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.MatchAllQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch._types.query_dsl.TermQuery;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.project.oriobook.common.constants.ElasticIndexConst;
+import com.project.oriobook.common.enums.CommonEnum;
 import com.project.oriobook.common.exceptions.ProductException;
+import com.project.oriobook.common.utils.ElasticUtil;
 import com.project.oriobook.common.utils.PaginationUtil;
 import com.project.oriobook.common.utils.ValidationUtil;
 import com.project.oriobook.modules.author.entities.Author;
@@ -30,27 +42,86 @@ public class ProductService implements IProductService {
     private final CategoryService categoryService;
     private final AuthorService authorService;
 
+    private final ElasticsearchClient elasticClient;
     private final ModelMapper modelMapper;
 
     @Override
-    public Page<Product> getAllProducts(FindAllProductQueryDTO query) {
-        if (query == null || query.isGetAll()) {
-            return productRepository.findAll(new FindAllProductQueryDTO(), Pageable.unpaged());
-        }
-        List<Sort.Order> orders = new ArrayList<>();
+    public SearchResponse<ObjectNode> getAllProducts(FindAllProductQueryDTO query) throws Exception {
+        PageRequest pageRequest = PageRequest.of(query.getPage(), query.getLimit());
+        int from = (int) pageRequest.getOffset();
+        int size = pageRequest.getPageSize();
 
-        if (!ValidationUtil.isNullOrBlankStr(query.getSortByRating())) {
-            orders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByRating().toString().toLowerCase()), "rating"));
+        SearchRequest.Builder searchRequestBuilder = new SearchRequest.Builder()
+            .index(ElasticIndexConst.PRODUCTS)
+            .from(from)
+            .size(size);
+
+        BoolQuery.Builder boolQueryBuilder = ElasticUtil.generateBoolBaseQuery(query);
+
+        // Add match query only if productName is not null
+        if (!ValidationUtil.isNullOrBlankStr(query.getProductName())) {
+            boolQueryBuilder.must(m -> m
+                .wildcard(wc -> wc
+                    .field("name")
+                    .value("*" + query.getProductName() + "*")
+                )
+            );
         }
 
+        // BoolQuery.Builder filterQueryBuilder = new BoolQuery.Builder();
+        if (!ValidationUtil.isNullOrBlankStr(query.getCategoryId())) {
+            TermQuery termQuery = new TermQuery.Builder()
+                .field("categoryNode.id.keyword")
+                .value(query.getCategoryId())
+                .build();
+
+            boolQueryBuilder.filter(f -> f
+                .term(termQuery));
+        }
+
+        if (!ValidationUtil.isNullOrBlankStr(query.getAuthorId())) {
+            TermQuery termQuery = new TermQuery.Builder()
+                .field("authorNode.id.keyword")
+                .value(query.getAuthorId())
+                .build();
+
+            boolQueryBuilder.filter(f -> f
+                .term(termQuery));
+        }
+
+        // Add sort query only if sortByPrice is not null
         if (!ValidationUtil.isNullOrBlankStr(query.getSortByPrice())) {
-            orders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByPrice().toString().toLowerCase()), "price"));
+            searchRequestBuilder.sort(s -> s
+                .field(f -> f
+                    .field("price")
+                    .order(query.getSortByPrice() == CommonEnum.SortEnum.ASC ? SortOrder.Asc : SortOrder.Desc)
+                )
+            );
         }
 
-        PageRequest pageRequest = PaginationUtil.generatePageRequest(query, orders);
-        Page<Product> productPaging = productRepository.findAll(query, pageRequest);
+        // Not do rating sort yet (apply for FindAllProductQueryDTO)
+        if (!ValidationUtil.isNullOrBlankStr(query.getSortByRating())) {
+            searchRequestBuilder.sort(s -> s
+                .field(f -> f
+                    .field("rating")
+                    .order(query.getSortByRating() == CommonEnum.SortEnum.ASC ? SortOrder.Asc : SortOrder.Desc)
+                )
+            );
+        }
 
-        return productPaging;
+        // Build query for the search request
+        searchRequestBuilder
+            .query(q -> q.bool(boolQueryBuilder.build()));
+
+        SearchResponse<ObjectNode> searchResponse = ElasticUtil.searchRequest(searchRequestBuilder,
+            elasticClient, ElasticIndexConst.PRODUCTS);
+
+        return searchResponse;
+    }
+
+    @Override
+    public Page<Product> getAllProductsToSync() {
+        return productRepository.findAll(Pageable.unpaged());
     }
 
     @Override
