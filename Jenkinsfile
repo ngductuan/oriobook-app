@@ -73,9 +73,11 @@ pipeline {
                                 }
 
                                 withCredentials([file(credentialsId: 'BE_ENV', variable: 'BE_ENV_PATH')]) {
+                                    def imageId = sh(script: "docker inspect --format '{{.Image}}' orio-be", returnStdout: true).trim()
                                     sh """
                                         docker pull ${DOCKER_IMAGE_BE}
                                         docker rm -f orio-be || true
+                                        docker rmi ${imageId} || true
                                         docker run --name orio-be --env-file \$BE_ENV_PATH -dp 5002:8080 ${DOCKER_IMAGE_BE}
                                     """
                                 }
