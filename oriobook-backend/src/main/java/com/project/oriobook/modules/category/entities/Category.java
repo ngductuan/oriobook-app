@@ -1,12 +1,17 @@
 package com.project.oriobook.modules.category.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.oriobook.core.entity.base.BaseEntity;
 import com.project.oriobook.modules.product.entities.Product;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
+import javax.swing.text.DateFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +35,6 @@ public class Category extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "parent_id")
     @JsonBackReference
-    // @JsonIgnore
     private Category parentNode;
 
     // for main (parent -> for children)
@@ -40,6 +44,6 @@ public class Category extends BaseEntity {
 
     // for products ref to category
     @OneToMany(mappedBy = "categoryNode", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonBackReference
     private List<Product> products = new ArrayList<>();
 }

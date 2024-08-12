@@ -1,5 +1,7 @@
 package com.project.oriobook.common.constants;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class CommonConst {
@@ -27,6 +29,13 @@ public class CommonConst {
     // Date format
     public static final String DATE_BOND_REGEX = "\\d{2}/\\d{2}/\\d{4}";
     public static final String DATE_DTO_FORMAT = "dd/MM/yyyy";
+    public static final String DATE_TIME_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    public static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd";
+    public static final ZoneId TIME_ZONE = ZoneId.of("UTC");
+    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_PATTERN)
+        .withZone(TIME_ZONE);
+    public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN)
+        .withZone(TIME_ZONE);
 
     // Cloudinary folder
     public static final String CLOUDINARY_PRODUCTS_FOLDER = "products";

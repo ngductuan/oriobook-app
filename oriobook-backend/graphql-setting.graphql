@@ -1,0 +1,30 @@
+PUT /products?pretty
+{
+  "mappings": {
+    "properties": {
+      "createdAt": {
+        "type": "date",
+        "format": "strict_date_time||epoch_millis"
+      },
+      "updatedAt": {
+        "type": "date",
+        "format": "strict_date_time||epoch_millis"
+      }
+    }
+  }
+}
+
+"categoryNode": {
+  "properties": {
+    "children": {
+      "properties": {
+        "id": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+      }

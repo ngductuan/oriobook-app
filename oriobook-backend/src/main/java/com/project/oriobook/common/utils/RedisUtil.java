@@ -23,8 +23,6 @@ public class RedisUtil {
             map.put((String) entry.getKey(), entry.getValue());
         }
 
-        T aliasItem = mapperUtil.convertMapToObject(map, className);
-
-        return aliasItem;
+        return MapperUtil.convertMapToObject(map, className);
     }
 }
