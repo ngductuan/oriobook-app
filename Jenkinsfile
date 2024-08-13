@@ -63,20 +63,29 @@ pipeline {
                             parameters: [choice(name: 'deploy', choices: 'no\nyes', description: 'Choose "yes" if you want to deploy')]
                         }
                         if (env.useChoice == 'yes') {
-                           withDockerRegistry(credentialsId: DOCKERHUB_CREDENTIALS_ID, url: 'https://index.docker.io/v1/') {
-                                sh """
-                                    docker pull ${DOCKER_IMAGE_FE}
-                                    docker rm -f orio-fe || true
-                                    docker run --name orio-fe -dp 5001:80 ${DOCKER_IMAGE_FE}
-                                """
+                            withDockerRegistry(credentialsId: DOCKERHUB_CREDENTIALS_ID, url: 'https://index.docker.io/v1/') {
+                                def feImageId = sh(script: "docker inspect --format '{{.Image}}' orio-fe 2>/dev/null || echo ''", returnStdout: true).trim()
+                                if (feImageId) {
+                                    sh """
+                                        docker pull ${DOCKER_IMAGE_FE}
+                                        docker rm -f orio-fe || true
+                                        docker rmi ${feImageId} || true
+                                        docker run --name orio-fe -dp 5001:80 ${DOCKER_IMAGE_FE}
+                                    """
+                                } else {
+                                    sh """
+                                        docker pull ${DOCKER_IMAGE_FE}
+                                        docker run --name orio-fe -dp 5001:80 ${DOCKER_IMAGE_FE}
+                                    """
+                                }
 
                                 withCredentials([file(credentialsId: 'BE_ENV', variable: 'BE_ENV_PATH')]) {
-                                    def imageId = sh(script: "docker inspect --format '{{.Image}}' orio-be 2>/dev/null || echo ''", returnStdout: true).trim()
-                                    if (imageId) {
+                                    def beImageId = sh(script: "docker inspect --format '{{.Image}}' orio-be 2>/dev/null || echo ''", returnStdout: true).trim()
+                                    if (beImageId) {
                                         sh """
                                             docker pull ${DOCKER_IMAGE_BE}
                                             docker rm -f orio-be || true
-                                            docker rmi ${imageId} || true
+                                            docker rmi ${beImageId} || true
                                             docker run --name orio-be --env-file \$BE_ENV_PATH -dp 5002:8080 ${DOCKER_IMAGE_BE}
                                         """
                                     } else {
