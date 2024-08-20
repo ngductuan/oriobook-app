@@ -4,6 +4,8 @@ services:
   kafka:
     image: 'bitnami/kafka:3.5'
     container_name: kafka_container
+    env_file:
+      - .env
     environment:
       KAFKA_ENABLE_KRAFT: yes
       KAFKA_CFG_NODE_ID: 1
@@ -39,7 +41,7 @@ services:
     image: quay.io/debezium/connect:3.5
     container_name: connect_container
     ports:
-      - 8083:8083
+      - "8083:8083"
     environment:
       BOOTSTRAP_SERVERS: kafka:9092
       GROUP_ID: 1
