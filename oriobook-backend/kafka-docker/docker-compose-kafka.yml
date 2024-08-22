@@ -5,7 +5,7 @@ services:
     image: 'bitnami/kafka:3.5'
     container_name: kafka_container
     env_file:
-      - .env
+      - kafka.env
     environment:
       KAFKA_ENABLE_KRAFT: yes
       KAFKA_CFG_NODE_ID: 1

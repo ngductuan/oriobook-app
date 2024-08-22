@@ -32,10 +32,9 @@ build/
 
 ### VS Code ###
 .vscode/
-/.env
-.env*
+*.env
 /database.sql
 .DS_Store
 *.zip
-/sync-docker/*-connector.json
+/kafka-docker/*-connector.json
 *.txt
