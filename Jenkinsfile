@@ -69,38 +69,44 @@ pipeline {
                         if (env.useChoice == 'yes') {
                             withDockerRegistry(credentialsId: DOCKERHUB_CREDENTIALS_ID, url: 'https://index.docker.io/v1/') {
                                 withCredentials([file(credentialsId: 'FE_ENV', variable: 'FE_ENV_PATH')]) {
-                                    if (feImageId) {
+                                    // Check if the container 'orio-fe' exists
+                                    def feContainerExists = sh(script: "docker ps -a --filter 'name=orio-fe' --format '{{.Names}}' | grep -w orio-fe || true", returnStdout: true).trim()
+
+                                    if (feContainerExists) {
+                                        // If the container exists, remove it
                                         sh """
-                                            docker rm -f orio-fe || true
+                                            docker rm -f orio-fe
                                             docker images --filter=reference='ngductuan/oriobook-fe:*' --format "{{.ID}}" | xargs --no-run-if-empty docker rmi -f
-                                            docker pull ${DOCKER_IMAGE_FE}
-                                            docker run --name orio-fe --env-file \$FE_ENV_PATH -dp 5001:80 ${DOCKER_IMAGE_FE}
-                                        """
-                                    } else {
-                                        sh """
-                                            docker pull ${DOCKER_IMAGE_FE}
-                                            docker run --name orio-fe --env-file \$FE_ENV_PATH -dp 5001:80 ${DOCKER_IMAGE_FE}
                                         """
                                     }
+
+                                    // Pull the new image and run the container
+                                    sh """
+                                        docker pull ${DOCKER_IMAGE_FE}
+                                        docker run --name orio-fe --env-file \$FE_ENV_PATH -dp 5001:80 ${DOCKER_IMAGE_FE}
+                                    """
                                 }
 
 
                                 withCredentials([file(credentialsId: 'BE_ENV', variable: 'BE_ENV_PATH')]) {
-                                    // def beImageId = sh(script: "docker inspect --format '{{.Image}}' orio-be 2>/dev/null || echo ''", returnStdout: true).trim()
-                                    if (beImageId) {
+                                    // Check if the container 'orio-be' exists
+                                    def beContainerExists = sh(script: "docker ps -a --filter 'name=orio-be' --format '{{.Names}}' | grep -w orio-be || true", returnStdout: true).trim()
+
+                                    if (beContainerExists) {
+                                        // If the container exists, remove it
                                         sh """
-                                            docker rm -f orio-be || true
+                                            docker rm -f orio-be
                                             docker images --filter=reference='ngductuan/oriobook-be:*' --format "{{.ID}}" | xargs --no-run-if-empty docker rmi -f
-                                            docker pull ${DOCKER_IMAGE_BE}
-                                            docker run --name orio-be --env-file \$BE_ENV_PATH -dp 5002:8080 ${DOCKER_IMAGE_BE}
-                                        """
-                                    } else {
-                                        sh """
-                                            docker pull ${DOCKER_IMAGE_BE}
-                                            docker run --name orio-be --env-file \$BE_ENV_PATH -dp 5002:8080 ${DOCKER_IMAGE_BE}
                                         """
                                     }
+
+                                    // Pull the new image and run the container
+                                    sh """
+                                        docker pull ${DOCKER_IMAGE_BE}
+                                        docker run --name orio-be --env-file \$BE_ENV_PATH -dp 5002:8080 ${DOCKER_IMAGE_BE}
+                                    """
                                 }
+
                             }
                         } else {
                             echo "Deployment is skipped"
