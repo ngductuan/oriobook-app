@@ -51,6 +51,8 @@ pipeline {
                         sh "docker push ${DOCKER_IMAGE_FE}"
                         sh "docker push ${DOCKER_IMAGE_BE}"
 
+                        sh " slim build --tag ${DOCKER_IMAGE_BE}-slim orio-be"
+
                         // Remove the Docker images after pushing
                         sh "docker rmi ${DOCKER_IMAGE_FE} || true"
                         sh "docker rmi ${DOCKER_IMAGE_BE} || true"

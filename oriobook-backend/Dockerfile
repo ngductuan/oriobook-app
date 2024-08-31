@@ -14,7 +14,7 @@ RUN mvn install -DskipTests=true
 FROM gcr.io/distroless/java17
 
 # Set up a non-root user
-USER 1000
+#USER 1000
 
 WORKDIR /run
 COPY --from=build /app/target/oriobook-0.0.1-SNAPSHOT.jar /run/oriobook-0.0.1-SNAPSHOT.jar

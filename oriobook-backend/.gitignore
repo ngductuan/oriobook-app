@@ -36,3 +36,4 @@ build/
 *.zip
 /kafka-docker/*-connector.json
 *.txt
+slim.report.json
