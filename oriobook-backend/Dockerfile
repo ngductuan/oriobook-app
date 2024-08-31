@@ -4,7 +4,6 @@ FROM maven:3.8.4-openjdk-17-slim AS build
 WORKDIR /app
 
 COPY pom.xml ./
-COPY src/main/resources/application.properties src/main/resources/
 
 # use cache when pom.xml is not changed
 RUN mvn dependency:go-offline -B
