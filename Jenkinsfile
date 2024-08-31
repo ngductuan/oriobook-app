@@ -74,6 +74,8 @@ pipeline {
 
                                     if (feContainerExists) {
                                         // If the container exists, remove it
+                                        echo "Removing the existing container 'orio-fe'"
+
                                         sh """
                                             docker rm -f orio-fe
                                             docker images --filter=reference='ngductuan/oriobook-fe:*' --format "{{.ID}}" | xargs --no-run-if-empty docker rmi -f
@@ -94,6 +96,8 @@ pipeline {
 
                                     if (beContainerExists) {
                                         // If the container exists, remove it
+                                        echo "Removing the existing container 'orio-be'"
+
                                         sh """
                                             docker rm -f orio-be
                                             docker images --filter=reference='ngductuan/oriobook-be:*' --format "{{.ID}}" | xargs --no-run-if-empty docker rmi -f
