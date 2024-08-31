@@ -50,6 +50,10 @@ pipeline {
 
                         sh "docker push ${DOCKER_IMAGE_FE}"
                         sh "docker push ${DOCKER_IMAGE_BE}"
+
+                        // Remove the Docker images after pushing
+                        sh "docker rmi ${DOCKER_IMAGE_FE} || true"
+                        sh "docker rmi ${DOCKER_IMAGE_BE} || true"
                     }
                 }
             }
@@ -64,28 +68,30 @@ pipeline {
                         }
                         if (env.useChoice == 'yes') {
                             withDockerRegistry(credentialsId: DOCKERHUB_CREDENTIALS_ID, url: 'https://index.docker.io/v1/') {
-                                def feImageId = sh(script: "docker inspect --format '{{.Image}}' orio-fe 2>/dev/null || echo ''", returnStdout: true).trim()
-                                if (feImageId) {
-                                    sh """
-                                        docker pull ${DOCKER_IMAGE_FE}
-                                        docker rm -f orio-fe || true
-                                        docker rmi ${feImageId} || true
-                                        docker run --name orio-fe -dp 5001:80 ${DOCKER_IMAGE_FE}
-                                    """
-                                } else {
-                                    sh """
-                                        docker pull ${DOCKER_IMAGE_FE}
-                                        docker run --name orio-fe -dp 5001:80 ${DOCKER_IMAGE_FE}
-                                    """
+                                withCredentials([file(credentialsId: 'FE_ENV', variable: 'FE_ENV_PATH')]) {
+                                    if (feImageId) {
+                                        sh """
+                                            docker rm -f orio-fe || true
+                                            docker images --filter=reference='ngductuan/oriobook-fe:*' --format "{{.ID}}" | xargs --no-run-if-empty docker rmi -f
+                                            docker pull ${DOCKER_IMAGE_FE}
+                                            docker run --name orio-fe --env-file \$FE_ENV_PATH -dp 5001:80 ${DOCKER_IMAGE_FE}
+                                        """
+                                    } else {
+                                        sh """
+                                            docker pull ${DOCKER_IMAGE_FE}
+                                            docker run --name orio-fe --env-file \$FE_ENV_PATH -dp 5001:80 ${DOCKER_IMAGE_FE}
+                                        """
+                                    }
                                 }
 
+
                                 withCredentials([file(credentialsId: 'BE_ENV', variable: 'BE_ENV_PATH')]) {
-                                    def beImageId = sh(script: "docker inspect --format '{{.Image}}' orio-be 2>/dev/null || echo ''", returnStdout: true).trim()
+                                    // def beImageId = sh(script: "docker inspect --format '{{.Image}}' orio-be 2>/dev/null || echo ''", returnStdout: true).trim()
                                     if (beImageId) {
                                         sh """
-                                            docker pull ${DOCKER_IMAGE_BE}
                                             docker rm -f orio-be || true
-                                            docker rmi ${beImageId} || true
+                                            docker images --filter=reference='ngductuan/oriobook-be:*' --format "{{.ID}}" | xargs --no-run-if-empty docker rmi -f
+                                            docker pull ${DOCKER_IMAGE_BE}
                                             docker run --name orio-be --env-file \$BE_ENV_PATH -dp 5002:8080 ${DOCKER_IMAGE_BE}
                                         """
                                     } else {
