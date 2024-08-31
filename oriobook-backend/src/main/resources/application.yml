@@ -31,7 +31,7 @@ spring:
         boot:
           allow_jdbc_metadata_access: false
         dialect: org.hibernate.dialect.MySQL8Dialect #driver
-        format_sql: true
+      format_sql: true
   servlet:
     multipart:
       enabled: true
