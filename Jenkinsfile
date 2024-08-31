@@ -3,9 +3,9 @@ pipeline {
         label 'lab-server'
     }
     environment {
-        APPNAME = 'oriobook'
+        APP_NAME = 'oriobook'
         DOCKERHUB_CREDENTIALS_ID = 'docker-to-jenkins-pat'
-        DOCKER_REPO_BASE = "ngductuan/${APPNAME}"
+        DOCKER_REPO_BASE = "ngductuan/${APP_NAME}"
 
         DOCKER_IMAGE_FE = ''
         DOCKER_IMAGE_BE = ''
@@ -51,6 +51,8 @@ pipeline {
                         sh "docker push ${DOCKER_IMAGE_FE}"
                         sh "docker push ${DOCKER_IMAGE_BE}"
 
+                        sh " slim build --tag ${DOCKER_IMAGE_BE}-slim orio-be"
+
                         // Remove the Docker images after pushing
                         sh "docker rmi ${DOCKER_IMAGE_FE} || true"
                         sh "docker rmi ${DOCKER_IMAGE_BE} || true"
@@ -74,6 +76,8 @@ pipeline {
 
                                     if (feContainerExists) {
                                         // If the container exists, remove it
+                                        echo "Removing the existing container 'orio-fe'"
+
                                         sh """
                                             docker rm -f orio-fe
                                             docker images --filter=reference='ngductuan/oriobook-fe:*' --format "{{.ID}}" | xargs --no-run-if-empty docker rmi -f
@@ -94,6 +98,8 @@ pipeline {
 
                                     if (beContainerExists) {
                                         // If the container exists, remove it
+                                        echo "Removing the existing container 'orio-be'"
+
                                         sh """
                                             docker rm -f orio-be
                                             docker images --filter=reference='ngductuan/oriobook-be:*' --format "{{.ID}}" | xargs --no-run-if-empty docker rmi -f
