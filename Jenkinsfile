@@ -3,9 +3,9 @@ pipeline {
         label 'lab-server'
     }
     environment {
-        APPNAME = 'oriobook'
+        APP_NAME = 'oriobook'
         DOCKERHUB_CREDENTIALS_ID = 'docker-to-jenkins-pat'
-        DOCKER_REPO_BASE = "ngductuan/${APPNAME}"
+        DOCKER_REPO_BASE = "ngductuan/${APP_NAME}"
 
         DOCKER_IMAGE_FE = ''
         DOCKER_IMAGE_BE = ''
