@@ -15,7 +15,8 @@ public class ElasticsearchConfig {
     @Bean
     public ElasticsearchClient elasticsearchClient() {
         RestClientBuilder restClientBuilder = RestClient.builder(
-                new HttpHost("localhost", 9200, "http")
+                // new HttpHost("localhost", 9200, "http")
+            new HttpHost("api-elk.orio-studio.online", 443, "https")
         );
 
         RestClientTransport transport = new RestClientTransport(
