@@ -48,12 +48,10 @@ pipeline {
                         withCredentials([file(credentialsId: 'FE_ENV', variable: 'FE_ENV_PATH')]) {
                             // Copy the .env file into the FE_FOLDER directory
                             sh "cp \$FE_ENV_PATH ${FE_FOLDER}/.env"
+
+                            sh "docker build -t ${DOCKER_IMAGE_FE} ${FE_FOLDER}"
                         }
 
-                        // Copy the .env file into the FE_FOLDER directory
-                        sh "cp ${FE_ENV_PATH} ${FE_FOLDER}/.env"
-
-                        sh "docker build -t ${DOCKER_IMAGE_FE} ${FE_FOLDER}"
                         sh "docker build -t ${DOCKER_IMAGE_BE} ${BE_FOLDER}"
 
                         sh "docker push ${DOCKER_IMAGE_FE}"
