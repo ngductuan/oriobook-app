@@ -45,6 +45,9 @@ pipeline {
                         echo "Frontend Docker Image: ${DOCKER_IMAGE_FE}"
                         echo "Backend Docker Image: ${DOCKER_IMAGE_BE}"
 
+                        // Copy the .env file into the FE_FOLDER directory
+                        sh "cp ${FE_ENV_PATH} ${FE_FOLDER}/.env"
+
                         sh "docker build -t ${DOCKER_IMAGE_FE} ${FE_FOLDER}"
                         sh "docker build -t ${DOCKER_IMAGE_BE} ${BE_FOLDER}"
 
