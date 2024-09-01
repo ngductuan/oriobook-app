@@ -45,6 +45,11 @@ pipeline {
                         echo "Frontend Docker Image: ${DOCKER_IMAGE_FE}"
                         echo "Backend Docker Image: ${DOCKER_IMAGE_BE}"
 
+                        withCredentials([file(credentialsId: 'FE_ENV', variable: 'FE_ENV_PATH')]) {
+                            // Copy the .env file into the FE_FOLDER directory
+                            sh "cp \$FE_ENV_PATH ${FE_FOLDER}/.env"
+                        }
+
                         // Copy the .env file into the FE_FOLDER directory
                         sh "cp ${FE_ENV_PATH} ${FE_FOLDER}/.env"
 
@@ -88,7 +93,7 @@ pipeline {
                                     // Pull the new image and run the container
                                     sh """
                                         docker pull ${DOCKER_IMAGE_FE}
-                                        docker run --name orio-fe --env-file \$FE_ENV_PATH -dp 5001:80 ${DOCKER_IMAGE_FE}
+                                        docker run --name orio-fe -dp 5001:80 ${DOCKER_IMAGE_FE}
                                     """
                                 }
 
