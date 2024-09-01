@@ -56,17 +56,28 @@ spring:
   #  min-idle: 0
   #  max-wait: -1
   #  test-on-borrow: true
+
+    #### outdated
     elasticsearch:
       cluster-names: elasticsearch
       cluster-nodes: ${ELASTICSEARCH_HOST}
       repositories:
         enabled: true
       auto-index-creation: true
+  ### newest
   elasticsearch:
     rest:
       uris: ${ELASTICSEARCH_HOST}
   cache:
     type: redis
+  kafka:
+    bootstrap-servers: ${KAFKA_IP_ADDRESS:localhost}:19092
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+#    listener:
+#      concurrency: 3
 
 #logging
 logging:
