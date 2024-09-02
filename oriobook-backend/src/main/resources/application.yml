@@ -71,7 +71,8 @@ spring:
   cache:
     type: redis
   kafka:
-    bootstrap-servers: ${KAFKA_IP_ADDRESS:localhost}:19092
+#    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_HOST:localhost}:9092
     consumer:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
