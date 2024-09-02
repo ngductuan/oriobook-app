@@ -60,17 +60,6 @@ public class UserController {
         return updatedUser != null;
     }
 
-    @PutMapping("/sync-elastic")
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = RoleConst.OP_ADMIN)
-    @SecurityRequirement(name = CommonConst.BEARER_KEY)
-    @PreAuthorize(RoleConst.ROLE_ADMIN)
-    public Boolean syncElastic() throws Exception {
-        Page<User> users = userService.getAllUsersToSync();
-
-        return elasticService.syncDataToElastic(users, ElasticIndexConst.USERS);
-    }
-
     @DeleteMapping("/profile")
     @Operation(summary = RoleConst.OP_ADMIN_USER)
     @SecurityRequirement(name = CommonConst.BEARER_KEY)

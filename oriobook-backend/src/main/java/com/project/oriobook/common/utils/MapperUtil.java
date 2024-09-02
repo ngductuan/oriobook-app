@@ -3,6 +3,7 @@ package com.project.oriobook.common.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -10,6 +11,11 @@ import java.util.Map;
 @Component
 public class MapperUtil {
     public static final ObjectMapper objectMapper = new ObjectMapper();
+
+    public static ObjectMapper createObjectMapper() {
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        return objectMapper;
+    }
 
     public static String convertMapToJson(Map<String, Object> object) throws JsonProcessingException {
         return objectMapper.writeValueAsString(object);

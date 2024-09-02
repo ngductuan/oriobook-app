@@ -8,6 +8,7 @@ import com.project.oriobook.modules.kafka.debezium.messages.ProductMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaNull;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,14 +19,18 @@ public class ProductListener {
 
     @KafkaHandler
     public void listenProduct(Object productObject) throws Exception {
+        if(productObject == null || productObject == KafkaNull.INSTANCE) {
+            System.out.println("Product object is null");
+            return;
+        }
+
         ProductMessage productMessage = KafkaUtil.convertObjectToMessage(productObject, ProductMessage.class);
 
         if (productMessage != null){
             System.out.println("Received: " + productMessage);
             elasticService.updateDataToElastic(productMessage, ElasticIndexConst.PRODUCTS);
-
         } else {
-            System.out.print("Kafka message is null");
+            System.out.print("Delete Kafka message");
         }
     }
 

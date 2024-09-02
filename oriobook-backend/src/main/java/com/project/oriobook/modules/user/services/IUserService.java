@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 
 public interface IUserService {
     User getUserById(String id) throws Exception;
-    Page<User> getAllUsersToSync();
     User updateUserProfile(String userId, UpdateUserProfileDTO dto) throws Exception;
     void deleteUser(String userId) throws Exception;
 
