@@ -1,12 +1,10 @@
 package com.project.oriobook.core.entity.base;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.project.oriobook.common.configs.JackSonConfig;
 import com.project.oriobook.common.constants.CommonConst;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
