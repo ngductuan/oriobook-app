@@ -1,13 +1,12 @@
 package com.project.oriobook.modules.elastic.services;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
-import co.elastic.clients.elasticsearch.core.BulkRequest;
-import co.elastic.clients.elasticsearch.core.BulkResponse;
-import co.elastic.clients.elasticsearch.core.DeleteByQueryRequest;
+import co.elastic.clients.elasticsearch._types.Result;
+import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
 import com.project.oriobook.common.exceptions.CommonException;
 import com.project.oriobook.core.entity.base.BaseEntity;
-import com.project.oriobook.modules.product.entities.Product;
+import com.project.oriobook.core.message.base.MessageBase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -47,4 +46,29 @@ public class ElasticService implements IElasticService{
             throw new CommonException.SyncElasticData("SyncElastic (" + index + ")");
         }
     }
+
+    @Override
+    public <T extends MessageBase> void updateDataToElastic(T data, String index) throws Exception {
+        try {
+            String documentId = String.valueOf(data.getId());
+
+            UpdateRequest<T, T> updateRequest = UpdateRequest.of(u -> u
+                .index(index)
+                .id(documentId)
+                .doc(data)
+            );
+
+            UpdateResponse<T> updateResponse = elasticClient.update(updateRequest, data.getClass());
+
+            if (updateResponse.result() == Result.NotFound) {
+                throw new CommonException.SyncElasticData("Document not found in index: " + index);
+            }
+
+        } catch (Exception e) {
+            throw new CommonException.SyncElasticData("Update failed for index: " + index + ", " +
+                "Document ID: " + data.getId());
+        }
+    }
+
+
 }

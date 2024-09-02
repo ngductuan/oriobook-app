@@ -1,8 +1,6 @@
 package com.project.oriobook.modules.author.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.oriobook.common.enums.CommonEnum;
 import com.project.oriobook.core.entity.base.BaseEntity;
 import com.project.oriobook.modules.product.entities.Product;

@@ -34,6 +34,10 @@ build/
 /database.sql
 .DS_Store
 *.zip
-/kafka-docker/*-connector.json
+
+/kafka-debezium-docker/*-connector.json
+/kafka-debezium-docker/kafka
+/kafka-debezium-docker/*.jar
 *.txt
+
 slim.report.json

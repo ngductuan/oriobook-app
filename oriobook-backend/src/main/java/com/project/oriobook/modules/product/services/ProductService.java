@@ -3,8 +3,6 @@ package com.project.oriobook.modules.product.services;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
-import co.elastic.clients.elasticsearch._types.query_dsl.MatchAllQuery;
-import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.TermQuery;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
@@ -13,7 +11,6 @@ import com.project.oriobook.common.constants.ElasticIndexConst;
 import com.project.oriobook.common.enums.CommonEnum;
 import com.project.oriobook.common.exceptions.ProductException;
 import com.project.oriobook.common.utils.ElasticUtil;
-import com.project.oriobook.common.utils.PaginationUtil;
 import com.project.oriobook.common.utils.ValidationUtil;
 import com.project.oriobook.modules.author.entities.Author;
 import com.project.oriobook.modules.author.services.AuthorService;
@@ -28,12 +25,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

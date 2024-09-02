@@ -10,12 +10,8 @@ import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.json.JsonData;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.project.oriobook.common.constants.CommonConst;
-import com.project.oriobook.common.constants.ElasticIndexConst;
 import com.project.oriobook.common.exceptions.CommonException;
-import com.project.oriobook.core.pagination.base.PageResponse;
 import com.project.oriobook.core.pagination.base.QueryFilterBase;
-import com.project.oriobook.modules.product.responses.ProductResponse;
-import org.springframework.data.domain.PageRequest;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;

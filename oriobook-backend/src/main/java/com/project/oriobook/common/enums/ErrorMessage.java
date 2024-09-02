@@ -13,6 +13,7 @@ public class ErrorMessage {
         errorMessages.put(ErrorCodeEnum.COMMON_INVALID_DATE_DTO_FORMAT.toString(), "Invalid date DTO format");
         errorMessages.put(ErrorCodeEnum.COMMON_GET_ELASTIC_DATA.toString(), "Error when getting elastic data");
         errorMessages.put(ErrorCodeEnum.COMMON_SYNC_ELASTIC_DATA.toString(), "Error when syncing elastic data");
+        errorMessages.put(ErrorCodeEnum.COMMON_GET_KAFKA_DATA.toString(), "Error when getting kafka data");
 
         // AUTH
         errorMessages.put(ErrorCodeEnum.AUTH_EMAIL_EXISTED.toString(), "Email already exists");

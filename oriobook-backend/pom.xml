@@ -187,6 +187,13 @@
 			<version>8.12.2</version>
 		</dependency>
 
+<!--		Kafka-->
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+			<version>3.2.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
