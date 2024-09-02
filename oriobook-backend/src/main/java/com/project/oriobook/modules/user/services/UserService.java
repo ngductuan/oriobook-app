@@ -1,11 +1,14 @@
 package com.project.oriobook.modules.user.services;
 
 import com.project.oriobook.common.exceptions.UserException;
+import com.project.oriobook.modules.product.entities.Product;
 import com.project.oriobook.modules.user.dto.UpdateUserProfileDTO;
 import com.project.oriobook.modules.user.entities.User;
 import com.project.oriobook.modules.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,6 +23,11 @@ public class UserService implements IUserService{
         User user = userRepository.findById(id)
                 .orElseThrow(UserException.NotFound::new);
         return user;
+    }
+
+    @Override
+    public Page<User> getAllUsersToSync() {
+        return userRepository.findAll(Pageable.unpaged());
     }
 
     @Override

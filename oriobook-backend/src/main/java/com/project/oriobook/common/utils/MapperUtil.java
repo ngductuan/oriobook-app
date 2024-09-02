@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Component
 public class MapperUtil {
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    public static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static String convertMapToJson(Map<String, Object> object) throws JsonProcessingException {
         return objectMapper.writeValueAsString(object);

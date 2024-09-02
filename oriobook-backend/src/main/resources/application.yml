@@ -16,6 +16,14 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${MYSQL_ROOT_USERNAME}
     password: ${MYSQL_ROOT_PASSWORD}
+
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      connection-timeout: 20000
+      pool-name: MyHikariCP
   jpa:
     open-in-view: false
     show-sql: true
@@ -71,15 +79,13 @@ spring:
   cache:
     type: redis
   kafka:
-#    bootstrap-servers: localhost:9092
     bootstrap-servers: ${KAFKA_HOST:localhost}:9092
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        "[spring.json.type.mapping]": product:com.project.oriobook.modules.product.entities.Product
     consumer:
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
       value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
-#    listener:
-#      concurrency: 3
-
 #logging
 logging:
   level:
