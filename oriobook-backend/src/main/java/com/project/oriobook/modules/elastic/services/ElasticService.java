@@ -7,6 +7,8 @@ import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
 import com.project.oriobook.common.exceptions.CommonException;
 import com.project.oriobook.core.entity.base.BaseEntity;
 import com.project.oriobook.core.message.base.MessageBase;
+import com.project.oriobook.modules.author.services.AuthorService;
+import com.project.oriobook.modules.category.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -48,7 +50,32 @@ public class ElasticService implements IElasticService{
     }
 
     @Override
-    public <T extends MessageBase> void updateDataToElastic(T data, String index) throws Exception {
+    public <T extends BaseEntity> void insertDataToElastic(T data, String index) throws Exception {
+        try {
+            String documentId = String.valueOf(data.getId());
+
+            IndexRequest<T> indexRequest = IndexRequest.of(i -> i
+                .index(index)
+                .id(documentId)
+                .document(data)
+            );
+
+            IndexResponse indexResponse = elasticClient.index(indexRequest);
+
+            if (indexResponse.result() == Result.Created) {
+                System.out.println("Document inserted successfully in index: " + index);
+            } else {
+                throw new CommonException.SyncElasticData("Failed to insert document in index: " + index);
+            }
+
+        } catch (Exception e) {
+            throw new CommonException.SyncElasticData("Insert failed for index: " + index + ", " +
+                "Document ID: " + data.getId());
+        }
+    }
+
+    @Override
+    public <T extends BaseEntity> void updateDataToElastic(T data, String index) throws Exception {
         try {
             String documentId = String.valueOf(data.getId());
 
@@ -64,11 +91,35 @@ public class ElasticService implements IElasticService{
                 throw new CommonException.SyncElasticData("Document not found in index: " + index);
             }
 
+            System.out.println("Successfully updated document in index: " + index);
         } catch (Exception e) {
+            System.err.println("Update failed for index: " + index + ", Document ID: " + data.getId());
             throw new CommonException.SyncElasticData("Update failed for index: " + index + ", " +
                 "Document ID: " + data.getId());
         }
     }
 
+    @Override
+    public <T extends BaseEntity> void deleteDataFromElastic(T data, String index) throws Exception {
+        try {
+            String documentId = String.valueOf(data.getId());
 
+            DeleteRequest deleteRequest = DeleteRequest.of(d -> d
+                .index(index)
+                .id(documentId)
+            );
+
+            DeleteResponse deleteResponse = elasticClient.delete(deleteRequest);
+
+            if (deleteResponse.result() == Result.NotFound) {
+                throw new CommonException.SyncElasticData("Document not found in index: " + index);
+            }
+
+            System.out.println("Successfully deleted document from index: " + index);
+
+        } catch (Exception e) {
+            throw new CommonException.SyncElasticData("Delete failed for index: " + index + ", " +
+                "Document ID: " + data.getId());
+        }
+    }
 }

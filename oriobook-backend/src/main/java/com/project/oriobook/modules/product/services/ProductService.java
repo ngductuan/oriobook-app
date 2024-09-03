@@ -52,7 +52,7 @@ public class ProductService implements IProductService {
         BoolQuery.Builder boolQueryBuilder = ElasticUtil.generateBoolBaseQuery(query);
 
         // Add match query only if productName is not null
-        if (!ValidationUtil.isNullOrBlankStr(query.getProductName())) {
+        if (!ValidationUtil.isNullOrBlankString(query.getProductName())) {
             boolQueryBuilder.must(m -> m
                 .wildcard(wc -> wc
                     .field("name")
@@ -62,7 +62,7 @@ public class ProductService implements IProductService {
         }
 
         // BoolQuery.Builder filterQueryBuilder = new BoolQuery.Builder();
-        if (!ValidationUtil.isNullOrBlankStr(query.getCategoryId())) {
+        if (!ValidationUtil.isNullOrBlankString(query.getCategoryId())) {
             TermQuery termQuery = new TermQuery.Builder()
                 .field("categoryNode.id.keyword")
                 .value(query.getCategoryId())
@@ -72,7 +72,7 @@ public class ProductService implements IProductService {
                 .term(termQuery));
         }
 
-        if (!ValidationUtil.isNullOrBlankStr(query.getAuthorId())) {
+        if (!ValidationUtil.isNullOrBlankString(query.getAuthorId())) {
             TermQuery termQuery = new TermQuery.Builder()
                 .field("authorNode.id.keyword")
                 .value(query.getAuthorId())
@@ -83,7 +83,7 @@ public class ProductService implements IProductService {
         }
 
         // Add sort query only if sortByPrice is not null
-        if (!ValidationUtil.isNullOrBlankStr(query.getSortByPrice())) {
+        if (!ValidationUtil.isNullOrBlankString(query.getSortByPrice())) {
             searchRequestBuilder.sort(s -> s
                 .field(f -> f
                     .field("price")
@@ -93,7 +93,7 @@ public class ProductService implements IProductService {
         }
 
         // Not do rating sort yet (apply for FindAllProductQueryDTO)
-        if (!ValidationUtil.isNullOrBlankStr(query.getSortByRating())) {
+        if (!ValidationUtil.isNullOrBlankString(query.getSortByRating())) {
             searchRequestBuilder.sort(s -> s
                 .field(f -> f
                     .field("rating")
