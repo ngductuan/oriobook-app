@@ -71,13 +71,13 @@ public class ProductController {
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.CREATED)
-    public Boolean createProduct(@Valid @RequestBody CreateProductDTO productDTO, BindingResult result) throws Exception {
+    public Product createProduct(@Valid @RequestBody CreateProductDTO productDTO, BindingResult result) throws Exception {
         if (result.hasErrors()) {
             throw new ValidationException(result);
         }
 
         Product newProduct = productService.createProduct(productDTO);
-        return newProduct != null;
+        return newProduct;
     }
 
     @PutMapping("/{id}")

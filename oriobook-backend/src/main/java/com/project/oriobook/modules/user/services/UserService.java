@@ -25,11 +25,6 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public Page<User> getAllUsersToSync() {
-        return userRepository.findAll(Pageable.unpaged());
-    }
-
-    @Override
     public User updateUserProfile(String userId, UpdateUserProfileDTO dto) throws Exception {
         User user = userRepository.findById(userId)
                 .orElseThrow(UserException.NotFound::new);

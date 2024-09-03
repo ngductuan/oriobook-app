@@ -10,7 +10,7 @@ import java.util.List;
 public class PaginationUtil {
     public static PageRequest generatePageRequest(QueryFilterBase query, List<Sort.Order> extraOrders){
         List<Sort.Order> baseOrders = new ArrayList<>();
-        if(!ValidationUtil.isNullOrBlankStr(query.getSortByDate())){
+        if(!ValidationUtil.isNullOrBlankString(query.getSortByDate())){
             baseOrders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByDate().toString()),"createdAt"));
         }
 
