@@ -86,17 +86,16 @@ spring:
         "[spring.json.type.mapping]": product:com.project.oriobook.modules.product.entities.Product
     consumer:
       value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+
 #logging
 logging:
-  level:
-    org:
-#      hibernate: DEBUG
-#      springframework.security: DEBUG
-#        springframework:
-#            security: DEBUG
-#            data: DEBUG
-#    file:
-#        name: ${LOG_FILE:logs/app.log}
+#  file: logs/application.log
+#  level:
+#    root: INFO
+#    org.springframework.web: DEBUG
+#  pattern:
+#    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
 
 # Prefix for API
 api:

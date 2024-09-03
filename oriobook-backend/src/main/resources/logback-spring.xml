@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Các biến thuộc tính -->
+    <property name="ENCODING" value="UTF-8" />
+    <property name="LOG_FILE" value="logs/application.log" />
+
+    <!-- Include cấu hình Spring Boot -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    <springProperty scope="context" name="appName" source="spring.application.name" />
+
+    <!-- Appender JSON cho Logstash -->
+    <appender name="LOGSTASH_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/application.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <maxFileSize>10MB</maxFileSize>
+        <maxHistory>30</maxHistory> <!-- Hold the number of old files - 30 days previous -->
+        <totalSizeCap>3GB</totalSizeCap>
+
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <mdc />
+                <pattern>
+                    <pattern>
+                        {
+                        "timestamp": "%date{yyyy-MM-dd'T'HH:mm:ss.SSS,UTC}",
+                        "log.level": "%level",
+                        "thread": "%thread",
+                        "logger": "%logger",
+                        "message": "%message",
+                        "host": "${HOSTNAME:-localhost}"
+                        }
+                    </pattern>
+                </pattern>
+                <stackTrace>
+                    <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                        <rootCauseFirst>true</rootCauseFirst>
+                    </throwableConverter>
+                </stackTrace>
+            </providers>
+        </encoder>
+    </appender>
+
+    <!-- Appender console dành cho phát triển -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%line - %msg%n</pattern>
+            <charset>${ENCODING}</charset>
+        </encoder>
+    </appender>
+
+    <!-- File appender for production -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/application.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <maxFileSize>10MB</maxFileSize>
+        <maxHistory>30</maxHistory> <!-- Hold the number of old files - 30 days previous -->
+        <totalSizeCap>3GB</totalSizeCap>
+
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Định nghĩa logger cụ thể và mức log -->
+    <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="DEBUG">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <!-- Định nghĩa root logger -->
+    <root level="INFO">
+        <appender-ref ref="LOGSTASH_APPENDER" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
+    </root>
+</configuration>
