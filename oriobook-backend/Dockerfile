@@ -21,8 +21,6 @@ COPY --from=build /app/target/oriobook-0.0.1-SNAPSHOT.jar /run/oriobook-0.0.1-SN
 
 ENV SPRING_ENV=prod
 
-RUN mkdir -p /logs && chmod 777 /logs
-
 EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "/run/oriobook-0.0.1-SNAPSHOT.jar"]
