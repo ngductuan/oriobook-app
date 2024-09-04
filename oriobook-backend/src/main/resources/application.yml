@@ -26,7 +26,7 @@ spring:
       pool-name: MyHikariCP
   jpa:
     open-in-view: false
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: none #chỗ này mà sửa thành drop-create thì rất nguy
       #ddl-auto: validate
@@ -86,17 +86,10 @@ spring:
         "[spring.json.type.mapping]": product:com.project.oriobook.modules.product.entities.Product
     consumer:
       value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+
 #logging
 logging:
-  level:
-    org:
-#      hibernate: DEBUG
-#      springframework.security: DEBUG
-#        springframework:
-#            security: DEBUG
-#            data: DEBUG
-#    file:
-#        name: ${LOG_FILE:logs/app.log}
+  file: logs/application.log
 
 # Prefix for API
 api:

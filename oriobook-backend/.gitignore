@@ -41,3 +41,5 @@ build/
 *.txt
 
 slim.report.json
+
+logs/
