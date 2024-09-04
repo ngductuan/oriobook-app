@@ -28,3 +28,64 @@ PUT /products?pretty
           }
         },
       }
+
+
+# Click the Variables button, above, to create your own variables.
+GET ${exampleVariable1} // _search
+{
+  "query": {
+    "${exampleVariable2}": {} // match_all
+  }
+}
+
+GET /products/_search
+
+GET /products/_doc/62717b92-9468-4503-af5b-9123c9ac37f7
+
+GET /users/_search
+
+GET /products/_search
+{
+  "query": {
+    "term": {
+      "_id": "433b353e-e0d0-49cc-b2af-437f3a046243"
+    }
+  }
+}
+
+PUT /users
+
+GET _cat/indices?pretty
+
+GET /filebeat-8.7.1-2024.09.04/_mapping
+
+GET /filebeat-8.7.1-2024.09.04/_search
+{
+  "sort": [
+    {
+      "@timestamp": {
+        "order": "desc"
+      }
+    }
+  ],
+  "size": 10
+}
+
+PUT /_ingest/pipeline/parse_json
+{
+  "description": "Parse message field as JSON",
+  "processors": [
+    {
+      "json": {
+        "field": "message",
+        "target_field": "json_parsed"
+      }
+    },
+    {
+      "rename": {
+        "field": "json_parsed",
+        "target_field": "_source"
+      }
+    }
+  ]
+}

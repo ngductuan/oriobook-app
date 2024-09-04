@@ -35,15 +35,15 @@
                 <jsonLayout class="net.logstash.logback.layout.JsonTemplateLayout">
                     <template>
                         {
-                        "timestamp": "${json:timestamp}",
-                        "level": "${json:level}",
-                        "thread": "${json:thread}",
-                        "logger": "${json:logger_name}",
-                        "message": "${json:message}",
-                        "context": {
-                        "application": "${json:context:application}"
-                        },
-                        "exception": "${json:exception}"
+                            "timestamp": "${json:timestamp}",
+                            "level": "${json:level}",
+                            "thread": "${json:thread}",
+                            "logger": "${json:logger_name}",
+                            "message": "${json:message}",
+                            "context": {
+                                "application": "${json:context:application}"
+                            },
+                            "exception": "${json:exception}"
                         }
                     </template>
                 </jsonLayout>
