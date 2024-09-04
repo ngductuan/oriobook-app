@@ -31,7 +31,7 @@ public class AuthService implements IAuthService {
     private final ModelMapper modelMapper;
     private final JwtTokenHelper jwtTokenHelper;
     private final AuthenticationManager authenticationManager;
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     @Override
     @Transactional
@@ -62,6 +62,7 @@ public class AuthService implements IAuthService {
 
         // Check password
         if(!passwordEncoder.matches(loginDTO.getPassword(), existingUser.getPassword())){
+            logger.warn("User {} entered wrong password", existingUser.getEmail());
             throw new AuthException.WrongCredentials();
         }
 
