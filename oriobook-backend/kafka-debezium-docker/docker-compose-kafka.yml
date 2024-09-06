@@ -21,8 +21,8 @@ services:
       ALLOW_PLAINTEXT_LISTENER: "yes"
       KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "true"
     ports:
-      - "9092:9092" # sử dụng để kết nối các client
-      - "9093:9093" # sử dụng để giao tiếp giữa các broker trong cluster
+      - "9092:9092" # using to connect to [client:other services]
+      - "9093:9093" # using to connect to kafka brokers
     volumes:
       - ./kafka/broker1:/bitnami/kafka:rw
     networks:

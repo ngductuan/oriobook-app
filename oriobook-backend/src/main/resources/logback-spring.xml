@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <!-- Variables -->
-    <springProperty scope="context" name="LOG_FILE" source="logging.file" />
+    <springProperty scope="context" name="LOG_FILE" source="spring.application.name" />
 
     <!--Include Spring default library-->
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
@@ -9,52 +9,59 @@
     <springProperty scope="context" name="appName" source="spring.application.name" />
 
     <!-- Appender JSON cho Logstash -->
-    <appender name="LOGSTASH_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_FILE}</file>
+    <springProfile name="prod">
+        <appender name="LOGSTASH_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>/logs/${LOG_FILE}.log</file>
 
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/application.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>/logs/${LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
 
-            <maxFileSize>10MB</maxFileSize>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>3GB</totalSizeCap>
-        </rollingPolicy>
+                <maxFileSize>10MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>3GB</totalSizeCap>
+            </rollingPolicy>
 
-        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
-            <providers>
-                <mdc />
-                <pattern>
-                    <pattern>
+            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+                <providers>
+                    <timestamp/>
+                    <logLevel/>
+                    <threadName/>
+                    <loggerName/>
+                    <message/>
+                    <context/>
+                    <exception/>
+                </providers>
+
+                <jsonLayout class="net.logstash.logback.layout.JsonTemplateLayout">
+                    <template>
                         {
-                        "timestamp": "%date{yyyy-MM-dd'T'HH:mm:ss.SSS,UTC}",
-                        "log.level": "%level",
-                        "thread": "%thread",
-                        "logger": "%logger",
-                        "message": "%message",
-                        "host": "${HOSTNAME:-localhost}"
+                            "timestamp": "${json:timestamp}",
+                            "level": "${json:level}",
+                            "thread": "${json:thread}",
+                            "logger": "${json:logger_name}",
+                            "message": "${json:message}",
+                            "context": {
+                                "application": "${json:context:application}"
+                            },
+                            "exception": "${json:exception}"
                         }
-                    </pattern>
-                </pattern>
-                <stackTrace>
-                    <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
-                        <rootCauseFirst>true</rootCauseFirst>
-                    </throwableConverter>
-                </stackTrace>
-            </providers>
-        </encoder>
+                    </template>
+                </jsonLayout>
+            </encoder>
 
-<!--        Filter logs-->
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>TRACE</level>
-            <onMatch>DENY</onMatch>
-            <onMismatch>NEUTRAL</onMismatch>
-        </filter>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>DEBUG</level>
-            <onMatch>DENY</onMatch>
-            <onMismatch>ACCEPT</onMismatch>
-        </filter>
-    </appender>
+            <!--        Filter logs-->
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>TRACE</level>
+                <onMatch>DENY</onMatch>
+                <onMismatch>NEUTRAL</onMismatch>
+            </filter>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>DEBUG</level>
+                <onMatch>DENY</onMatch>
+                <onMismatch>ACCEPT</onMismatch>
+            </filter>
+        </appender>
+    </springProfile>
 
     <!-- Appender console for development -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -68,8 +75,10 @@
         <appender-ref ref="CONSOLE" />
     </logger>
 
-    <root level="INFO">
-        <appender-ref ref="LOGSTASH_APPENDER" />
-    </root>
+    <springProfile name="prod">
+        <root level="INFO">
+            <appender-ref ref="LOGSTASH_APPENDER" />
+        </root>
+    </springProfile>
 
 </configuration>

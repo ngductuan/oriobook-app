@@ -89,7 +89,7 @@ spring:
 
 #logging
 logging:
-  file: logs/application.log
+  file: /logs/oriobook.log
 
 # Prefix for API
 api:
