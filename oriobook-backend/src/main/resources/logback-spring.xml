@@ -75,6 +75,12 @@
         <appender-ref ref="CONSOLE" />
     </logger>
 
+    <!--<springProfile name="dev">-->
+    <!--    <root level="INFO">-->
+    <!--        <appender-ref ref="CONSOLE" />-->
+    <!--    </root>-->
+    <!--</springProfile>-->
+
     <springProfile name="prod">
         <root level="INFO">
             <appender-ref ref="LOGSTASH_APPENDER" />

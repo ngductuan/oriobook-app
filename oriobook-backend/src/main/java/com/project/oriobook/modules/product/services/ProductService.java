@@ -48,6 +48,11 @@ public class ProductService implements IProductService {
             .index(ElasticIndexConst.PRODUCTS)
             .from(from)
             .size(size);
+        searchRequestBuilder.sort(s -> s
+            .field(f -> f
+                .field("createdAt").order(ElasticUtil.getSortOrder(query.getSortByDate()))
+            )
+        );
 
         BoolQuery.Builder boolQueryBuilder = ElasticUtil.generateBoolBaseQuery(query);
 
@@ -86,8 +91,7 @@ public class ProductService implements IProductService {
         if (!ValidationUtil.isNullOrBlankString(query.getSortByPrice())) {
             searchRequestBuilder.sort(s -> s
                 .field(f -> f
-                    .field("price")
-                    .order(query.getSortByPrice() == CommonEnum.SortEnum.ASC ? SortOrder.Asc : SortOrder.Desc)
+                    .field("price").order(ElasticUtil.getSortOrder(query.getSortByPrice()))
                 )
             );
         }
@@ -96,8 +100,7 @@ public class ProductService implements IProductService {
         if (!ValidationUtil.isNullOrBlankString(query.getSortByRating())) {
             searchRequestBuilder.sort(s -> s
                 .field(f -> f
-                    .field("rating")
-                    .order(query.getSortByRating() == CommonEnum.SortEnum.ASC ? SortOrder.Asc : SortOrder.Desc)
+                    .field("rating").order(ElasticUtil.getSortOrder(query.getSortByRating()))
                 )
             );
         }
