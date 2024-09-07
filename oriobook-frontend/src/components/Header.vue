@@ -37,7 +37,7 @@
         />
         <button type="submit">Search</button>
       </form>
-      <button class="cart-btn">
+      <button class="cart-btn" v-if="!isAdminBool">
         <i class="fa-sharp fa-regular fa-basket-shopping-simple"></i>
         <span id="lblCartCount"> {{ cart }} </span>
         <span>Cart</span>
@@ -47,7 +47,8 @@
 </template>
 
 <script>
-import { ref, onMounted, inject } from "vue";
+import { ref, onMounted, inject, computed } from "vue";
+import { isAdmin } from "@/helpers/helperFunctions";
 
 export default {
   name: "Header",
@@ -66,6 +67,11 @@ export default {
   setup() {
     let cart = ref(0);
     const searchQuery = ref("");
+
+    const isAdminBool = computed(async () => {
+      const adminBool = await isAdmin();
+      return adminBool;
+    });
 
     const handleSearchForm = () => {
       $(".search").css({
@@ -108,6 +114,7 @@ export default {
       cart,
       // totalQuant,
       searchQuery,
+      isAdminBool,
     };
   },
 };

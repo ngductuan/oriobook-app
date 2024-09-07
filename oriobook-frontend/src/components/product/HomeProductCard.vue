@@ -16,6 +16,7 @@
         <img v-else :src="product.image" :alt="product.name" class="img-1" />
       </a>
       <button
+        v-if="!isAdminBool"
         class="add-to-cart"
         @click="AddProduct(product.id, product.stock)"
       >
@@ -48,11 +49,15 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted, computed } from "vue";
 import axios from "../../config/axios";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
-import { CartActionEnum } from "@/types/enum.type";
+import { CartActionEnum, RoleEnum } from "@/types/enum.type";
+import { getTokenInfo } from "@/helpers/helperFunctions";
+import { StorageKey } from "@/constants/storage.const";
+import { getFromLocalStorage } from "@/utils/local-storage.util";
+import { isAdmin } from "@/helpers/helperFunctions";
 
 export default {
   name: "HomeProductCard",
@@ -63,6 +68,11 @@ export default {
 
   setup(props, { emit }) {
     const imgHover = ref(true);
+
+    const isAdminBool = computed(async () => {
+      const adminBool = await isAdmin();
+      return adminBool;
+    });
 
     function handleLinkClick(to) {
       localStorage.setItem("activeLink", to);
@@ -77,7 +87,6 @@ export default {
             `${process.env.VUE_APP_MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.ADD}`
           );
           emit("reloadcart");
-          console.log("response", response);
           // if (response.data.status == true) {
           //   const response1 = await axios.get(
           //     `${process.env.VUE_APP_MAIN_URL}/carts/total-quantity`
@@ -97,7 +106,7 @@ export default {
           });
         } catch (error) {
           console.error("Lỗi khi gọi API", error);
-          window.location.href = "/login";
+          // window.location.href = "/login";
         }
       } else {
         toast.error("Sold out!", {
@@ -110,6 +119,7 @@ export default {
       imgHover,
       handleLinkClick,
       AddProduct,
+      isAdminBool,
     };
   },
 };

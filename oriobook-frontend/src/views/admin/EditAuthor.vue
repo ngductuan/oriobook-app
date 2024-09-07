@@ -55,18 +55,9 @@
                 >
                 <input
                   type="date"
-                  :value="author.date_of_birth"
-                  name="date_of_birth"
+                  :value="author.dateOfBirth"
+                  name="dateOfBirth"
                   class="pe-2"
-                />
-              </div>
-              <div class="col d-none">
-                <label for="product-publish_book">Published Book</label>
-                <input
-                  id="product-publish_book"
-                  type="number"
-                  :value="author.published_book ? author.published_book : 0"
-                  name="published_book"
                 />
               </div>
             </li>
@@ -109,11 +100,16 @@
               </select>
             </div>
             <div class="mb-2">
+              <label for="formFile" class="pt-4"
+                >Image file
+                <span class="text-danger">{{ imageError }}</span></label
+              >
               <input
                 type="file"
                 name="image"
                 class="form-control"
                 id="formFile"
+                @change="handleFileChange"
               />
             </div>
           </div>
@@ -127,6 +123,7 @@
 import Sidebar from "@/components/account/SideBar";
 import { onMounted, ref } from "vue";
 import axios from "../../config/axios";
+import { convertToDayBackend } from "@/utils/common.util";
 
 import { useRoute, useRouter } from "vue-router";
 export default {
@@ -139,13 +136,13 @@ export default {
     const router = useRouter();
     const id = ref(route.params.id);
     const author = ref({
-      _id: "",
+      id: "",
       name: "",
       description: "",
       style: "",
       address: "",
-      date_of_birth: "",
-      published_book: "",
+      dateOfBirth: "",
+      image: "",
     });
     const genders = ["Male", "Female"];
     const authorGender = ref("");
@@ -160,6 +157,19 @@ export default {
     const styleError = ref("");
     const addressError = ref("");
     const descriptionError = ref("");
+    const imageError = ref("");
+
+    const imageFileChange = ref(null);
+
+    const handleFileChange = (event) => {
+      const files = event.target.files;
+      if (files && files.length > 0) {
+        imageFileChange.value = files[0];
+        console.log("imageFile: ", imageFileChange.value);
+      } else {
+        console.log("No file selected");
+      }
+    };
 
     const validateForm = (values) => {
       let isValid = true;
@@ -203,9 +213,9 @@ export default {
         addressError.value = "";
       }
 
-      // Validation for date_of_birth
-      author.value.date_of_birth = values.date_of_birth;
-      if (values.date_of_birth === "") {
+      // Validation for dateOfBirth
+      author.value.dateOfBirth = values.dateOfBirth;
+      if (values.dateOfBirth === "") {
         dobError.value = "cannot be empty.";
         isValid = false;
       } else {
@@ -225,6 +235,16 @@ export default {
         descriptionError.value = "";
       }
 
+      // Validate image
+      if (
+        values.image.name === "" &&
+        values.image.size === 0 &&
+        author.value?.image === ""
+      ) {
+        imageError.value = "cannot be empty.";
+        isValid = false;
+      }
+
       return isValid;
     };
 
@@ -235,30 +255,73 @@ export default {
         values[key] = value;
       });
 
+      let genderForm = formData.get("gender");
+      if (genderForm) {
+        formData.set("gender", genderForm.toUpperCase());
+      }
+
+      let dateOfBirth = formData.get("dateOfBirth");
+      if (dateOfBirth) {
+        formData.set("dateOfBirth", convertToDayBackend(dateOfBirth));
+      }
+
       // Validate before submitting
       if (!validateForm(values)) {
         return;
       }
 
-      try {
-        const idAuthor = author.value._id ? author.value._id : "";
-        // Hiển thị hiệu ứng loading
-        $(".edit-product-forms").html(`
+      // Hiển thị hiệu ứng loading
+      $(".edit-product-forms").html(`
           <div class="w-100 text-center mt-5">
             <div class="spinner-border" role="status">
               <span class="sr-only">Loading...</span>
             </div>
           </div>
         `);
-        const response = await axios.post(
-          `${process.env.VUE_APP_MAIN_URL}/author/edit/save/${idAuthor}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
+
+      try {
+        let imgRes;
+
+        if (imageFileChange.value) {
+          const imageFormData = new FormData();
+          imageFormData.append("image", imageFileChange.value);
+
+          imgRes = await axios.post(
+            `${process.env.VUE_APP_MAIN_URL}/upload/image`,
+            imageFormData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+
+          formData.set("image", imgRes.data?.secureUrl);
+        } else {
+          formData.set("image", author.value?.image);
+        }
+
+        const idAuthor = author.value.id;
+
+        let response;
+        if (route.name == "EditAuthorForUpdate") {
+          response = await axios.put(
+            `${process.env.VUE_APP_MAIN_URL}/authors/${idAuthor}`,
+            formData
+          );
+          if (response.status == 200) {
+            console.log("Update author successfully");
           }
-        );
+        } else {
+          response = await axios.post(
+            `${process.env.VUE_APP_MAIN_URL}/authors`,
+            formData
+          );
+          if (response.status == 201) {
+            console.log("Add author successfully");
+          }
+        }
+
         router.push("/admin/manage-author");
       } catch (error) {
         console.error("Error submitting form:", error);
@@ -276,26 +339,25 @@ export default {
       onMounted(async () => {
         try {
           const response = await axios.get(
-            `${process.env.VUE_APP_MAIN_URL}/author/edit/${id.value}`
+            `${process.env.VUE_APP_MAIN_URL}/authors/${id.value}`
           );
           if (response.status == 200) {
             author.value = response.data;
             authorGender.value = author.value.gender;
-            const date = new Date(author.value.date_of_birth);
+            const date = new Date(author.value.dateOfBirth);
             // Lấy các thành phần ngày tháng
             const year = date.getFullYear();
             const month = (date.getMonth() + 1).toString().padStart(2, "0");
             const day = date.getDate().toString().padStart(2, "0");
-            author.value.date_of_birth = year + "-" + month + "-" + day;
-            console.log("AuhtorDOB: ", author.value.date_of_birth);
+            author.value.dateOfBirth = year + "-" + month + "-" + day;
             // Hiển thị hình ảnh preview
             $(() => {
               $(".file-drop-zone-title").css({
                 padding: "0px",
               });
               $(".file-drop-zone-title").html(`
-            <img src="${author.value.image}"/>
-          `);
+                <img src="${author.value.image}"/>
+              `);
             });
           } else
             throw {
@@ -320,6 +382,8 @@ export default {
       styleError,
       addressError,
       descriptionError,
+      imageError,
+      handleFileChange,
     };
   },
 };

@@ -13,7 +13,7 @@
               type="email"
               class="search-input"
               id="search-input-id"
-              placeholder="Search for product"
+              placeholder="Search for category"
               :value="searchQuery"
             />
           </div>
