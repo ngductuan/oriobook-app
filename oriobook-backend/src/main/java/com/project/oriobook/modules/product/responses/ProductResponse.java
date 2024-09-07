@@ -15,6 +15,10 @@ public class ProductResponse extends BaseEntity {
 
     private Double price;
 
+    private String description;
+
+    private double rating;
+
     private int stock;
 
     private Category categoryNode;

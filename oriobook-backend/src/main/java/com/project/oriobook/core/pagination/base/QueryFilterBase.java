@@ -29,8 +29,6 @@ public class QueryFilterBase {
 
     protected CommonEnum.SortEnum sortByDate;
 
-    protected boolean getAll = false;
-
     public LocalDateTime getStartDate() {
         return CommonUtil.convertStringToDateTime(startDate);
     }

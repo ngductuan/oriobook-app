@@ -40,18 +40,8 @@ public class ProductService implements IProductService {
 
     @Override
     public SearchResponse<ObjectNode> getAllProducts(FindAllProductQueryDTO query) throws Exception {
-        PageRequest pageRequest = PageRequest.of(query.getPage(), query.getLimit());
-        int from = (int) pageRequest.getOffset();
-        int size = pageRequest.getPageSize();
-
-        SearchRequest.Builder searchRequestBuilder = new SearchRequest.Builder()
-            .index(ElasticIndexConst.PRODUCTS)
-            .from(from)
-            .size(size);
-        searchRequestBuilder.sort(s -> s
-            .field(f -> f
-                .field("createdAt").order(ElasticUtil.getSortOrder(query.getSortByDate()))
-            )
+        SearchRequest.Builder searchRequestBuilder = ElasticUtil.generateSearchRequestBuilder(
+            query, ElasticIndexConst.PRODUCTS
         );
 
         BoolQuery.Builder boolQueryBuilder = ElasticUtil.generateBoolBaseQuery(query);
@@ -59,9 +49,10 @@ public class ProductService implements IProductService {
         // Add match query only if productName is not null
         if (!ValidationUtil.isNullOrBlankString(query.getProductName())) {
             boolQueryBuilder.must(m -> m
-                .wildcard(wc -> wc
+                .match(wc -> wc
                     .field("name")
-                    .value("*" + query.getProductName() + "*")
+                    .query(query.getProductName())
+                    .fuzziness("AUTO")
                 )
             );
         }

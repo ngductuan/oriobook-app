@@ -26,7 +26,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public Page<Category> getAllMainCategories(FindAllCategoryQueryDTO query) {
-        if (query == null || query.isGetAll()) {
+        if (query == null) {
             return categoryRepository.findAllMain(new FindAllCategoryQueryDTO(), Pageable.unpaged());
         }
 

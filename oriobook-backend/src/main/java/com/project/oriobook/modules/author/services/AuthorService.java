@@ -25,7 +25,7 @@ public class AuthorService implements IAuthorService{
 
     @Override
     public Page<Author> getAllAuthors(FindAllAuthorQueryDTO query) {
-        if(query == null || query.isGetAll()){
+        if(query == null){
             return authorRepository.findAll(new FindAllAuthorQueryDTO(), Pageable.unpaged());
         }
 

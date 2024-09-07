@@ -25,6 +25,8 @@ public class Product extends BaseEntity{
 
     private String description;
 
+    private double rating;
+
     private int stock;
 
     @ManyToOne(fetch = FetchType.EAGER)
