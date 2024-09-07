@@ -1,7 +1,13 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import {
+  getFromLocalStorage,
+  setToLocalStorage,
+} from "@/utils/local-storage.util";
+import { StorageKey } from "@/constants/storage.const";
+
 const getTokenInCookie = () => {
-  return localStorage.getItem("token") ?? "";
+  return getFromLocalStorage(StorageKey.ACCESS_TOKEN) ?? "";
 };
 const instances = axios.create();
 // Add a request interceptor

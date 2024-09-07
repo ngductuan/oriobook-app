@@ -118,6 +118,11 @@
 import Sidebar from "@/components/account/SideBar";
 import { onMounted, ref } from "vue";
 import axios from "@/config/axios";
+import {
+  getFromLocalStorage,
+  setToLocalStorage,
+} from "@/utils/local-storage.util";
+import { StorageKey } from "@/constants/storage.const";
 
 import { useRoute, useRouter } from "vue-router";
 export default {
@@ -243,7 +248,7 @@ export default {
         const { image, ...productInfo } = values;
 
         // console.log(image, productInfo);
-        const token = localStorage.getItem("token");
+        const token = getFromLocalStorage(StorageKey.ACCESS_TOKEN);
         // console.log("token", token);
 
         const formData = new FormData();

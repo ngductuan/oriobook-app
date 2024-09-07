@@ -5,6 +5,17 @@ const path = require("path");
 const webpack = require("webpack");
 
 module.exports = defineConfig({
+  devServer: {
+    port: 3010,
+  },
+  configureWebpack: {
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "src"),
+      },
+      extensions: [".js", ".vue", ".json"],
+    },
+  },
   // transpileDependencies: true,
   // devServer: {
   //   proxy: {
@@ -42,4 +53,5 @@ module.exports = defineConfig({
   //     },
   //   },
   // },
+  publicPath: "/",
 });

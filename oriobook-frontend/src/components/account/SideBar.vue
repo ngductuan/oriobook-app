@@ -105,6 +105,9 @@ import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "../../config/axios";
 import { RoleEnum } from "@/types/enum.type";
+import { removeFromLocalStorage } from "@/utils/local-storage.util";
+import { StorageKey } from "@/constants/storage.const";
+
 export default {
   name: "SideBar",
 
@@ -121,14 +124,16 @@ export default {
       // let res = response.data;
 
       // if (res.result === "success") {
-      //   localStorage.removeItem("token");
+      //   localStorage.removeItem("accessToken");
       //   localStorage.removeItem("sidebar");
 
       //   window.location.href = "/login";
       // }
 
-      localStorage.removeItem("token");
-      localStorage.removeItem("sidebar");
+      removeFromLocalStorage(StorageKey.ACCESS_TOKEN);
+      removeFromLocalStorage(StorageKey.SIDEBAR_STATE);
+      removeFromLocalStorage(StorageKey.USER_INFO);
+      removeFromLocalStorage(StorageKey.ACTIVE_LINk);
 
       window.location.href = "/login";
     }

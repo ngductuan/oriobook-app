@@ -1,5 +1,10 @@
 import { RoleEnum } from "@/types/enum.type";
 import VueJwtDecode from "vue-jwt-decode";
+import { StorageKey } from "@/constants/storage.const";
+import {
+  getFromLocalStorage,
+  setToLocalStorage,
+} from "@/utils/local-storage.util";
 
 export function convertDateFormat(inputDate) {
   const dateObj = new Date(inputDate);
@@ -29,7 +34,7 @@ export function scrollToTop(top = 0) {
 }
 
 export async function getTokenInfo() {
-  const token = localStorage.getItem("token");
+  const token = getFromLocalStorage(StorageKey.ACCESS_TOKEN);
   if (!token) {
     return null;
   }
@@ -47,7 +52,7 @@ export async function getTokenInfo() {
 }
 
 export async function isAdmin() {
-  const token = localStorage.getItem("token");
+  const token = getFromLocalStorage(StorageKey.ACCESS_TOKEN);
   if (!token) {
     return false;
   }

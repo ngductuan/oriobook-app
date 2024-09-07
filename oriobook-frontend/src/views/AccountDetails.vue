@@ -3,7 +3,7 @@
     <div class="row content">
       <SideBar />
       <div class="woocommerce-MyAccount-content col-9">
-        <AccountDetails />
+        <AccountDetails :userInfo="userInfo" />
         <AccountDetails_Pass v-if="display === true" />
       </div>
     </div>
@@ -25,11 +25,17 @@ export default {
   },
   setup() {
     let display = ref(true);
+    let userInfo = ref({});
+
     onMounted(async () => {
       try {
         const response = await axios.get(
-          `${process.env.VUE_APP_MAIN_URL}/account/getAccountDetail`
+          `${process.env.VUE_APP_MAIN_URL}/users/profile`
         );
+
+        userInfo.value = response.data;
+
+        // console.log("userInfo", userInfo.value);
 
         if (response.data.password == "") {
           display.value = false;
@@ -41,6 +47,7 @@ export default {
 
     return {
       display,
+      userInfo,
     };
   },
 };

@@ -80,6 +80,9 @@ import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import axios from "../config/axios";
 import { useRouter } from "vue-router";
+import { jwtDecode } from "jwt-decode";
+import { setToLocalStorage } from "@/utils/local-storage.util";
+import { StorageKey } from "@/constants/storage.const";
 
 export default {
   name: "SignIn",
@@ -111,23 +114,21 @@ export default {
             formData
           );
 
-          localStorage.setItem("token", response.data.accessToken);
+          const accessToken = response?.data?.accessToken;
+          console.log("response (login)", response);
 
-          if (response.data == "email error") {
-            toast.error("Your email is not in use yet.", {
-              autoClose: 2000,
-              position: "top-center",
-            });
-          } else if (response.data == "password error") {
-            toast.error("Your password is wrong.", {
-              autoClose: 2000,
-              position: "top-center",
-            });
-          } else {
-            window.location.href = "/account-details";
-          }
+          setToLocalStorage(StorageKey.ACCESS_TOKEN, accessToken);
+
+          const decodedPayload = jwtDecode(accessToken);
+          console.log(decodedPayload);
+
+          setToLocalStorage(StorageKey.USER_INFO, decodedPayload);
+
+          // if (response.status === 200) {
+          window.location.href = "/account-details";
+          // }
         } catch (error) {
-          toast.error(error.response.data.message, {
+          toast.error(error?.response?.data?.message, {
             autoClose: 2000,
             position: "top-center",
           });

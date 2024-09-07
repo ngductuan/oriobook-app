@@ -6,7 +6,14 @@
         class="img-1"
         @click="handleLinkClick('/products')"
       >
-        <img :src="product.image" :alt="product.name" class="img-1" />
+        <img
+          v-if="!product.image"
+          src="/public/placeholder/loading-image.png"
+          alt="Loading..."
+          class="img-1"
+        />
+
+        <img v-else :src="product.image" :alt="product.name" class="img-1" />
       </a>
       <button
         class="add-to-cart"

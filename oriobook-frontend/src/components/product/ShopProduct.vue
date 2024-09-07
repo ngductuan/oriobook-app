@@ -111,7 +111,7 @@
         </div>
         <div
           class="d-flex mt-5 justify-content-center"
-          :class="totalPages > 0 ? 'd-none' : ''"
+          :class="totalPages > 0 || isLoading ? 'd-none' : ''"
         >
           <p class="woocommerce-info">
             No products were found matching your selection.
@@ -146,6 +146,8 @@ export default {
     const author_page = ref(props.author_page);
     const route = useRoute();
     const toggleMenu = ref(false);
+    const isLoading = ref(true);
+
     const sortingOptions = [
       { value: "", label: "Default sorting" },
       // { value: "rating", label: "Sort by average rating" },
@@ -248,9 +250,12 @@ export default {
     };
 
     const requestPage = async () => {
+      if (!isLoading.value) {
+        displayLoading(".js-product-wrapper", -32);
+      }
+
       try {
         // scrollToTop(440);
-        displayLoading(".js-product-wrapper", -32);
         const params = new URLSearchParams(queryObject).toString();
         const response = await axios.get(
           `${process.env.VUE_APP_MAIN_URL}/products?page=${
@@ -291,7 +296,11 @@ export default {
     });
 
     onMounted(async () => {
+      displayLoading(".js-product-wrapper", -32);
       try {
+        await requestPage();
+        isLoading.value = false;
+
         let response = await axios.get(
           `${process.env.VUE_APP_MAIN_URL}/categories`
         );
@@ -301,7 +310,6 @@ export default {
         // Lấy tất cả tác giả
         response = await axios.get(`${process.env.VUE_APP_MAIN_URL}/authors`);
         authors.value = response.data.data;
-        await requestPage();
         paginationControl();
       } catch (error) {
         console.error("Lỗi khi gọi API:", error);
@@ -328,6 +336,7 @@ export default {
       selectCategory,
       selectAuthor,
       addCart,
+      isLoading,
     };
   },
 };
