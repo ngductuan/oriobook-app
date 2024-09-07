@@ -51,8 +51,8 @@ public class UserController {
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN_USER)
     @ResponseStatus(HttpStatus.OK)
-    public Boolean updateProduct(@Valid @RequestBody UpdateUserProfileDTO dto,
-                                 @AuthenticationPrincipal User userDetails, BindingResult result)
+    public Boolean updateProduct(@Valid @RequestBody UpdateUserProfileDTO dto,  BindingResult result,
+                                 @AuthenticationPrincipal User userDetails)
             throws Exception {
         if(result.hasErrors()) {
             throw new ValidationException(result);

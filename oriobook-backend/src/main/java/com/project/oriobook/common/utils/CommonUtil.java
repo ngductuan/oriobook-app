@@ -3,8 +3,8 @@ package com.project.oriobook.common.utils;
 import com.project.oriobook.common.constants.CommonConst;
 import com.project.oriobook.common.exceptions.base.JwtExceptionBase;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -52,5 +52,14 @@ public class CommonUtil {
         BigDecimal roundedValue = bigDecimalValue.setScale(2, RoundingMode.HALF_UP);
 
         return roundedValue.doubleValue();
+    }
+
+    public static String getFileExtension(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+
+        if (originalFilename != null && originalFilename.contains(".")) {
+            return originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
+        }
+        return "";
     }
 }

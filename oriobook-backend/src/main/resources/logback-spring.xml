@@ -64,16 +64,16 @@
     </springProfile>
 
     <!-- Appender console for development -->
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
-            <charset>${CONSOLE_LOG_CHARSET}</charset>
-        </encoder>
-    </appender>
+    <!--<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">-->
+    <!--    <encoder>-->
+    <!--        <pattern>${CONSOLE_LOG_PATTERN}</pattern>-->
+    <!--        <charset>${CONSOLE_LOG_CHARSET}</charset>-->
+    <!--    </encoder>-->
+    <!--</appender>-->
 
-    <logger name="com.project.oriobook" level="DEBUG">
-        <appender-ref ref="CONSOLE" />
-    </logger>
+    <!--<logger name="com.project.oriobook" level="DEBUG">-->
+    <!--    <appender-ref ref="CONSOLE" />-->
+    <!--</logger>-->
 
     <!--<springProfile name="dev">-->
     <!--    <root level="INFO">-->

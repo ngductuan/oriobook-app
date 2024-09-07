@@ -1,5 +1,6 @@
 package com.project.oriobook.modules.author.responses;
 
+import com.project.oriobook.common.enums.CommonEnum;
 import com.project.oriobook.core.entity.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,4 +15,6 @@ public class AuthorResponse extends BaseEntity {
     private String image;
 
     private int publishedBook;
+
+    private CommonEnum.GenderEnum gender;
 }

@@ -3,6 +3,7 @@ package com.project.oriobook.modules.upload_file;
 import com.project.oriobook.common.constants.CommonConst;
 import com.project.oriobook.common.constants.RoleConst;
 import com.project.oriobook.common.exceptions.UploadFileException;
+import com.project.oriobook.common.utils.CommonUtil;
 import com.project.oriobook.modules.upload_file.entities.CloudinaryEntity;
 import com.project.oriobook.modules.upload_file.services.UploadFileService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +32,9 @@ public class UploadFileController {
             throw new UploadFileException.NotEmpty();
         }
 
-        if(CommonConst.ALLOWED_IMAGE_EXTENSIONS.contains(file.getContentType())){
+        String fileExtension = CommonUtil.getFileExtension(file);
+
+        if(fileExtension.isEmpty() || !CommonConst.ALLOWED_IMAGE_EXTENSIONS.contains(fileExtension)){
             throw new UploadFileException.OnlyUploadImage();
         }
 

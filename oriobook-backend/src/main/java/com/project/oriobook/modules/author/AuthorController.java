@@ -68,7 +68,8 @@ public class AuthorController {
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.OK)
-    public Boolean updateAuthor(@PathVariable String id, @Valid @RequestBody CreateAuthorDTO authorDTO, BindingResult result)
+    public Boolean updateAuthor(@PathVariable String id, @Valid @RequestBody CreateAuthorDTO authorDTO,
+                                BindingResult result)
             throws Exception {
         if(result.hasErrors()) {
             throw new ValidationException(result);
