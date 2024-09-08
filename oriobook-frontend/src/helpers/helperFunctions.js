@@ -54,6 +54,7 @@ export async function isAdmin() {
   }
   try {
     const verified = await VueJwtDecode.decode(token);
+    // console.log("verified", verified);
     if (verified == null) {
       return false;
     } else {

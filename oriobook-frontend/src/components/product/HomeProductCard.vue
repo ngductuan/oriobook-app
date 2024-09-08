@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import axios from "../../config/axios";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
@@ -69,10 +69,7 @@ export default {
   setup(props, { emit }) {
     const imgHover = ref(true);
 
-    const isAdminBool = computed(async () => {
-      const adminBool = await isAdmin();
-      return adminBool;
-    });
+    const isAdminBool = ref(false);
 
     function handleLinkClick(to) {
       localStorage.setItem("activeLink", to);
@@ -81,26 +78,12 @@ export default {
     const AddProduct = async (id, stock) => {
       if (stock > 0) {
         try {
-          console.log(id);
-          const quantity = 1;
+          // console.log(id);
           const response = await axios.put(
             `${process.env.VUE_APP_MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.ADD}`
           );
           emit("reloadcart");
-          // if (response.data.status == true) {
-          //   const response1 = await axios.get(
-          //     `${process.env.VUE_APP_MAIN_URL}/carts/total-quantity`
-          //   );
-          //   let newquantity = ref(0);
-          //   // for (let i = 0; i < response1.data.length; i++) {
-          //   //   newquantity.value += response1.data[i].quantities;
-          //   // }
-          //   newquantity.value = response1.data;
-          //   this.eventBus.emit("reload", newquantity.value);
-          //   toast.success("Added Product!", {
-          //     autoClose: 1000,
-          //   });
-          // }
+
           toast.success("Added Product!", {
             autoClose: 1000,
           });
@@ -114,6 +97,10 @@ export default {
         });
       }
     };
+
+    onMounted(async () => {
+      isAdminBool.value = await isAdmin();
+    });
 
     return {
       imgHover,

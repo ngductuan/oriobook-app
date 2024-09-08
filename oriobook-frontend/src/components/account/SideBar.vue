@@ -186,7 +186,9 @@ export default {
           activeSideBar = path;
         }
 
-        let markedElement = $(`.navigation-link[data-path="${activeSideBar}"]`);
+        // let markedElement = $(`.navigation-link[data-path="${activeSideBar}"]`);
+        // let markedElement = $(`.navigation-link[data-path="${activeSideBar}"]`);
+        let markedElement = $(`.navigation-link[data-path='${activeSideBar}']`);
 
         if (markedElement && markedElement.length === 1) {
           directPage(markedElement);
@@ -195,7 +197,7 @@ export default {
       } else {
         let activeSideBar =
           localStorage.getItem("sidebar") ?? "/account-details";
-        let markedElement = $(`.navigation-link[data-path="${activeSideBar}"]`);
+        let markedElement = $(`.navigation-link[data-path='${activeSideBar}']`);
 
         updateActive(markedElement);
       }

@@ -106,7 +106,7 @@ export default {
     const login_path = ref("");
     function Click() {
       accessToken = getFromLocalStorage(StorageKey.ACCESS_TOKEN);
-      console.log("accessToken (nav)", accessToken);
+      // console.log("accessToken (nav)", accessToken);
       debugger;
       if (accessToken) {
         login_path.value = "/account-details";

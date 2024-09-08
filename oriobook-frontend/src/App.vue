@@ -15,6 +15,7 @@ import Cart from "@/components/Cart.vue";
 import Footer from "@/components/Footer";
 import { ref, provide, onMounted } from "vue";
 import axios from "./config/axios";
+import { isAdmin } from "./helpers/helperFunctions";
 
 const quantity = ref(0); // Khai báo biến quantity là biến toàn cục
 
@@ -36,6 +37,7 @@ export default {
   },
   setup() {
     let quantityTemp = ref(0);
+    const isAdminBool = ref(false);
 
     const fetchCart = async () => {
       try {
@@ -44,13 +46,18 @@ export default {
         );
 
         quantityTemp.value = response.data;
+
+        // console.log("response.data (cart count)", response.data);
       } catch (error) {
         console.error("Lỗi khi gọi API", error);
       }
     };
 
-    onMounted(() => {
-      fetchCart();
+    onMounted(async () => {
+      isAdminBool.value = await isAdmin();
+      if (!isAdminBool.value) {
+        await fetchCart();
+      }
     });
 
     const handleMyEvent = () => {
