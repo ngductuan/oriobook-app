@@ -1,6 +1,7 @@
 package com.project.oriobook.common.utils;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
@@ -10,13 +11,37 @@ import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.json.JsonData;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.project.oriobook.common.constants.CommonConst;
+import com.project.oriobook.common.constants.ElasticIndexConst;
+import com.project.oriobook.common.enums.CommonEnum;
 import com.project.oriobook.common.exceptions.CommonException;
 import com.project.oriobook.core.pagination.base.QueryFilterBase;
+import org.springframework.data.domain.PageRequest;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
 public class ElasticUtil {
+    public static SearchRequest.Builder generateSearchRequestBuilder(QueryFilterBase query, String elasticIndex) {
+        PageRequest pageRequest = PageRequest.of(query.getPage(), query.getLimit());
+        int from = (int) pageRequest.getOffset();
+        int size = pageRequest.getPageSize();
+
+        SearchRequest.Builder searchRequestBuilder = new SearchRequest.Builder()
+            .index(elasticIndex)
+            .from(from)
+            .size(size);
+
+        if (!ValidationUtil.isNullOrBlankString(query.getSortByDate())) {
+            searchRequestBuilder.sort(s -> s
+                .field(f -> f
+                    .field("createdAt").order(ElasticUtil.getSortOrder(query.getSortByDate()))
+                )
+            );
+        }
+
+        return searchRequestBuilder;
+    }
+
     public static BoolQuery.Builder generateBoolBaseQuery(QueryFilterBase query) {
         BoolQuery.Builder boolQueryBuilder = new BoolQuery.Builder();
 
@@ -35,6 +60,7 @@ public class ElasticUtil {
 
             boolQueryBuilder.filter(Query.of(q -> q.range(rangeQueryBuilder.build())));
         }
+
         return boolQueryBuilder;
     }
 
@@ -48,5 +74,9 @@ public class ElasticUtil {
         } catch (IOException e) {
             throw new CommonException.GetElasticData("GetElasticData: (" + elasticIndex + ")");
         }
+    }
+
+    public static SortOrder getSortOrder(CommonEnum.SortEnum sortBy) {
+        return sortBy.equals(CommonEnum.SortEnum.ASC) ? SortOrder.Asc : SortOrder.Desc;
     }
 }

@@ -7,6 +7,7 @@ import com.project.oriobook.modules.author.entities.Author;
 import com.project.oriobook.modules.author.services.AuthorService;
 import com.project.oriobook.modules.category.entities.Category;
 import com.project.oriobook.modules.category.services.CategoryService;
+import com.project.oriobook.modules.elastic.services.ElasticService;
 import com.project.oriobook.modules.elastic.services.IElasticService;
 import com.project.oriobook.modules.kafka.debezium.messages.ProductMessage;
 import com.project.oriobook.modules.product.entities.Product;
@@ -23,7 +24,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @KafkaListener(groupId = KafkaConst.DB_PRODUCTS_GROUP_ID, topics = {KafkaConst.DB_PRODUCTS_TOPIC})
 public class ProductListener {
-    private final IElasticService elasticService;
+    private final ElasticService elasticService;
     private final CategoryService categoryService;
     private final AuthorService authorService;
 

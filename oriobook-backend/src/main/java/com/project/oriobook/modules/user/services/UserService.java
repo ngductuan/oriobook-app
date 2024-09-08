@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class UserService implements IUserService{
     }
 
     @Override
+    @Transactional
     public User updateUserProfile(String userId, UpdateUserProfileDTO dto) throws Exception {
         User user = userRepository.findById(userId)
                 .orElseThrow(UserException.NotFound::new);
@@ -36,6 +38,7 @@ public class UserService implements IUserService{
     }
 
     @Override
+    @Transactional
     public void deleteUser(String userId) throws Exception {
         User user = userRepository.findById(userId)
                 .orElseThrow(UserException.NotFound::new);

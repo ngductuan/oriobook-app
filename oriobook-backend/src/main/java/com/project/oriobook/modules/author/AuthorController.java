@@ -9,6 +9,7 @@ import com.project.oriobook.modules.author.dto.FindAllAuthorQueryDTO;
 import com.project.oriobook.modules.author.entities.Author;
 import com.project.oriobook.modules.author.responses.AuthorResponse;
 import com.project.oriobook.modules.author.services.AuthorService;
+import com.project.oriobook.modules.author.services.IAuthorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -68,7 +69,8 @@ public class AuthorController {
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN)
     @ResponseStatus(HttpStatus.OK)
-    public Boolean updateAuthor(@PathVariable String id, @Valid @RequestBody CreateAuthorDTO authorDTO, BindingResult result)
+    public Boolean updateAuthor(@PathVariable String id, @Valid @RequestBody CreateAuthorDTO authorDTO,
+                                BindingResult result)
             throws Exception {
         if(result.hasErrors()) {
             throw new ValidationException(result);

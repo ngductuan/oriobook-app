@@ -9,6 +9,7 @@ import com.project.oriobook.modules.product.entities.Product;
 import com.project.oriobook.modules.product.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ public class OrderDetailsService implements IOrderDetailsService{
     private final ProductService productService;
 
     @Override
+    @Transactional
     public List<OrderDetails> createOrderDetails(Order order, List<CartRedisItem> cartItems)
             throws Exception{
         if(ValidationUtil.isNullOrEmptyList(cartItems)){

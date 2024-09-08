@@ -51,6 +51,8 @@ public class AuthService implements IAuthService {
         String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
         user.setPassword(encodedPassword);
 
+        // Create cart for user
+
         return userRepository.save(user);
     }
 

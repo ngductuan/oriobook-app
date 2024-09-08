@@ -88,8 +88,8 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
 
 #logging
-logging:
-  file: /logs/oriobook.log
+#logging:
+#  file: /logs/oriobook.log
 
 # Prefix for API
 api:

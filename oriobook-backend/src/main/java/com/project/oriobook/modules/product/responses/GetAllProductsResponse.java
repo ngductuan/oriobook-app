@@ -1,35 +1,38 @@
 package com.project.oriobook.modules.product.responses;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.oriobook.core.entity.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ProductResponse extends BaseEntity {
-    private String id;
+public class GetAllProductsResponse extends BaseEntity {
+    protected String name;
 
-    private String name;
+    protected String image;
 
-    private String image;
+    protected Double price;
 
-    private Double price;
+    protected String description;
 
-    private int stock;
+    protected double rating;
 
-    private Category categoryNode;
+    protected int stock;
 
-    private Author authorNode;
+    protected Category categoryNode;
+
+    protected Author authorNode;
 
     @EqualsAndHashCode(callSuper = true)
     @Data
     public static class Category extends BaseEntity {
-        private String name;
+        protected String name;
     }
 
     @EqualsAndHashCode(callSuper = true)
     @Data
     public static class Author extends BaseEntity {
-        private String name;
+        protected String name;
     }
 }

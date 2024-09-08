@@ -26,12 +26,12 @@ public class CommonException {
         }
     }
 
-    public static class SyncElasticData extends LogicExceptionBase {
+    public static class ElasticData extends LogicExceptionBase {
         private static final ErrorCodeEnum code = ErrorCodeEnum.COMMON_SYNC_ELASTIC_DATA;
         private static final String message = ErrorMessage.get(code);
 
-        public SyncElasticData(String message) {
-            super(500, SyncElasticData.message, new ErrorDetails(code.toString(), message));
+        public ElasticData(String message) {
+            super(500, ElasticData.message, new ErrorDetails(code.toString(), message));
         }
     }
 

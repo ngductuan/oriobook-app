@@ -1,14 +1,12 @@
 package com.project.oriobook.modules.product.services;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
-import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.TermQuery;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.project.oriobook.common.constants.ElasticIndexConst;
-import com.project.oriobook.common.enums.CommonEnum;
 import com.project.oriobook.common.exceptions.ProductException;
 import com.project.oriobook.common.utils.ElasticUtil;
 import com.project.oriobook.common.utils.ValidationUtil;
@@ -16,14 +14,16 @@ import com.project.oriobook.modules.author.entities.Author;
 import com.project.oriobook.modules.author.services.AuthorService;
 import com.project.oriobook.modules.category.entities.Category;
 import com.project.oriobook.modules.category.services.CategoryService;
+import com.project.oriobook.modules.elastic.services.ElasticService;
+import com.project.oriobook.modules.elastic.services.IElasticService;
 import com.project.oriobook.modules.product.dto.CreateProductDTO;
 import com.project.oriobook.modules.product.dto.FindAllProductQueryDTO;
 import com.project.oriobook.modules.product.entities.Product;
 import com.project.oriobook.modules.product.repository.ProductRepository;
+import com.project.oriobook.modules.product.responses.GetProductByIdResponse;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,29 +34,26 @@ public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
     private final AuthorService authorService;
+    private final ElasticService elasticService;
 
     private final ElasticsearchClient elasticClient;
     private final ModelMapper modelMapper;
 
     @Override
     public SearchResponse<ObjectNode> getAllProducts(FindAllProductQueryDTO query) throws Exception {
-        PageRequest pageRequest = PageRequest.of(query.getPage(), query.getLimit());
-        int from = (int) pageRequest.getOffset();
-        int size = pageRequest.getPageSize();
-
-        SearchRequest.Builder searchRequestBuilder = new SearchRequest.Builder()
-            .index(ElasticIndexConst.PRODUCTS)
-            .from(from)
-            .size(size);
+        SearchRequest.Builder searchRequestBuilder = ElasticUtil.generateSearchRequestBuilder(
+            query, ElasticIndexConst.PRODUCTS
+        );
 
         BoolQuery.Builder boolQueryBuilder = ElasticUtil.generateBoolBaseQuery(query);
 
         // Add match query only if productName is not null
         if (!ValidationUtil.isNullOrBlankString(query.getProductName())) {
             boolQueryBuilder.must(m -> m
-                .wildcard(wc -> wc
+                .match(wc -> wc
                     .field("name")
-                    .value("*" + query.getProductName() + "*")
+                    .query(query.getProductName())
+                    .fuzziness("AUTO")
                 )
             );
         }
@@ -86,8 +83,7 @@ public class ProductService implements IProductService {
         if (!ValidationUtil.isNullOrBlankString(query.getSortByPrice())) {
             searchRequestBuilder.sort(s -> s
                 .field(f -> f
-                    .field("price")
-                    .order(query.getSortByPrice() == CommonEnum.SortEnum.ASC ? SortOrder.Asc : SortOrder.Desc)
+                    .field("price").order(ElasticUtil.getSortOrder(query.getSortByPrice()))
                 )
             );
         }
@@ -96,8 +92,7 @@ public class ProductService implements IProductService {
         if (!ValidationUtil.isNullOrBlankString(query.getSortByRating())) {
             searchRequestBuilder.sort(s -> s
                 .field(f -> f
-                    .field("rating")
-                    .order(query.getSortByRating() == CommonEnum.SortEnum.ASC ? SortOrder.Asc : SortOrder.Desc)
+                    .field("rating").order(ElasticUtil.getSortOrder(query.getSortByRating()))
                 )
             );
         }
@@ -120,9 +115,17 @@ public class ProductService implements IProductService {
     @Override
     public Product getProductById(String id) throws Exception {
         Product existingProduct = productRepository.findById(id)
-                .orElseThrow(ProductException.NotFound::new);
+            .orElseThrow(ProductException.NotFound::new);
 
         return existingProduct;
+    }
+
+    @Override
+    public GetProductByIdResponse getProductByIdFromElastic(String id) throws Exception {
+        GetProductByIdResponse elasticProduct = elasticService.getDataFromElasticById(
+            id, ElasticIndexConst.PRODUCTS, GetProductByIdResponse.class);
+
+        return elasticProduct;
     }
 
     @Override

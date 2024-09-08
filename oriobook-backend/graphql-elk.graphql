@@ -89,3 +89,44 @@ PUT /_ingest/pipeline/parse_json
     }
   ]
 }
+
+------------------Example elastic's query level------------------
+{
+  "bool": {
+    "must": [
+      {
+        "match": {
+          "content": "search engine"
+        }
+      },
+      {
+        "term": {
+          "status": "published"
+        }
+      }
+    ],
+    "should": [
+      {
+        "match": {
+          "title": "elasticsearch"
+        }
+      },
+      {
+        "term": {
+          "category": "technology"
+        }
+      }
+    ],
+    "filter": [
+      {
+        "range": {
+          "date": {
+            "gte": "2024-01-01"
+          }
+        }
+      }
+    ]
+  }
+}
+
+

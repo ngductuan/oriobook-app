@@ -1,6 +1,6 @@
 package com.project.oriobook.modules.cart.responses;
 
-import com.project.oriobook.modules.product.responses.ProductResponse;
+import com.project.oriobook.modules.product.responses.GetAllProductsResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,7 +19,7 @@ public class CartResponse {
 
     @EqualsAndHashCode(callSuper = true)
     @Data
-    public static class CartItem extends ProductResponse {
+    public static class CartItem extends GetAllProductsResponse {
         private int quantity;
         private double itemTotalPrice;
     }

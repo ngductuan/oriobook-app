@@ -5,9 +5,11 @@ import com.project.oriobook.common.constants.ElasticIndexConst;
 import com.project.oriobook.common.constants.RoleConst;
 import com.project.oriobook.common.exceptions.ValidationException;
 import com.project.oriobook.modules.elastic.services.ElasticService;
+import com.project.oriobook.modules.elastic.services.IElasticService;
 import com.project.oriobook.modules.user.dto.UpdateUserProfileDTO;
 import com.project.oriobook.modules.user.entities.User;
 import com.project.oriobook.modules.user.responses.UserResponse;
+import com.project.oriobook.modules.user.services.IUserService;
 import com.project.oriobook.modules.user.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -29,7 +31,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("${api.prefix}/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService userService;
+    private final IUserService userService;
 
     private final ElasticService elasticService;
     private final ModelMapper modelMapper;
@@ -51,8 +53,8 @@ public class UserController {
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_ADMIN_USER)
     @ResponseStatus(HttpStatus.OK)
-    public Boolean updateProduct(@Valid @RequestBody UpdateUserProfileDTO dto,
-                                 @AuthenticationPrincipal User userDetails, BindingResult result)
+    public Boolean updateProduct(@Valid @RequestBody UpdateUserProfileDTO dto,  BindingResult result,
+                                 @AuthenticationPrincipal User userDetails)
             throws Exception {
         if(result.hasErrors()) {
             throw new ValidationException(result);

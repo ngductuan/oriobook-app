@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 
 public interface IElasticService {
     <T extends BaseEntity> boolean syncDataToElastic(Page<T> dataPage, String index) throws Exception;
+    <T extends BaseEntity> T getDataFromElasticById(String id, String index, Class<T> clazz) throws Exception;
     <T extends BaseEntity> void insertDataToElastic(T data, String index) throws Exception;
     <T extends BaseEntity> void updateDataToElastic(T data, String index) throws Exception;
     <T extends BaseEntity> void deleteDataFromElastic(T data, String index) throws Exception;
