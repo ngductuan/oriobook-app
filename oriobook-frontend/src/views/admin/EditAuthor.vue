@@ -109,6 +109,7 @@
                 name="image"
                 class="form-control"
                 id="formFile"
+                accept="image/*"
                 @change="handleFileChange"
               />
             </div>
