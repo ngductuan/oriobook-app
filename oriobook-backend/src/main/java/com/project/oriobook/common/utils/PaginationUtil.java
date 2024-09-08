@@ -14,6 +14,10 @@ public class PaginationUtil {
             baseOrders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByDate().toString()),"createdAt"));
         }
 
+        if(!ValidationUtil.isNullOrBlankString(query.getSortByUpdatedDate())){
+            baseOrders.add(new Sort.Order(Sort.Direction.fromString(query.getSortByUpdatedDate().toString()),"updatedAt"));
+        }
+
         baseOrders.addAll(extraOrders);
 
         PageRequest pageRequest = PageRequest.of(query.getPage(), query.getLimit(), Sort.by(baseOrders));

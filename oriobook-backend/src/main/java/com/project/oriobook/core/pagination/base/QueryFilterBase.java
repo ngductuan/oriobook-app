@@ -29,6 +29,8 @@ public class QueryFilterBase {
 
     protected CommonEnum.SortEnum sortByDate;
 
+    protected CommonEnum.SortEnum sortByUpdatedDate;
+
     protected boolean getAll = false;
 
     public LocalDateTime getStartDate() {
