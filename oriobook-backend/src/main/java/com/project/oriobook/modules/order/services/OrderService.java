@@ -49,6 +49,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    @Transactional
     public Order updateOrderStatus(String orderId, UpdateOrderDTO dto) throws Exception {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderException.OrderNotFound(orderId));

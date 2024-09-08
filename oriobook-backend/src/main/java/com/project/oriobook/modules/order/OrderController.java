@@ -8,6 +8,7 @@ import com.project.oriobook.modules.order.dto.FindAllOrderQueryDTO;
 import com.project.oriobook.modules.order.dto.UpdateOrderDTO;
 import com.project.oriobook.modules.order.entities.Order;
 import com.project.oriobook.modules.order.responses.OrderResponse;
+import com.project.oriobook.modules.order.services.IOrderService;
 import com.project.oriobook.modules.order.services.OrderService;
 import com.project.oriobook.modules.user.entities.User;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("${api.prefix}/orders")
 @RequiredArgsConstructor
 public class OrderController {
-    private final OrderService orderService;
+    private final IOrderService orderService;
 
     private final ModelMapper modelMapper;
 

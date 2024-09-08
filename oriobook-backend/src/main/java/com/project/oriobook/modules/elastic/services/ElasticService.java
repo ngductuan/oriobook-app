@@ -4,11 +4,10 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.Result;
 import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.project.oriobook.common.exceptions.CommonException;
+import com.project.oriobook.common.utils.MapperUtil;
 import com.project.oriobook.core.entity.base.BaseEntity;
-import com.project.oriobook.core.message.base.MessageBase;
-import com.project.oriobook.modules.author.services.AuthorService;
-import com.project.oriobook.modules.category.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -45,9 +44,35 @@ public class ElasticService implements IElasticService{
 
             return !bulkResponse.errors();
         } catch (Exception e) {
-            throw new CommonException.SyncElasticData("SyncElastic (" + index + ")");
+            throw new CommonException.ElasticData("SyncElastic (" + index + ")");
         }
     }
+
+    @Override
+    public <T extends BaseEntity> T getDataFromElasticById(String id, String index, Class<T> clazz) throws Exception {
+        try {
+            GetRequest getRequest = GetRequest.of(g -> g
+                .index(index)
+                .id(id)
+            );
+
+            GetResponse<JsonNode> getResponse = elasticClient.get(getRequest, JsonNode.class);
+
+            JsonNode source = getResponse.source();
+
+            if (getResponse.found() && source != null) {
+                T productResponse = MapperUtil.objectMapper.treeToValue(source, clazz);
+                return productResponse;
+            } else {
+                throw new CommonException.ElasticData("Document not found in index: " + index + ", ID: " + id);
+            }
+
+        } catch (Exception e) {
+            System.err.println("Failed to get document from index: " + index + ", ID: " + id);
+            throw new CommonException.ElasticData("Failed to get document from index: " + index + ", ID: " + id);
+        }
+    }
+
 
     @Override
     public <T extends BaseEntity> void insertDataToElastic(T data, String index) throws Exception {
@@ -65,11 +90,11 @@ public class ElasticService implements IElasticService{
             if (indexResponse.result() == Result.Created) {
                 System.out.println("Document inserted successfully in index: " + index);
             } else {
-                throw new CommonException.SyncElasticData("Failed to insert document in index: " + index);
+                throw new CommonException.ElasticData("Failed to insert document in index: " + index);
             }
 
         } catch (Exception e) {
-            throw new CommonException.SyncElasticData("Insert failed for index: " + index + ", " +
+            throw new CommonException.ElasticData("Insert failed for index: " + index + ", " +
                 "Document ID: " + data.getId());
         }
     }
@@ -88,13 +113,13 @@ public class ElasticService implements IElasticService{
             UpdateResponse<T> updateResponse = elasticClient.update(updateRequest, data.getClass());
 
             if (updateResponse.result() == Result.NotFound) {
-                throw new CommonException.SyncElasticData("Document not found in index: " + index);
+                throw new CommonException.ElasticData("Document not found in index: " + index);
             }
 
             System.out.println("Successfully updated document in index: " + index);
         } catch (Exception e) {
             System.err.println("Update failed for index: " + index + ", Document ID: " + data.getId());
-            throw new CommonException.SyncElasticData("Update failed for index: " + index + ", " +
+            throw new CommonException.ElasticData("Update failed for index: " + index + ", " +
                 "Document ID: " + data.getId());
         }
     }
@@ -112,13 +137,13 @@ public class ElasticService implements IElasticService{
             DeleteResponse deleteResponse = elasticClient.delete(deleteRequest);
 
             if (deleteResponse.result() == Result.NotFound) {
-                throw new CommonException.SyncElasticData("Document not found in index: " + index);
+                throw new CommonException.ElasticData("Document not found in index: " + index);
             }
 
             System.out.println("Successfully deleted document from index: " + index);
 
         } catch (Exception e) {
-            throw new CommonException.SyncElasticData("Delete failed for index: " + index + ", " +
+            throw new CommonException.ElasticData("Delete failed for index: " + index + ", " +
                 "Document ID: " + data.getId());
         }
     }

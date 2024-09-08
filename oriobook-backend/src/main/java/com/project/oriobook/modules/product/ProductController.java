@@ -8,10 +8,13 @@ import com.project.oriobook.common.constants.RoleConst;
 import com.project.oriobook.common.exceptions.ValidationException;
 import com.project.oriobook.core.pagination.base.PageResponse;
 import com.project.oriobook.modules.elastic.services.ElasticService;
+import com.project.oriobook.modules.elastic.services.IElasticService;
 import com.project.oriobook.modules.product.dto.CreateProductDTO;
 import com.project.oriobook.modules.product.dto.FindAllProductQueryDTO;
 import com.project.oriobook.modules.product.entities.Product;
-import com.project.oriobook.modules.product.responses.ProductResponse;
+import com.project.oriobook.modules.product.responses.GetAllProductsResponse;
+import com.project.oriobook.modules.product.responses.GetProductByIdResponse;
+import com.project.oriobook.modules.product.services.IProductService;
 import com.project.oriobook.modules.product.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -38,14 +41,22 @@ public class ProductController {
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public PageResponse<ProductResponse> getAllProducts(@ParameterObject @ModelAttribute
+    public PageResponse<GetAllProductsResponse> getAllProducts(@ParameterObject @ModelAttribute
                                                             FindAllProductQueryDTO query) throws Exception {
         SearchResponse<ObjectNode> searchResponse = productService.getAllProducts(query);
 
-        PageResponse<ProductResponse> pageResponse = new PageResponse<>();
-        pageResponse.setResponseForElastic(searchResponse, query.getPage(), query.getLimit(), ProductResponse.class);
+        PageResponse<GetAllProductsResponse> pageResponse = new PageResponse<>();
+        pageResponse.setResponseForElastic(searchResponse, query.getPage(), query.getLimit(),
+            GetAllProductsResponse.class);
 
         return pageResponse;
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public GetProductByIdResponse getProductById(@PathVariable String id) throws Exception {
+        GetProductByIdResponse productResponse = productService.getProductByIdFromElastic(id);
+        return productResponse;
     }
 
     @PutMapping("/sync-elastic")
@@ -57,13 +68,6 @@ public class ProductController {
         Page<Product> products = productService.getAllProductsToSync();
 
         return elasticService.syncDataToElastic(products, ElasticIndexConst.PRODUCTS);
-    }
-
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ProductResponse getProductById(@PathVariable String id) throws Exception {
-        Product product = productService.getProductById(id);
-        return modelMapper.map(product, ProductResponse.class);
     }
 
     @PostMapping("")

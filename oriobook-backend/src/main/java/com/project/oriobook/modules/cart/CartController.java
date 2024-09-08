@@ -7,7 +7,9 @@ import com.project.oriobook.common.utils.CommonUtil;
 import com.project.oriobook.modules.cart.entities.CartRedisItem;
 import com.project.oriobook.modules.cart.responses.CartResponse;
 import com.project.oriobook.modules.cart.services.CartRedisService;
+import com.project.oriobook.modules.cart.services.ICartRedisService;
 import com.project.oriobook.modules.product.entities.Product;
+import com.project.oriobook.modules.product.services.IProductService;
 import com.project.oriobook.modules.product.services.ProductService;
 import com.project.oriobook.modules.user.entities.User;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,8 +29,8 @@ import java.util.List;
 @RequestMapping("${api.prefix}/carts")
 @RequiredArgsConstructor
 public class CartController {
-    private final CartRedisService cartRedisService;
-    private final ProductService productService;
+    private final ICartRedisService cartRedisService;
+    private final IProductService productService;
 
     private final ModelMapper modelMapper;
 

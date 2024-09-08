@@ -63,28 +63,6 @@ public class ElasticUtil {
 
         return boolQueryBuilder;
     }
-    // public static BoolQuery.Builder generateBoolBaseQuery(QueryFilterBase query) {
-    //     BoolQuery.Builder boolQueryBuilder = new BoolQuery.Builder();
-    //
-    //     // Add range queries if startDate or endDate are provided
-    //     if (query.getStartDate() != null || query.getEndDate() != null) {
-    //         RangeQuery.Builder rangeQueryBuilder = QueryBuilders.range().field("createdAt");
-    //
-    //         if (query.getStartDate() != null) {
-    //             String startDateString = query.getStartDate().format(CommonConst.DATE_TIME_FORMAT);
-    //             rangeQueryBuilder.gte(JsonData.of(startDateString));
-    //         }
-    //         if (query.getEndDate() != null) {
-    //             // rangeQueryBuilder.lte(query.getEndDate());
-    //             String endDateString = query.getEndDate().format(CommonConst.DATE_TIME_FORMAT);
-    //             rangeQueryBuilder.lte(JsonData.of(endDateString));
-    //         }
-    //
-    //         boolQueryBuilder.filter(rangeQueryBuilder.build()._toQuery());
-    //     }
-    //
-    //     return boolQueryBuilder;
-    // }
 
     public static SearchResponse<ObjectNode> searchRequest(SearchRequest.Builder searchRequestBuilder,
         ElasticsearchClient client, String elasticIndex) throws Exception {

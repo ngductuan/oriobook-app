@@ -5,6 +5,7 @@ import com.project.oriobook.modules.auth.dto.LoginDTO;
 import com.project.oriobook.modules.auth.dto.SignUpDTO;
 import com.project.oriobook.modules.auth.responses.LoginResponse;
 import com.project.oriobook.modules.auth.services.AuthService;
+import com.project.oriobook.modules.auth.services.IAuthService;
 import com.project.oriobook.modules.user.entities.User;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("${api.prefix}/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final AuthService authService;
+    private final IAuthService authService;
 
     @PostMapping("/sign-up")
     @ResponseStatus(HttpStatus.CREATED)
