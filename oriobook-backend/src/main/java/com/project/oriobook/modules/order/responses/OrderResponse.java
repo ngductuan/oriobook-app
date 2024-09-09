@@ -43,8 +43,8 @@ public class OrderResponse extends BaseEntity {
 
         private Double itemTotalPrice;
 
-        @JsonProperty("isReviewed")
-        private boolean isReviewed;
+        @JsonProperty("isReview")
+        private boolean isReview;
 
         @EqualsAndHashCode(callSuper = true)
         @Data
