@@ -10,6 +10,7 @@ import com.project.oriobook.modules.order.entities.Order;
 import com.project.oriobook.modules.order.responses.OrderResponse;
 import com.project.oriobook.modules.order.services.IOrderService;
 import com.project.oriobook.modules.order.services.OrderService;
+import com.project.oriobook.modules.order_details.entities.OrderDetails;
 import com.project.oriobook.modules.user.entities.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -22,6 +23,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Tag(name = "orders")
@@ -70,9 +73,13 @@ public class OrderController {
     @SecurityRequirement(name = CommonConst.BEARER_KEY)
     @PreAuthorize(RoleConst.ROLE_USER)
     @ResponseStatus(HttpStatus.OK)
-    public Order getOrderDetails(@PathVariable String id, @AuthenticationPrincipal User userDetails) throws Exception {
+    public OrderResponse getOrderDetails(@PathVariable String id, @AuthenticationPrincipal User userDetails) throws Exception {
         Order order = orderService.getOrderById(id, userDetails.getId());
-        return order;
+
+        modelMapper.typeMap(Order.class, OrderResponse.class);
+        OrderResponse orderResponse = modelMapper.map(order, OrderResponse.class);
+
+        return orderResponse;
     }
 
     @PostMapping("")

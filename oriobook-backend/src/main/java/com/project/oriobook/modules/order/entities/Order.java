@@ -35,7 +35,7 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "total_price")
     private Double totalPrice;
 
-    @OneToMany(mappedBy = "orderNode", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "orderNode", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<OrderDetails> detailsList = new ArrayList<>();
 }

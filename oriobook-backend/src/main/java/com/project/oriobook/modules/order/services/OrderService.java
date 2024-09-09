@@ -16,6 +16,7 @@ import com.project.oriobook.modules.order_details.services.OrderDetailsService;
 import com.project.oriobook.modules.product.services.ProductService;
 import com.project.oriobook.modules.user.entities.User;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -112,7 +113,8 @@ public class OrderService implements IOrderService {
     public Order getOrderById(String orderId, String userId) throws Exception {
         Order order = orderRepository.findByIdAndUserIdEquals(orderId, userId)
                 .orElseThrow(() -> new OrderException.OrderNotFound(orderId));
-
+        // open lazy orderDetails if it set to lazy
+        // Hibernate.initialize(order.getDetailsList());
         return order;
     }
 }
