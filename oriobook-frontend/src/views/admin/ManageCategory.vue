@@ -13,7 +13,7 @@
               type="email"
               class="search-input"
               id="search-input-id"
-              placeholder="Search for product"
+              placeholder="Search for category"
               :value="searchQuery"
             />
           </div>
@@ -52,17 +52,17 @@
                 <input
                   class="manage-product-checkbox col-1"
                   type="checkbox"
-                  :value="category._id"
+                  :value="category.id"
                 />
                 <a
-                  :href="'/admin/edit-category/' + category._id"
+                  :href="'/admin/edit-category/' + category.id"
                   class="manage-product-item-link col"
                 >
                   <ul
                     class="manage-product-item-infos row gx-0 align-items-center"
                   >
                     <li class="manage-product-info text-center col">
-                      {{ category.name }} ({{ category.num_product }})
+                      {{ category?.name }} ({{ category?.numProducts }})
                     </li>
                     <li class="manage-product-info text-center col-2 me-2">
                       {{ category.num_sub }}
@@ -90,6 +90,7 @@ import { onMounted, ref } from "vue";
 import axios from "../../config/axios";
 import { displayLoading, removeLoading } from "@/helpers/loadingScreen";
 import Pagination from "@/components/Pagination.vue";
+import { SortEnum } from "@/types/enum.type";
 
 export default {
   name: "Manage",
@@ -118,15 +119,17 @@ export default {
     const requestPage = async () => {
       try {
         displayLoading(".manage-product-list", -32, -32);
-        let url = `${process.env.VUE_APP_MAIN_URL}/category/manage?page=${page}&perPage=${perPage}`;
-        if (searchQuery) url += `&search=${searchQuery.value}`;
+        let url = `${process.env.VUE_APP_MAIN_URL}/categories?page=${
+          page - 1
+        }&limit=${perPage}&sortByDate=${SortEnum.DESC}`;
+        if (searchQuery) url += `&categoryName=${searchQuery.value}`;
         const response = await axios.get(url);
         console.log(response.data);
         curPage.value = page;
-        categories.value = response.data.categories;
+        categories.value = response.data?.data;
         totalPages.value = response.data.totalPages;
         categories.value = categories.value.map((cate) => {
-          cate.num_sub = cate.sub_category.length;
+          cate.num_sub = cate?.children.length;
           return cate;
         });
         removeLoading();
@@ -199,7 +202,7 @@ export default {
               const id_product = $(checkbox).val();
               displayLoading(".manage-product-list", -32, -32);
               const response = await axios.delete(
-                `${process.env.VUE_APP_MAIN_URL}/category/delete/${id_product}`
+                `${process.env.VUE_APP_MAIN_URL}/categories/${id_product}`
               );
               checkbox.parentElement.remove();
               removeLoading();

@@ -90,6 +90,11 @@
 import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "../config/axios";
+import {
+  setToLocalStorage,
+  getFromLocalStorage,
+} from "@/utils/local-storage.util";
+import { StorageKey } from "@/constants/storage.const";
 
 export default {
   name: "Nav",
@@ -97,12 +102,13 @@ export default {
   setup() {
     const router = useRouter();
 
-    let Token;
+    let accessToken;
     const login_path = ref("");
     function Click() {
-      Token = localStorage.getItem("token");
-      // console.log(Token);
-      if (Token) {
+      accessToken = getFromLocalStorage(StorageKey.ACCESS_TOKEN);
+      // console.log("accessToken (nav)", accessToken);
+      debugger;
+      if (accessToken) {
         login_path.value = "/account-details";
       } else {
         login_path.value = "/login";
@@ -110,7 +116,7 @@ export default {
     }
 
     // Step 1: Create a ref to store the active link
-    const activeLink = ref(localStorage.getItem("activeLink") || "/");
+    const activeLink = ref(getFromLocalStorage(StorageKey.ACTIVE_LINk) || "/");
 
     // Watch for changes in the activeLink value
     // watch(activeLink, (newVal, oldVal) => {
@@ -123,13 +129,13 @@ export default {
     // Step 2: Handle router link click event
     function handleLinkClick(to) {
       activeLink.value = to;
-      localStorage.setItem("activeLink", to);
-      localStorage.setItem("sidebar", '/account-details');
+      setToLocalStorage(StorageKey.ACTIVE_LINk, to);
+      setToLocalStorage(StorageKey.SIDEBAR_STATE, "/account-details");
     }
 
     // Step 3: Check localStorage on component mount
     onMounted(() => {
-      const storedActiveLink = localStorage.getItem("activeLink");
+      const storedActiveLink = localStorage.getItem(StorageKey.ACTIVE_LINk);
       if (storedActiveLink) {
         activeLink.value = storedActiveLink;
       }
@@ -137,7 +143,7 @@ export default {
 
     return {
       Click,
-      Token,
+      accessToken,
       login_path,
       activeLink,
       handleLinkClick,

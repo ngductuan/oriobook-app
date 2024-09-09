@@ -107,19 +107,25 @@
 </template>
 
 <script>
-import { reactive, computed, onMounted } from "vue";
+import { reactive, computed, onMounted, ref } from "vue";
 import useVuelidate from "@vuelidate/core";
 import { required, minLength, maxLength, numeric } from "@vuelidate/validators";
 import { toast } from "vue3-toastify";
 import { useRouter } from "vue-router";
 import "vue3-toastify/dist/index.css";
 import axios from "../../config/axios";
+import {
+  setToLocalStorage,
+  getFromLocalStorage,
+} from "@/utils/local-storage.util";
+import { StorageKey } from "@/constants/storage.const";
 
 export default {
   name: "AccountDetails",
-
-  setup() {
+  props: ["userInfo"],
+  setup(props, { emit }) {
     const router = useRouter();
+    const userImage = ref("");
 
     const formData = reactive({
       account_first_name: "",
@@ -130,9 +136,9 @@ export default {
     });
 
     onMounted(async () => {
-      console.log("localStorage", localStorage.getItem("token"));
+      // // console.log("localStorage", localStorage.getItem("token"));
       try {
-        const token = localStorage.getItem("token");
+        const token = getFromLocalStorage(StorageKey.ACCESS_TOKEN);
         if (!token) {
           throw new Error("Token not found in localStorage");
         }
@@ -140,11 +146,17 @@ export default {
         const response = await axios.get(
           `${process.env.VUE_APP_MAIN_URL}/users/profile`
         );
-        formData.account_first_name = response.data.firstName;
-        formData.account_last_name = response.data.lastName;
-        formData.account_address = response.data.address;
-        formData.account_phone = response.data.phone;
-        formData.account_email = response.data.email;
+
+        const mainData = response.data;
+
+        if (response.status === 200) {
+          formData.account_first_name = mainData.firstName;
+          formData.account_last_name = mainData.lastName;
+          formData.account_address = mainData.address;
+          formData.account_phone = mainData.phone;
+          formData.account_email = mainData.email;
+          userImage.value = mainData.image;
+        }
       } catch (error) {
         console.error("Lỗi khi gọi API", error);
       }
@@ -170,22 +182,30 @@ export default {
       const result = await v$.value.$validate();
       if (result) {
         // alert(`Account details changed successfully.`);
+        const coreFormData = {
+          firstName: formData.account_first_name,
+          lastName: formData.account_last_name,
+          address: formData.account_address,
+          phone: formData.account_phone,
+          image: userImage.value,
+        };
+
         try {
           const response = await axios.put(
             `${process.env.VUE_APP_MAIN_URL}/users/profile`,
             {
-              ...formData,
+              ...coreFormData,
             }
           );
 
-          if (response.data.status == true) {
+          if (response.status == 200) {
             toast.success("Saved successfully!", {
               autoClose: 2000,
             });
             router.push("/account-details");
           }
         } catch (error) {
-          toast.error(error.response.data.message, {
+          toast.error(error?.response?.data?.message, {
             autoClose: 2000,
             position: "top-center",
           });

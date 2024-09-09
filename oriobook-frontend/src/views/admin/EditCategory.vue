@@ -140,7 +140,7 @@ export default {
     let sub_cate = [];
     const categories = ref([]);
     const category = ref({
-      _id: "",
+      id: "",
       name: "",
     });
     const isSelected = (option, productOption) => {
@@ -194,25 +194,25 @@ export default {
 
     const addSubCategory = () => {
       const name = $("#product-sub").val().trim();
-      const _id = $("#product-sub-id").val();
+      const id = $("#product-sub-id").val();
       // Validate before submitting
       if (!validateSubForm(name)) {
         return;
       }
       $("#product-sub").val("");
       $("#product-sub-id").val("");
-      if (_id != "new-cate") {
+      if (id != "new-cate") {
         // Sửa tên sub cate trên giao diện và trong list sub_cate
         $(".js-sub-cate.active").find(".sub-cate-title").text(name);
         sub_cate.forEach((cate) => {
-          if (cate._id == _id) {
+          if (cate.id == id) {
             cate.name = name;
           }
         });
         $(".js-sub-cate.active").removeClass("active");
       } else {
         sub_cate.push({
-          _id: "",
+          id: "",
           name: name,
         });
         var newElement = $(
@@ -235,7 +235,7 @@ export default {
     const removeSubCategory = function (e) {
       e.stopPropagation();
       sub_cate = sub_cate.filter(
-        (item) => item._id !== $(this).parent().find("input").val()
+        (item) => item.id !== $(this).parent().find("input").val()
       );
       $(this).parent().remove();
     };
@@ -260,7 +260,7 @@ export default {
       }
 
       try {
-        const idCategory = category.value._id ? category.value._id : "";
+        const idCategory = category.value.id ? category.value.id : "";
         // Hiển thị hiệu ứng loading
         $(".edit-product-forms").html(`
           <div class="w-100 text-center mt-5">
@@ -293,14 +293,14 @@ export default {
                 `<span style="border-radius: 4px" class="p-1 bg-primary me-1">
                   <span class="js-sub-cate" data-bs-toggle="modal"
                   data-bs-target="#exampleModal" role="button">
-                    <span class="sub-cate-title">${subCate._id.name}</span>
-                    <span> (${subCate._id.num_product})</span>
-                    <input type="hidden" value="${subCate._id._id}">
+                    <span class="sub-cate-title">${subCate.id.name}</span>
+                    <span> (${subCate.id.num_product})</span>
+                    <input type="hidden" value="${subCate.id.id}">
                   </span>
                   <i class="fa-sharp fa-solid fa-circle-xmark ms-2 js-delete-cate" role="button"></i>
                   </span>`
               );
-              sub_cate.push({ _id: subCate._id._id, name: subCate._id.name });
+              sub_cate.push({ id: subCate.id.id, name: subCate.id.name });
               $("#product-description").append(newElement);
             });
             $(".js-delete-cate").click(removeSubCategory);

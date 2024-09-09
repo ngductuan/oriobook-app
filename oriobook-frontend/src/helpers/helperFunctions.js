@@ -1,5 +1,11 @@
 import { RoleEnum } from "@/types/enum.type";
 import VueJwtDecode from "vue-jwt-decode";
+import { StorageKey } from "@/constants/storage.const";
+import {
+  getFromLocalStorage,
+  setToLocalStorage,
+} from "@/utils/local-storage.util";
+import { jwtDecode } from "jwt-decode";
 
 export function convertDateFormat(inputDate) {
   const dateObj = new Date(inputDate);
@@ -28,31 +34,27 @@ export function scrollToTop(top = 0) {
   });
 }
 
-export async function getTokenInfo() {
-  const token = localStorage.getItem("token");
+export function getTokenInfo() {
+  const token = getFromLocalStorage(StorageKey.ACCESS_TOKEN);
   if (!token) {
     return null;
   }
   try {
-    const verified = await VueJwtDecode.decode(token);
-    // console.log("verified", verified);
-    return {
-      id: verified.id,
-      email: verified.email,
-      role: verified.role,
-    };
+    const verified = jwtDecode(token);
+    return verified;
   } catch (err) {
     return null;
   }
 }
 
 export async function isAdmin() {
-  const token = localStorage.getItem("token");
+  const token = getFromLocalStorage(StorageKey.ACCESS_TOKEN);
   if (!token) {
     return false;
   }
   try {
     const verified = await VueJwtDecode.decode(token);
+    // console.log("verified", verified);
     if (verified == null) {
       return false;
     } else {

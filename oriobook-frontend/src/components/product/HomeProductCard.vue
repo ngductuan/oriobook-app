@@ -6,9 +6,17 @@
         class="img-1"
         @click="handleLinkClick('/products')"
       >
-        <img :src="product.image" :alt="product.name" class="img-1" />
+        <img
+          v-if="!product.image"
+          src="/public/placeholder/loading-image.png"
+          alt="Loading..."
+          class="img-1"
+        />
+
+        <img v-else :src="product.image" :alt="product.name" class="img-1" />
       </a>
       <button
+        v-if="!isAdminBool"
         class="add-to-cart"
         @click="AddProduct(product.id, product.stock)"
       >
@@ -41,11 +49,15 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import axios from "../../config/axios";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
-import { CartActionEnum } from "@/types/enum.type";
+import { CartActionEnum, RoleEnum } from "@/types/enum.type";
+import { getTokenInfo } from "@/helpers/helperFunctions";
+import { StorageKey } from "@/constants/storage.const";
+import { getFromLocalStorage } from "@/utils/local-storage.util";
+import { isAdmin } from "@/helpers/helperFunctions";
 
 export default {
   name: "HomeProductCard",
@@ -57,6 +69,8 @@ export default {
   setup(props, { emit }) {
     const imgHover = ref(true);
 
+    const isAdminBool = ref(false);
+
     function handleLinkClick(to) {
       localStorage.setItem("activeLink", to);
     }
@@ -64,33 +78,18 @@ export default {
     const AddProduct = async (id, stock) => {
       if (stock > 0) {
         try {
-          console.log(id);
-          const quantity = 1;
+          // console.log(id);
           const response = await axios.put(
             `${process.env.VUE_APP_MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.ADD}`
           );
           emit("reloadcart");
-          console.log("response", response);
-          // if (response.data.status == true) {
-          //   const response1 = await axios.get(
-          //     `${process.env.VUE_APP_MAIN_URL}/carts/total-quantity`
-          //   );
-          //   let newquantity = ref(0);
-          //   // for (let i = 0; i < response1.data.length; i++) {
-          //   //   newquantity.value += response1.data[i].quantities;
-          //   // }
-          //   newquantity.value = response1.data;
-          //   this.eventBus.emit("reload", newquantity.value);
-          //   toast.success("Added Product!", {
-          //     autoClose: 1000,
-          //   });
-          // }
+
           toast.success("Added Product!", {
             autoClose: 1000,
           });
         } catch (error) {
           console.error("Lỗi khi gọi API", error);
-          window.location.href = "/login";
+          // window.location.href = "/login";
         }
       } else {
         toast.error("Sold out!", {
@@ -99,10 +98,15 @@ export default {
       }
     };
 
+    onMounted(async () => {
+      isAdminBool.value = await isAdmin();
+    });
+
     return {
       imgHover,
       handleLinkClick,
       AddProduct,
+      isAdminBool,
     };
   },
 };

@@ -90,7 +90,7 @@ export default {
             );
 
             if (response1.data.status === true) {
-              localStorage.removeItem("token");
+              localStorage.removeItem("accessToken");
               localStorage.removeItem("sidebar");
               window.location.href = "/";
             } else {

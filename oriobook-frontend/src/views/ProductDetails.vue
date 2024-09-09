@@ -3,15 +3,16 @@
     <div class="product-content row mt-5">
       <div class="col-6 justify-content-center d-flex">
         <img
-          :src="product.image"
+          :src="isLoading ? '/placeholder/loading-image.png' : product.image"
           :alt="product.name"
           class="col-7 product-img"
+          style="height: 600px"
         />
       </div>
       <div class="product-info col-6 ms-auto">
         <div class="product-title">{{ product.name }}</div>
         <div class="product-rating">
-          {{ productRating }} / 5.0
+          {{ product.rating }} / 5
           <i class="fa-solid fa-star" style="color: orange"></i>
         </div>
         <div class="product-price mt-4">
@@ -30,6 +31,9 @@
         </p>
         <p class="product-desc">
           <span>Category: {{ product.category_name }}</span>
+        </p>
+        <p class="product-desc">
+          <span>Description: {{ product.description }}</span>
         </p>
         <p class="product-desc">
           <span>Stock: {{ product.stock }}</span>
@@ -95,7 +99,7 @@
         </ul>
       </div>
     </div>
-    <tabProduct :product="product" />
+    <!-- <tabProduct :product="product" /> -->
     <div class="row mt-5 gx-2 justify-content-center">
       <div class="col-12 title">Related Products</div>
 
@@ -103,7 +107,7 @@
         <div
           class="col-4 mt-3 m-20"
           v-for="relatedProduct in relatedProducts"
-          :key="relatedProduct._id"
+          :key="relatedProduct.id"
         >
           <HomeProductCard :product="relatedProduct" />
         </div>
@@ -138,10 +142,10 @@ export default {
     const route = useRoute();
     const id = ref(route.params.id);
     const product = ref({});
-    const relatedProducts = ref({});
+    const relatedProducts = ref([]);
     const nameAuthor = ref("");
     const idAuthor = ref("");
-    const productRating = ref(0);
+    const isLoading = ref(true);
 
     const totalPages = ref(0);
     let page = 1;
@@ -168,28 +172,46 @@ export default {
       });
     };
 
+    const requestProductDetails = async () => {
+      isLoading.value = true;
+      try {
+        const response = await axios.get(
+          `${process.env.VUE_APP_MAIN_URL}/products/${id.value}`
+        );
+        isLoading.value = false;
+
+        console.log("response (requestProductDetails)", response);
+
+        product.value = response.data;
+        product.value.category_name = product.value.categoryNode.name;
+        nameAuthor.value = product.value.authorNode.name;
+        idAuthor.value = product.value.authorNode.id;
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     const requestPage = async () => {
       try {
         displayLoading(".js-related-product", -50, 0);
-        const response = await axios.get(
-          `${process.env.VUE_APP_MAIN_URL}/product/detail/${id.value}?page=${page}&perPage=${perPage}`
+        const res = await axios.get(
+          `${process.env.VUE_APP_MAIN_URL}/products?page=${
+            page - 1
+          }&limit=${perPage}&categoryId=${product?.value?.categoryNode?.id}`
         );
 
-        console.log(response.data.product);
+        console.log("response (requestPage)", res);
+        const mainData = res.data;
 
-        product.value = response.data.product;
-        productRating.value = response.data.productRating;
-        product.value.category_name = product.value.id_category.name;
-        relatedProducts.value = response.data.relatedProducts;
-        nameAuthor.value = product.value.id_author.name;
-        idAuthor.value = product.value.id_author._id;
-        curPage.value = page;
-        totalPages.value = response.data.totalPages;
+        relatedProducts.value = mainData?.data;
+        curPage.value = mainData.currentPage + 1;
+        totalPages.value = mainData.totalPages;
         removeLoading();
       } catch (error) {
         console.error(error);
       }
     };
+
     let quantity = ref(1);
 
     function handleLinkClick(to) {
@@ -198,6 +220,7 @@ export default {
 
     onMounted(async () => {
       try {
+        await requestProductDetails();
         await requestPage();
         paginationControl();
       } catch (error) {
@@ -259,13 +282,13 @@ export default {
       nameAuthor,
       idAuthor,
       relatedProducts,
-      productRating,
       curPage,
       totalPages,
       quantity,
       isDisabled,
       changeQuantity,
       handleLinkClick,
+      isLoading,
     };
   },
   methods: {

@@ -13,7 +13,7 @@
               type="email"
               class="search-input"
               id="search-input-id"
-              placeholder="Search for product"
+              placeholder="Search for author"
               :value="searchQuery"
             />
           </div>
@@ -47,10 +47,10 @@
                 <input
                   class="manage-product-checkbox col-1"
                   type="checkbox"
-                  :value="author._id"
+                  :value="author.id"
                 />
                 <a
-                  :href="'/admin/edit-author/' + author._id"
+                  :href="'/admin/edit-author/' + author.id"
                   class="manage-product-item-link col"
                 >
                   <ul
@@ -67,10 +67,10 @@
                       {{ author.name }}
                     </li>
                     <li class="manage-product-info text-center col-2 me-2">
-                      {{ author.gender }}
+                      {{ toCapitalize(author.gender) }}
                     </li>
                     <li class="manage-product-info text-center col-2 me-2">
-                      {{ author.published_book }}
+                      {{ author.publishedBook }}
                     </li>
                   </ul>
                 </a>
@@ -95,6 +95,8 @@ import { onMounted, ref } from "vue";
 import axios from "../../config/axios";
 import { displayLoading, removeLoading } from "@/helpers/loadingScreen";
 import Pagination from "@/components/Pagination.vue";
+import { toCapitalize } from "@/utils/common.util";
+
 export default {
   name: "Manage",
   components: {
@@ -122,12 +124,15 @@ export default {
     const requestPage = async () => {
       try {
         displayLoading(".manage-product-list", -32, -32);
-        let url = `${process.env.VUE_APP_MAIN_URL}/author/manage?page=${page}&perPage=${perPage}`;
-        if (searchQuery) url += `&search=${searchQuery.value}`;
+        let url = `${process.env.VUE_APP_MAIN_URL}/authors?page=${
+          page - 1
+        }&limit=${perPage}&sortByDate=DESC`;
+        if (searchQuery) url += `&authorName=${searchQuery.value}`;
         const response = await axios.get(url);
         curPage.value = page;
-        authors.value = response.data.authors;
+        authors.value = response.data.data;
         totalPages.value = response.data.totalPages;
+
         removeLoading();
         $(() => {
           handleDelete();
@@ -152,7 +157,6 @@ export default {
 
       $(".js-next-link").click(async function (e) {
         e.preventDefault();
-        console.log(totalPages.value);
         page = page < totalPages.value ? page + 1 : page;
         requestPage();
       });
@@ -199,11 +203,13 @@ export default {
               displayLoading(".manage-product-list", -32, -32);
               console.log("GỌi hàm delete");
               const response = await axios.delete(
-                `${process.env.VUE_APP_MAIN_URL}/author/delete/${id_author}`
+                `${process.env.VUE_APP_MAIN_URL}/authors/${id_author}`
               );
-              checkbox.parentElement.remove();
-              removeLoading();
-              // window.location.reload();
+              if (response.status === 200) {
+                checkbox.parentElement.remove();
+                removeLoading();
+              }
+              window.location.reload();
             }
             mainCheckbox.checked = false;
           });
@@ -227,6 +233,7 @@ export default {
       totalPages,
       curPage,
       searchQuery,
+      toCapitalize,
     };
   },
 };

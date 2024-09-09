@@ -99,12 +99,17 @@
             </div>
 
             <div class="mb-2">
+              <label for="formFile" class="pt-4"
+                >Image file
+                <span class="text-danger">{{ imageError }}</span></label
+              >
               <input
                 type="file"
                 name="image"
                 class="form-control"
                 id="formFile"
                 accept="image/*"
+                @change="handleFileChange"
               />
             </div>
           </div>
@@ -118,8 +123,14 @@
 import Sidebar from "@/components/account/SideBar";
 import { onMounted, ref } from "vue";
 import axios from "@/config/axios";
+import {
+  getFromLocalStorage,
+  setToLocalStorage,
+} from "@/utils/local-storage.util";
+import { StorageKey } from "@/constants/storage.const";
 
 import { useRoute, useRouter } from "vue-router";
+import { SortEnum } from "@/types/enum.type";
 export default {
   name: "Edit",
   components: {
@@ -147,6 +158,19 @@ export default {
     const priceError = ref("");
     const stockError = ref("");
     const descriptionError = ref("");
+    const imageError = ref("");
+
+    const imageFileChange = ref(null);
+
+    const handleFileChange = (event) => {
+      const files = event.target.files;
+      if (files && files.length > 0) {
+        imageFileChange.value = files[0];
+        console.log("imageFile: ", imageFileChange.value);
+      } else {
+        console.log("No file selected");
+      }
+    };
 
     const validateForm = (values) => {
       let isValid = true;
@@ -212,7 +236,17 @@ export default {
         descriptionError.value = "";
       }
 
-      // console.log("Values: ", values);
+      // Validate image
+      if (
+        values.image.name === "" &&
+        values.image.size === 0 &&
+        !product.value?.image
+      ) {
+        imageError.value = "cannot be empty.";
+        isValid = false;
+      }
+
+      console.log("Values: ", values, imageError.value, product.value?.image);
 
       return isValid;
     };
@@ -229,10 +263,8 @@ export default {
         return;
       }
 
-      try {
-        const idProduct = product.value.id ? product.value.id : "";
-        // Hiển thị hiệu ứng loading
-        $(".edit-product-forms").html(`
+      // Hiển thị hiệu ứng loading
+      $(".edit-product-forms").html(`
           <div class="w-100 text-center mt-5">
             <div class="spinner-border" role="status">
               <span class="sr-only">Loading...</span>
@@ -240,42 +272,59 @@ export default {
           </div>
         `);
 
-        const { image, ...productInfo } = values;
+      try {
+        let imgRes;
 
-        // console.log(image, productInfo);
-        const token = localStorage.getItem("token");
-        // console.log("token", token);
+        if (imageFileChange.value) {
+          const imageFormData = new FormData();
+          imageFormData.append("image", imageFileChange.value);
 
-        const formData = new FormData();
-        formData.append("image", image); // 'image' là đối tượng file bạn muốn upload
+          imgRes = await axios.post(
+            `${process.env.VUE_APP_MAIN_URL}/upload/image`,
+            imageFormData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
 
-        const response = await fetch(
-          `${process.env.VUE_APP_MAIN_URL}/upload/image`,
-          {
-            method: "POST",
-            body: formData,
-            headers: {
-              Authorization: `Bearer ${token}`,
-              // Không cần thiết phải chỉ định 'Content-Type': 'multipart/form-data' với fetch,
-              // vì trình duyệt sẽ tự động thiết lập nó khi gửi FormData.
-            },
+          formData.set("image", imgRes.data?.secureUrl);
+        } else {
+          formData.set("image", product.value?.image);
+        }
+
+        const idProduct = product.value.id;
+
+        let response;
+        if (route.name == "EditForUpdate") {
+          response = await axios.put(
+            `${process.env.VUE_APP_MAIN_URL}/products/${idProduct}`,
+            formData
+          );
+
+          console.log("response (update)", response);
+
+          if (response.status == 200) {
+            console.log("Update product successfully");
           }
-        );
+        } else {
+          response = await axios.post(
+            `${process.env.VUE_APP_MAIN_URL}/products`,
+            formData
+          );
+          if (response.status == 201) {
+            console.log("Add product successfully");
+          }
+        }
 
-        const imageRes = await response.json();
-
-        // console.log(imageRes);
-
-        productInfo.image = imageRes.secureUrl ?? product.value.image;
-
-        // console.log("productInfo", productInfo);
-
-        const response2 = await axios.put(
-          `${process.env.VUE_APP_MAIN_URL}/products/${idProduct}`,
-          productInfo
-        );
-
-        router.push("/admin/manage");
+        if (response.status == 200 || response.status == 201) {
+          router.push("/admin/manage").then(() => {
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          });
+        }
       } catch (error) {
         console.error("Error submitting form:", error);
       }
@@ -325,12 +374,6 @@ export default {
           if (response.status == 200) {
             product.value = response.data;
 
-            // console.log(
-            //   "response for product",
-            //   response.data,
-            //   product.value.authorNode.name
-            // );
-
             authorName.value = product.value?.authorNode.id;
 
             // Hiển thị hình ảnh preview
@@ -366,6 +409,8 @@ export default {
       priceError,
       stockError,
       descriptionError,
+      imageError,
+      handleFileChange,
     };
   },
 };
