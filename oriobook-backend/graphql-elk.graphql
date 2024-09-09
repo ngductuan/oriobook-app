@@ -1,14 +1,14 @@
-PUT /products?pretty
+DELETE /products
+
+PUT /products
 {
   "mappings": {
     "properties": {
       "createdAt": {
-        "type": "date",
-        "format": "strict_date_time||epoch_millis"
+        "type": "date"
       },
       "updatedAt": {
-        "type": "date",
-        "format": "strict_date_time||epoch_millis"
+        "type": "date"
       }
     }
   }

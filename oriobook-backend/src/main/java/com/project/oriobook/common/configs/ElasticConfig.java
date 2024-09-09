@@ -14,7 +14,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @Configuration
-public class ElasticsearchConfig {
+public class ElasticConfig {
     @Value(("${spring.elasticsearch.rest.uris}"))
     private String elasticsearchUri;
 

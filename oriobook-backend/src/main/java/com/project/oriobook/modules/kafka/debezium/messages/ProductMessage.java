@@ -14,6 +14,7 @@ public class ProductMessage extends DMLMessageBase {
     private double price;
     private String description;
     private int stock;
+    private double rating;
 
     @JsonProperty("author_id")
     private String authorId;

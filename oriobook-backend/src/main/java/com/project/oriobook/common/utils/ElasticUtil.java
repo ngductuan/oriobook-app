@@ -39,6 +39,14 @@ public class ElasticUtil {
             );
         }
 
+        if (!ValidationUtil.isNullOrBlankString(query.getSortByUpdatedDate())) {
+            searchRequestBuilder.sort(s -> s
+                .field(f -> f
+                    .field("updatedAt").order(ElasticUtil.getSortOrder(query.getSortByUpdatedDate()))
+                )
+            );
+        }
+
         return searchRequestBuilder;
     }
 

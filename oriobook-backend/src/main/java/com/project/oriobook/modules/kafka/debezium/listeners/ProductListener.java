@@ -2,6 +2,7 @@ package com.project.oriobook.modules.kafka.debezium.listeners;
 
 import com.project.oriobook.common.constants.ElasticIndexConst;
 import com.project.oriobook.common.constants.KafkaConst;
+import com.project.oriobook.common.exceptions.CommonException;
 import com.project.oriobook.common.utils.KafkaUtil;
 import com.project.oriobook.modules.author.entities.Author;
 import com.project.oriobook.modules.author.services.AuthorService;
@@ -77,7 +78,7 @@ public class ProductListener {
             }
         } catch (Exception e) {
             System.err.println("Error processing Kafka message: " + e.getMessage());
-            // Optionally rethrow the exception if you want it to propagate.
+            throw new CommonException.ElasticData("Error processing Kafka message (ListenProduct");
         }
     }
 

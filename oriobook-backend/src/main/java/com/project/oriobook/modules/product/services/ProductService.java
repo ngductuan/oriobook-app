@@ -12,8 +12,10 @@ import com.project.oriobook.common.utils.ElasticUtil;
 import com.project.oriobook.common.utils.ValidationUtil;
 import com.project.oriobook.modules.author.entities.Author;
 import com.project.oriobook.modules.author.services.AuthorService;
+import com.project.oriobook.modules.author.services.IAuthorService;
 import com.project.oriobook.modules.category.entities.Category;
 import com.project.oriobook.modules.category.services.CategoryService;
+import com.project.oriobook.modules.category.services.ICategoryService;
 import com.project.oriobook.modules.elastic.services.ElasticService;
 import com.project.oriobook.modules.elastic.services.IElasticService;
 import com.project.oriobook.modules.product.dto.CreateProductDTO;
@@ -32,9 +34,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
-    private final CategoryService categoryService;
-    private final AuthorService authorService;
-    private final ElasticService elasticService;
+    private final ICategoryService categoryService;
+    private final IAuthorService authorService;
+    private final IElasticService elasticService;
 
     private final ElasticsearchClient elasticClient;
     private final ModelMapper modelMapper;
