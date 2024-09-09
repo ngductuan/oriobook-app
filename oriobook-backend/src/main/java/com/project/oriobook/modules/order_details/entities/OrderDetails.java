@@ -35,5 +35,5 @@ public class OrderDetails extends BaseEntity {
     private Double itemTotalPrice;
 
     @JoinColumn(name = "is_review")
-    private boolean isReviewed = false;
+    private boolean isReview = false;
 }
