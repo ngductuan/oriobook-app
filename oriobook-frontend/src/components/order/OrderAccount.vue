@@ -32,16 +32,18 @@
         style=""
       >
         <div class="title-order-section" style="margin-right: 12px">
-          <p class="order-code">Order code: {{ order._id }}</p>
-          <p class="order-code">Date: {{ convertDateFormat(order.date) }}</p>
-          <p class="total">Total price: ${{ order.total_price }}</p>
+          <p class="order-code">Order code: {{ order.id }}</p>
+          <p class="order-code">
+            Date: {{ convertDateFormat(order.createdAt) }}
+          </p>
+          <p class="total">Total price: ${{ order.totalPrice }}</p>
         </div>
         <div
-          :class="{ 'scroll-bar-custom-3': order.detail?.length > 2 }"
+          :class="{ 'scroll-bar-custom-3': order?.detailsList?.length > 2 }"
           :style="{
-            'overflow-y': order.detail?.length > 2 ? 'scroll' : 'unset',
+            'overflow-y': order?.detailsList?.length > 2 ? 'scroll' : 'unset',
             'max-height': '360px',
-            'margin-right': order.detail?.length > 2 ? 'unset' : '12px',
+            'margin-right': order?.detailsList?.length > 2 ? 'unset' : '12px',
           }"
         >
           <table class="order-table table-bordered">
@@ -55,41 +57,43 @@
             <tbody>
               <tr
                 class="cart_item"
-                v-for="(item, i_item) in order.detail"
+                v-for="(item, i_item) in order?.detailsList"
                 :key="i_item"
               >
                 <td class="product-thumbnail">
                   <div class="product-cart-info">
                     <a
-                      v-if="item.id_product"
-                      :href="'/products/' + item.product?._id"
+                      v-if="item?.productNode?.id"
+                      :href="'/products/' + item.id"
                       ><img
-                        :src="item.product?.image"
+                        :src="item?.productNode?.image"
                         class="product-img"
                         alt=""
                     /></a>
 
                     <img
-                      v-if="!item.id_product"
-                      :src="item.product?.image"
+                      v-if="!item.id"
+                      :src="item?.productNode?.image"
                       class="product-img"
                       alt=""
                     />
 
                     <div class="product-name">
                       <a
-                        v-if="item.id_product"
-                        :href="'/products/' + item.product?._id"
-                        >{{ item.product ? item.product.name : "" }}</a
+                        v-if="item?.productNode?.id"
+                        :href="'/products/' + item.productNode?.id"
+                        >{{
+                          item.productNode ? item?.productNode?.name : ""
+                        }}</a
                       >
 
-                      <p v-if="!item.id_product" class="mb-0">
-                        {{ item.product ? item.product.name : "" }}
+                      <p v-if="!item?.productNode?.id" class="mb-0">
+                        {{ item?.productNode ? item.productNode?.name : "" }}
                       </p>
 
                       <p class="price">
                         <span class="woocommerce-Price-amount amount">
-                          {{ item.product ? item.product.price : ""
+                          {{ item?.productNode?.price ?? ""
                           }}<span class="currency">$</span>
                         </span>
                       </p>
@@ -101,12 +105,12 @@
                         type="button"
                         class="btn btn-primary btn-submit"
                         @click="
-                          clickModal(item.product?._id, order._id, i_item)
+                          clickModal(item.productNode?.id, order.id, i_item)
                         "
                         :class="{
-                          'btn-secondary': item.isReviewed || !item.id_product,
+                          'btn-secondary': item?.isReviewed || !item.id,
                         }"
-                        :disabled="item.isReviewed || !item.id_product"
+                        :disabled="item?.isReviewed || !item.productNode.id"
                       >
                         {{ item.isReviewed ? "Evaluated" : "Evaluate" }}
                       </button>
@@ -121,7 +125,7 @@
                 </td>
                 <td class="product-subtotal" data-title="Subtotal">
                   <span class="woocommerce-Price-amount amount"
-                    ><bdi>${{ item.subtotal }}</bdi></span
+                    ><bdi>${{ item?.itemTotalPrice }}</bdi></span
                   >
                 </td>
               </tr>
@@ -132,7 +136,7 @@
     </div>
 
     <!-- Notify -->
-    <div class="notify-box" :class="{ 'no-show': orderData.length }">
+    <div class="notify-box" :class="{ 'no-show': orderData?.length }">
       <p class="text-center" style="font-size: 20px; margin-top: 2rem">
         There are no orders!
       </p>
@@ -142,7 +146,7 @@
 
     <!-- Pagination -->
     <!-- :class="{ 'no-show': !orderData.length }" -->
-    <div class="col-12 mt-2" :class="{ 'no-show': !orderData.length }">
+    <div class="col-12 mt-2" :class="{ 'no-show': !orderData?.length }">
       <nav aria-label="Page navigation example">
         <ul class="pagination d-flex justify-content-end">
           <li class="page-item">
@@ -254,7 +258,7 @@ export default {
     let page = 1;
     const curPage = ref(page);
     let perPage = 2;
-    let pathRef = ref("order/pending");
+    let pathRef = ref("pending");
 
     const clickModal = (_idProduct, _idOrder, _orderIndex) => {
       idProduct.value = _idProduct;
@@ -325,7 +329,7 @@ export default {
       toggle_3.value = false;
       // console.log("da vo");
       // fetchData('order/pending')
-      pathRef.value = "order/pending";
+      pathRef.value = "pending";
       page = 1;
       curPage.value = page;
       await requestPage();
@@ -337,7 +341,7 @@ export default {
       toggle_2.value = true;
       toggle_3.value = false;
       // fetchData('order/successful')
-      pathRef.value = "order/successful";
+      pathRef.value = "successful";
       page = 1;
       curPage.value = page;
       await requestPage();
@@ -349,7 +353,7 @@ export default {
       toggle_2.value = false;
       toggle_3.value = true;
       // fetchData('order/cancelled')
-      pathRef.value = "order/cancelled";
+      pathRef.value = "cancelled";
       page = 1;
       curPage.value = page;
       await requestPage();
@@ -359,12 +363,12 @@ export default {
     const requestPage = async () => {
       displayLoading(".order-container", -48);
       const response = await axios.get(
-        `${process.env.VUE_APP_MAIN_URL}/${pathRef.value}?page=${page}&perPage=${perPage}`
+        `${process.env.VUE_APP_MAIN_URL}/orders?page=${page}&limit=${perPage}&${pathRef.value}`
       );
 
       curPage.value = page;
-      orderData.value = response.data.pendingOrder;
-      totalPages.value = response.data.totalPages;
+      orderData.value = response.data?.data;
+      totalPages.value = response.data?.totalPages;
       removeLoading();
     };
 
@@ -394,7 +398,7 @@ export default {
 
     onMounted(async () => {
       try {
-        await requestPage("order/pending");
+        await requestPage("pending");
         init();
       } catch (error) {
         console.error("Lỗi khi gọi API:", error);

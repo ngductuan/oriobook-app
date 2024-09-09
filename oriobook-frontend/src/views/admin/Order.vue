@@ -341,11 +341,15 @@ export default {
     const requestPage = async () => {
       displayLoading(".order-section", -48, 0);
       const response = await axios.get(
-        `${process.env.VUE_APP_MAIN_URL}/order/manage-order?page=${page}&perPage=${perPage}`
+        `${process.env.VUE_APP_MAIN_URL}/orders/manage?page=${
+          page - 1
+        }&limit=${perPage}`
       );
+      console.log("da qua day 1");
       curPage.value = page;
-      orderData.value = response.data.orders;
-      totalPages.value = response.data.totalPages;
+      orderData.value = response.data?.data;
+      console.log("orderData", orderData.value);
+      totalPages.value = response.data?.totalPages;
       removeLoading();
     };
 

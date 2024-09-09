@@ -12,13 +12,11 @@
         <button class="col" @click="minus(cartItem.id)">
           <i class="fa-light fa-minus"></i>
         </button>
-        <input
-          type="text"
-          class="col text-center"
+        <span
+          class="col text-center d-flex justify-content-center align-items-center"
           id="quantity"
-          disabled
-          :value="selfQuantity"
-        />
+          >{{ cartItem.quantity }}</span
+        >
         <button
           class="col"
           @click="plus(cartItem?.id, cartItem.stock)"
@@ -49,25 +47,25 @@ export default {
   },
   setup(props, { emit }) {
     let cartItem = ref(props.cartItem);
-    const selfQuantity = ref(cartItem?.quantity);
+    // const selfQuantity = ref(0);
     const removeItem = ref(false);
 
-    watch(
-      () => props.cartItem,
-      (updatedCartItem) => {
-        // cartItem = updatedCartItem;
-        if (updatedCartItem?.quantity) {
-          selfQuantity.value = updatedCartItem?.quantity;
-        }
-      },
-      { immediate: true }
-    );
+    // watch(
+    //   () => props.cartItem,
+    //   (updatedCartItem) => {
+    //     // cartItem = updatedCartItem;
+    //     if (updatedCartItem?.quantity) {
+    //       selfQuantity.value = updatedCartItem?.quantity;
+    //     }
+    //   },
+    //   { immediate: true }
+    // );
 
     const minus = async (id) => {
       // console.log(id);
-      if (selfQuantity.value <= 1) return;
+      if (cartItem.value?.quantity <= 1) return;
 
-      selfQuantity.value -= 1;
+      cartItem.value.quantity -= 1;
 
       const response = await axios.put(
         `${process.env.VUE_APP_MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.SUBTRACT}`
@@ -79,8 +77,8 @@ export default {
     };
 
     async function plus(id, stock) {
-      if (stock > 0 && selfQuantity.value < stock) {
-        selfQuantity.value += 1;
+      if (stock > 0 && cartItem.value?.quantity < stock) {
+        cartItem.value.quantity += 1;
 
         const response = await axios.put(
           `${process.env.VUE_APP_MAIN_URL}/carts/adjust/${id}?adjustMode=${CartActionEnum.ADD}`
@@ -119,8 +117,7 @@ export default {
     });
 
     onMounted(async () => {
-      // console.log("cartItem", cartItem);
-      selfQuantity.value = cartItem?.quantity;
+      console.log("cartItem", cartItem);
     });
 
     return {
@@ -129,7 +126,7 @@ export default {
       plus,
       RemoveProduct,
       isDisabled,
-      selfQuantity,
+      // selfQuantity,
       removeItem,
     };
   },

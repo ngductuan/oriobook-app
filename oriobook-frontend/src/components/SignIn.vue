@@ -125,7 +125,7 @@ export default {
           setToLocalStorage(StorageKey.USER_INFO, decodedPayload);
 
           // if (response.status === 200) {
-          window.location.href = "/account-details";
+          window.location.href = "/";
           // }
         } catch (error) {
           toast.error(error?.response?.data?.message, {

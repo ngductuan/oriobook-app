@@ -52,7 +52,11 @@
         <p class="product-total d-flex justify-content-between">
           <span>Subtotal: </span><span>{{ price }}$</span>
         </p>
-        <router-link to="/checkout" class="cart-checkout-btn text-uppercase">
+        <router-link
+          to="/checkout"
+          class="cart-checkout-btn text-uppercase"
+          @click="closeModal"
+        >
           <span>Check out</span>
         </router-link>
       </template>
@@ -127,14 +131,18 @@ export default {
       // price.value = await Price();
     });
 
+    const closeModal = () => {
+      $(".cart").removeClass("enable");
+    };
+
     const handleCart = () => {
       $(".cart").click(async () => {
         console.log("close");
-        $(".cart").removeClass("enable");
+        closeModal();
       });
       $(".cart-close-btn").click(async () => {
         console.log("close");
-        $(".cart").removeClass("enable");
+        closeModal();
       });
     };
 
@@ -149,6 +157,7 @@ export default {
       // plus,
       cart,
       price,
+      closeModal,
       // isDisabled,
     };
   },
