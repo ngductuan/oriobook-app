@@ -20,7 +20,8 @@ public interface OrderRepository extends JpaRepository<Order, String> {
 
     @Query("SELECT p FROM Order p WHERE p.userNode.id = :userId " +
             "AND (:#{#query.startDate} IS NULL OR p.createdAt >= :#{#query.startDate}) " +
-            "AND (:#{#query.endDate} IS NULL OR p.createdAt <= :#{#query.endDate})"
+            "AND (:#{#query.endDate} IS NULL OR p.createdAt <= :#{#query.endDate})" +
+            "AND (:#{#query.status} IS NULL OR p.status = :#{#query.status})"
     )
     Page<Order> findAllMyOrders(@Param("userId") String userId, @Param("query") FindAllOrderQueryDTO query,
                             Pageable pageable);

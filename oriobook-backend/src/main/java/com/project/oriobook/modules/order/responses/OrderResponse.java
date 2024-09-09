@@ -1,5 +1,6 @@
 package com.project.oriobook.modules.order.responses;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.oriobook.common.enums.CommonEnum;
 import com.project.oriobook.core.entity.base.BaseEntity;
 import lombok.Data;
@@ -16,6 +17,8 @@ public class OrderResponse extends BaseEntity {
     private String note;
 
     private User userNode;
+
+    private Double totalPrice;
 
     @EqualsAndHashCode(callSuper = true)
     @Data
@@ -40,7 +43,8 @@ public class OrderResponse extends BaseEntity {
 
         private Double itemTotalPrice;
 
-        private boolean isReview;
+        @JsonProperty("isReviewed")
+        private boolean isReviewed;
 
         @EqualsAndHashCode(callSuper = true)
         @Data
