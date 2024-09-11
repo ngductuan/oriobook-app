@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  oriobook-be:
+    build:
+      context: ./oriobook-backend
+      dockerfile: Dockerfile
+    container_name: orio-be-container
+    env_file:
+      - ./oriobook-backend/.env
+    ports:
+      - "5002:8080"
+    networks:
+      - orio-network
+
+  oriobook-fe:
+    build:
+      context: ./oriobook-frontend
+      dockerfile: Dockerfile
+    container_name: orio-fe-container
+    env_file:
+      - ./oriobook-frontend/.env
+    ports:
+      - "5001:80"
+    networks:
+      - orio-network
+
+networks:
+  orio-network:
+    driver: bridge
