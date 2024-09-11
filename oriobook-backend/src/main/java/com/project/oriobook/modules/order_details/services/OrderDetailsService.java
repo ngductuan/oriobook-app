@@ -3,11 +3,14 @@ package com.project.oriobook.modules.order_details.services;
 import com.project.oriobook.common.utils.ValidationUtil;
 import com.project.oriobook.modules.cart.entities.CartRedisItem;
 import com.project.oriobook.modules.order.entities.Order;
+import com.project.oriobook.modules.order.services.OrderService;
 import com.project.oriobook.modules.order_details.entities.OrderDetails;
 import com.project.oriobook.modules.order_details.repository.OrderDetailsRepository;
 import com.project.oriobook.modules.product.entities.Product;
 import com.project.oriobook.modules.product.services.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +22,8 @@ import java.util.List;
 public class OrderDetailsService implements IOrderDetailsService{
     private final OrderDetailsRepository orderDetailsRepository;
     private final ProductService productService;
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderDetailsService.class);
 
     @Override
     @Transactional

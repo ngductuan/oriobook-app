@@ -3,9 +3,12 @@ package com.project.oriobook.modules.upload_file.services;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.project.oriobook.common.constants.CommonConst;
+import com.project.oriobook.modules.product.services.ProductService;
 import com.project.oriobook.modules.upload_file.entities.CloudinaryEntity;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +21,7 @@ public class UploadFileService implements IUploadFileService {
     private final Cloudinary cloudinary;
 
     private final ModelMapper modelMapper;
+    private static final Logger logger = LoggerFactory.getLogger(UploadFileService.class);
 
 
     @Override

@@ -62,40 +62,15 @@
         </appender>
     </springProfile>
 
-    <!--&lt;!&ndash; Appender console for development &ndash;&gt;-->
-    <!--<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">-->
-    <!--    <encoder>-->
-    <!--        <pattern>${CONSOLE_LOG_PATTERN}</pattern>-->
-    <!--        <charset>${CONSOLE_LOG_CHARSET}</charset>-->
-    <!--    </encoder>-->
-
-    <!--    <filter class="ch.qos.logback.classic.turbo.DuplicateMessageFilter"/>-->
-    <!--</appender>-->
-
-    <!--<turboFilter class="ch.qos.logback.classic.turbo.DuplicateMessageFilter" allowedRepetitions="2"/>-->
-
     <!-- Appender console for development -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <!--<pattern>${CONSOLE_LOG_PATTERN}</pattern>-->
             <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}:%line - %msg%n</pattern>
             <charset>${CONSOLE_LOG_CHARSET}</charset>
         </encoder>
-        <!-- Add DuplicateMessageFilter to avoid repeated logs -->
     </appender>
 
-    <!--<logger name="org.apache.kafka" level="INFO" additivity="false"/>-->
-    <!--<logger name="org.apache.kafka" level="INFO" additivity="false"/>-->
-    <!--<logger name="org.springframework.kafka" level="INFO" additivity="false"/>-->
-
-    <!--<logger name="ROOT" level="DEBUG">-->
-    <!--    <appender-ref ref="CONSOLE" />-->
-    <!--</logger>-->
-
     <springProfile name="dev">
-        <!--<logger name="org.apache.kafka" level="info" additivity="false"/>-->
-        <!--<logger name="org.springframework.kafka" level="info" additivity="false"/>-->
-
         <logger name="com.project.oriobook" level="DEBUG" additivity="false">
             <appender-ref ref="CONSOLE" />
         </logger>
@@ -112,20 +87,3 @@
     </springProfile>
 
 </configuration>
-
-        <!--&lt;!&ndash; Logger for project &ndash;&gt;-->
-        <!--<logger name="com.project.oriobook" level="DEBUG" additivity="false">-->
-        <!--    <appender-ref ref="CONSOLE" />-->
-        <!--</logger>-->
-
-        <!--&lt;!&ndash; Logger for Kafka with additivity=false to prevent repeated logs &ndash;&gt;-->
-        <!--<logger name="org.apache.kafka" level="DEBUG" additivity="false">-->
-        <!--    <appender-ref ref="CONSOLE" />-->
-        <!--</logger>-->
-
-
-        <!--<springProfile name="dev">-->
-        <!--    <root level="DEBUG">-->
-        <!--        <appender-ref ref="CONSOLE" />-->
-        <!--    </root>-->
-        <!--</springProfile>-->

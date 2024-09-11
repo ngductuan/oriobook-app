@@ -18,6 +18,7 @@ import com.project.oriobook.modules.category.services.CategoryService;
 import com.project.oriobook.modules.category.services.ICategoryService;
 import com.project.oriobook.modules.elastic.services.ElasticService;
 import com.project.oriobook.modules.elastic.services.IElasticService;
+import com.project.oriobook.modules.order_details.services.OrderDetailsService;
 import com.project.oriobook.modules.product.dto.CreateProductDTO;
 import com.project.oriobook.modules.product.dto.FindAllProductQueryDTO;
 import com.project.oriobook.modules.product.entities.Product;
@@ -25,6 +26,8 @@ import com.project.oriobook.modules.product.repository.ProductRepository;
 import com.project.oriobook.modules.product.responses.GetProductByIdResponse;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -40,6 +43,7 @@ public class ProductService implements IProductService {
 
     private final ElasticsearchClient elasticClient;
     private final ModelMapper modelMapper;
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
     @Override
     public SearchResponse<ObjectNode> getAllProducts(FindAllProductQueryDTO query) throws Exception {

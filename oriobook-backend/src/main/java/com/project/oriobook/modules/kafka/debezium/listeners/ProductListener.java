@@ -14,6 +14,8 @@ import com.project.oriobook.modules.kafka.debezium.messages.ProductMessage;
 import com.project.oriobook.modules.product.entities.Product;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaNull;
@@ -30,6 +32,7 @@ public class ProductListener {
     private final AuthorService authorService;
 
     private final ModelMapper modelMapper;
+    private static final Logger logger = LoggerFactory.getLogger(ProductListener.class);
 
     @KafkaHandler
     public void listenProduct(Object productObject) throws Exception {
