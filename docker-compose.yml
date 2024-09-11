@@ -20,3 +20,5 @@ services:
       - ./oriobook-backend/.env
     ports:
       - "5002:8080"
+    volumes:
+      - /logs/oriobook:/logs
