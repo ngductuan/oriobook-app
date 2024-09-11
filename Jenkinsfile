@@ -63,6 +63,32 @@ pipeline {
                         }
                         if (env.useChoice == 'yes') {
                             withDockerRegistry(credentialsId: DOCKERHUB_CREDENTIALS_ID, url: 'https://index.docker.io/v1/') {
+                                // Check if the container 'orio-fe' exists
+                                def feContainerExists = sh(script: "docker ps -a --filter 'name=orio-fe' --format '{{.Names}}' | grep -w orio-fe || true", returnStdout: true).trim()
+
+                                if (feContainerExists) {
+                                    // If the container exists, remove it
+                                    echo "Removing the existing container 'orio-fe'"
+
+                                    sh """
+                                        docker rm -f orio-fe
+                                        docker images --filter=reference='ngductuan/oriobook-fe:*' --format "{{.ID}}" | xargs --no-run-if-empty docker rmi -f
+                                    """
+                                }
+
+                                // Check if the container 'orio-be' exists
+                                def beContainerExists = sh(script: "docker ps -a --filter 'name=orio-be' --format '{{.Names}}' | grep -w orio-be || true", returnStdout: true).trim()
+
+                                if (beContainerExists) {
+                                    // If the container exists, remove it
+                                    echo "Removing the existing container 'orio-be'"
+
+                                    sh """
+                                        docker rm -f orio-be
+                                        docker images --filter=reference='ngductuan/oriobook-be:*' --format "{{.ID}}" | xargs --no-run-if-empty docker rmi -f
+                                    """
+                                }
+
                                 // Pull images and deploy containers
                                 sh """
                                     IMAGE_TAG=${IMAGE_TAG} docker-compose -f docker-compose.yml down
