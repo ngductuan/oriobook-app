@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Variables -->
+    <springProperty scope="context" name="LOG_FILE" source="spring.application.name" />
+
+    <!--Include Spring default library-->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <!-- Appender JSON cho Logstash -->
+    <springProfile name="prod">
+        <appender name="LOGSTASH_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>/logs/${LOG_FILE}.log</file>
+
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>/logs/${LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+
+                <maxFileSize>10MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>3GB</totalSizeCap>
+            </rollingPolicy>
+
+            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+                <providers>
+                    <timestamp/>
+                    <logLevel/>
+                    <threadName/>
+                    <loggerName/>
+                    <message/>
+                    <context/>
+                    <exception/>
+                </providers>
+
+                <jsonLayout class="net.logstash.logback.layout.JsonTemplateLayout">
+                    <template>
+                        {
+                        "timestamp": "${json:timestamp}",
+                        "level": "${json:level}",
+                        "thread": "${json:thread}",
+                        "logger": "${json:logger_name}",
+                        "message": "${json:message}",
+                        "context": {
+                        "application": "${json:context:application}"
+                        },
+                        "exception": "${json:exception}"
+                        }
+                    </template>
+                </jsonLayout>
+            </encoder>
+
+            <!--        Filter logs-->
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>TRACE</level>
+                <onMatch>DENY</onMatch>
+                <onMismatch>NEUTRAL</onMismatch>
+            </filter>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>DEBUG</level>
+                <onMatch>DENY</onMatch>
+                <onMismatch>ACCEPT</onMismatch>
+            </filter>
+        </appender>
+    </springProfile>
+
+    <!--&lt;!&ndash; Appender console for development &ndash;&gt;-->
+    <!--<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">-->
+    <!--    <encoder>-->
+    <!--        <pattern>${CONSOLE_LOG_PATTERN}</pattern>-->
+    <!--        <charset>${CONSOLE_LOG_CHARSET}</charset>-->
+    <!--    </encoder>-->
+
+    <!--    <filter class="ch.qos.logback.classic.turbo.DuplicateMessageFilter"/>-->
+    <!--</appender>-->
+
+    <!--<turboFilter class="ch.qos.logback.classic.turbo.DuplicateMessageFilter" allowedRepetitions="2"/>-->
+
+    <!-- Appender console for development -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!--<pattern>${CONSOLE_LOG_PATTERN}</pattern>-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}:%line - %msg%n</pattern>
+            <charset>${CONSOLE_LOG_CHARSET}</charset>
+        </encoder>
+        <!-- Add DuplicateMessageFilter to avoid repeated logs -->
+    </appender>
+
+    <!--<logger name="org.apache.kafka" level="INFO" additivity="false"/>-->
+    <!--<logger name="org.apache.kafka" level="INFO" additivity="false"/>-->
+    <!--<logger name="org.springframework.kafka" level="INFO" additivity="false"/>-->
+
+    <!--<logger name="ROOT" level="DEBUG">-->
+    <!--    <appender-ref ref="CONSOLE" />-->
+    <!--</logger>-->
+
+    <springProfile name="dev">
+        <!--<logger name="org.apache.kafka" level="INFO" additivity="false"/>-->
+        <!--<logger name="org.springframework.kafka" level="INFO" additivity="false"/>-->
+
+        <logger name="com.project.oriobook" level="DEBUG" additivity="false">
+            <appender-ref ref="CONSOLE" />
+        </logger>
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+
+    <springProfile name="prod">
+        <root level="INFO">
+            <appender-ref ref="LOGSTASH_APPENDER" />
+        </root>
+    </springProfile>
+
+</configuration>
+
+        <!--&lt;!&ndash; Logger for project &ndash;&gt;-->
+        <!--<logger name="com.project.oriobook" level="DEBUG" additivity="false">-->
+        <!--    <appender-ref ref="CONSOLE" />-->
+        <!--</logger>-->
+
+        <!--&lt;!&ndash; Logger for Kafka with additivity=false to prevent repeated logs &ndash;&gt;-->
+        <!--<logger name="org.apache.kafka" level="DEBUG" additivity="false">-->
+        <!--    <appender-ref ref="CONSOLE" />-->
+        <!--</logger>-->
+
+
+        <!--<springProfile name="dev">-->
+        <!--    <root level="DEBUG">-->
+        <!--        <appender-ref ref="CONSOLE" />-->
+        <!--    </root>-->
+        <!--</springProfile>-->
