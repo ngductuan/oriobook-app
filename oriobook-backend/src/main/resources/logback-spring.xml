@@ -93,8 +93,8 @@
     <!--</logger>-->
 
     <springProfile name="dev">
-        <!--<logger name="org.apache.kafka" level="INFO" additivity="false"/>-->
-        <!--<logger name="org.springframework.kafka" level="INFO" additivity="false"/>-->
+        <!--<logger name="org.apache.kafka" level="info" additivity="false"/>-->
+        <!--<logger name="org.springframework.kafka" level="info" additivity="false"/>-->
 
         <logger name="com.project.oriobook" level="DEBUG" additivity="false">
             <appender-ref ref="CONSOLE" />
