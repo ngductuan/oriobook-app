@@ -7,13 +7,10 @@ pipeline {
         DOCKERHUB_CREDENTIALS_ID = 'docker-to-jenkins-pat'
         DOCKER_REPO_BASE = "ngductuan/${APP_NAME}"
 
-        DOCKER_IMAGE_FE = ''
-        DOCKER_IMAGE_BE = ''
-        GIT_COMMIT = ''
-
         FE_FOLDER = "oriobook-frontend"
         BE_FOLDER = "oriobook-backend"
 
+        GIT_COMMIT = ''
         IMAGE_TAG = ''
     }
     stages {
@@ -26,14 +23,20 @@ pipeline {
             steps {
                 script {
                     git branch: 'develop', credentialsId: 'jenkins-github-user-repo', url: 'https://github.com/ngductuan/oriobook-app.git'
-                    
+
                     GIT_COMMIT = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
 
                     TAG_NAME = sh(returnStdout: true, script: "git tag --points-at HEAD").trim()
-                    IMAGE_TAG = "${TAG_NAME ?: 'build'}"
+                    IMAGE_TAG = "${TAG_NAME ?: 'build'}-${GIT_COMMIT}"
+
+                    // Copy .env files to the project folders
+                    withCredentials([file(credentialsId: 'FE_ENV', variable: 'FE_ENV_PATH')]) {
+                        sh "cp \$FE_ENV_PATH ${FE_FOLDER}/.env"
+                    }
                     
-                    DOCKER_IMAGE_FE = "${DOCKER_REPO_BASE}-fe:${IMAGE_TAG}-${GIT_COMMIT}"
-                    DOCKER_IMAGE_BE = "${DOCKER_REPO_BASE}-be:${IMAGE_TAG}-${GIT_COMMIT}"
+                    withCredentials([file(credentialsId: 'BE_ENV', variable: 'BE_ENV_PATH')]) {
+                        sh "cp \$BE_ENV_PATH ${BE_FOLDER}/.env"
+                    }
                 }
             }
         }
@@ -41,25 +44,11 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: DOCKERHUB_CREDENTIALS_ID, url: 'https://index.docker.io/v1/') {
-
-                        echo "Frontend Docker Image: ${DOCKER_IMAGE_FE}"
-                        echo "Backend Docker Image: ${DOCKER_IMAGE_BE}"
-
-                        withCredentials([file(credentialsId: 'FE_ENV', variable: 'FE_ENV_PATH')]) {
-                            // Copy the .env file into the FE_FOLDER directory
-                            sh "cp \$FE_ENV_PATH ${FE_FOLDER}/.env"
-
-                            sh "docker build -t ${DOCKER_IMAGE_FE} ${FE_FOLDER}"
-                        }
-
-                        sh "docker build -t ${DOCKER_IMAGE_BE} ${BE_FOLDER}"
-
-                        sh "docker push ${DOCKER_IMAGE_FE}"
-                        sh "docker push ${DOCKER_IMAGE_BE}"
-
-                        // Remove the Docker images after pushing
-                        sh "docker rmi ${DOCKER_IMAGE_FE} || true"
-                        sh "docker rmi ${DOCKER_IMAGE_BE} || true"
+                        // Build and push images
+                        sh """
+                            IMAGE_TAG=${IMAGE_TAG} docker-compose -f docker-compose.yml build
+                            IMAGE_TAG=${IMAGE_TAG} docker-compose -f docker-compose.yml push
+                        """
                     }
                 }
             }
@@ -74,54 +63,16 @@ pipeline {
                         }
                         if (env.useChoice == 'yes') {
                             withDockerRegistry(credentialsId: DOCKERHUB_CREDENTIALS_ID, url: 'https://index.docker.io/v1/') {
-                                withCredentials([file(credentialsId: 'FE_ENV', variable: 'FE_ENV_PATH')]) {
-                                    // Check if the container 'orio-fe' exists
-                                    def feContainerExists = sh(script: "docker ps -a --filter 'name=orio-fe' --format '{{.Names}}' | grep -w orio-fe || true", returnStdout: true).trim()
-
-                                    if (feContainerExists) {
-                                        // If the container exists, remove it
-                                        echo "Removing the existing container 'orio-fe'"
-
-                                        sh """
-                                            docker rm -f orio-fe
-                                            docker images --filter=reference='ngductuan/oriobook-fe:*' --format "{{.ID}}" | xargs --no-run-if-empty docker rmi -f
-                                        """
-                                    }
-
-                                    // Pull the new image and run the container
-                                    sh """
-                                        docker pull ${DOCKER_IMAGE_FE}
-                                        docker run --name orio-fe -dp 5001:80 ${DOCKER_IMAGE_FE}
-                                    """
-                                }
-
-
-                                withCredentials([file(credentialsId: 'BE_ENV', variable: 'BE_ENV_PATH')]) {
-                                    // Check if the container 'orio-be' exists
-                                    def beContainerExists = sh(script: "docker ps -a --filter 'name=orio-be' --format '{{.Names}}' | grep -w orio-be || true", returnStdout: true).trim()
-
-                                    if (beContainerExists) {
-                                        // If the container exists, remove it
-                                        echo "Removing the existing container 'orio-be'"
-
-                                        sh """
-                                            docker rm -f orio-be
-                                            docker images --filter=reference='ngductuan/oriobook-be:*' --format "{{.ID}}" | xargs --no-run-if-empty docker rmi -f
-                                        """
-                                    }
-
-                                    // Pull the new image and run the container
-                                    sh """
-                                        docker pull ${DOCKER_IMAGE_BE}
-                                        docker run --name orio-be --env-file \$BE_ENV_PATH -dp 5002:8080 ${DOCKER_IMAGE_BE}
-                                    """
-                                }
-
+                                // Pull images and deploy containers
+                                sh """
+                                    IMAGE_TAG=${IMAGE_TAG} docker-compose -f docker-compose.yml down
+                                    IMAGE_TAG=${IMAGE_TAG} docker-compose -f docker-compose.yml up -d
+                                """
                             }
                         } else {
                             echo "Deployment is skipped"
                         }
-                    } catch (Exception err){
+                    } catch (Exception err) {
                         echo "Timeout to deploy or error occurred: ${err}"
                     }
                 }
