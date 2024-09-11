@@ -7,7 +7,7 @@ services:
     image: ngductuan/oriobook-fe:${IMAGE_TAG}
     container_name: orio-fe
     env_file:
-      - .env
+      - ./oriobook-frontend/.env
     ports:
       - "5001:80"
 
@@ -17,6 +17,6 @@ services:
     image: ngductuan/oriobook-be:${IMAGE_TAG}
     container_name: orio-be
     env_file:
-      - .env
+      - ./oriobook-backend/.env
     ports:
       - "5002:8080"
