@@ -16,8 +16,8 @@ import org.springframework.context.annotation.Configuration;
                 description = "Ecommerce application for training"
         ),
         servers = {
-                @Server(url = "http://localhost:${server.port}", description = "Local Development Server"),
                 @Server(url = "https://stage.orio-studio.online", description = "Production Server"),
+                @Server(url = "http://localhost:${server.port}", description = "Local Development Server"),
         }
 )
 
