@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Variables -->
+    <springProperty scope="context" name="LOG_FILE" source="spring.application.name" />
+
+    <!--Include Spring default library-->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <!-- Appender JSON cho Logstash -->
+    <springProfile name="prod">
+        <appender name="LOGSTASH_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>/logs/${LOG_FILE}.log</file>
+
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>/logs/${LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+
+                <maxFileSize>10MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>3GB</totalSizeCap>
+            </rollingPolicy>
+
+            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+                <providers>
+                    <timestamp/>
+                    <logLevel/>
+                    <threadName/>
+                    <loggerName/>
+                    <message/>
+                    <context/>
+                    <exception/>
+                </providers>
+
+                <jsonLayout class="net.logstash.logback.layout.JsonTemplateLayout">
+                    <template>
+                        {
+                        "timestamp": "${json:timestamp}",
+                        "level": "${json:level}",
+                        "thread": "${json:thread}",
+                        "logger": "${json:logger_name}",
+                        "message": "${json:message}",
+                        "context": {
+                        "application": "${json:context:application}"
+                        },
+                        "exception": "${json:exception}"
+                        }
+                    </template>
+                </jsonLayout>
+            </encoder>
+
+            <!--        Filter logs-->
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>TRACE</level>
+                <onMatch>DENY</onMatch>
+                <onMismatch>NEUTRAL</onMismatch>
+            </filter>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>DEBUG</level>
+                <onMatch>DENY</onMatch>
+                <onMismatch>ACCEPT</onMismatch>
+            </filter>
+        </appender>
+    </springProfile>
+
+    <!-- Appender console for development -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}:%line - %msg%n</pattern>
+            <charset>${CONSOLE_LOG_CHARSET}</charset>
+        </encoder>
+    </appender>
+
+    <springProfile name="dev">
+        <logger name="com.project.oriobook" level="DEBUG" additivity="false">
+            <appender-ref ref="CONSOLE" />
+        </logger>
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+
+    <springProfile name="prod">
+        <root level="INFO">
+            <appender-ref ref="LOGSTASH_APPENDER" />
+        </root>
+    </springProfile>
+
+</configuration>

@@ -6,6 +6,7 @@ import com.project.oriobook.common.utils.PaginationUtil;
 import com.project.oriobook.common.utils.ValidationUtil;
 import com.project.oriobook.modules.cart.entities.CartRedisItem;
 import com.project.oriobook.modules.cart.services.CartRedisService;
+import com.project.oriobook.modules.category.services.CategoryService;
 import com.project.oriobook.modules.order.dto.CreateOrderDTO;
 import com.project.oriobook.modules.order.dto.FindAllOrderQueryDTO;
 import com.project.oriobook.modules.order.dto.UpdateOrderDTO;
@@ -18,6 +19,8 @@ import com.project.oriobook.modules.user.entities.User;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +38,8 @@ public class OrderService implements IOrderService {
     private final CartRedisService cartRedisService;
     private final OrderDetailsService orderDetailsService;
 
-    private final ModelMapper modelMapper;
+    private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
+
 
     @Override
     public Page<Order> getAllOrders(FindAllOrderQueryDTO query) {

@@ -8,7 +8,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.project.oriobook.common.exceptions.CommonException;
 import com.project.oriobook.common.utils.MapperUtil;
 import com.project.oriobook.core.entity.base.BaseEntity;
+import com.project.oriobook.modules.auth.services.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ElasticService implements IElasticService{
     private final ElasticsearchClient elasticClient;
+
+    private static final Logger logger = LoggerFactory.getLogger(ElasticService.class);
 
     @Override
     public <T extends BaseEntity> boolean syncDataToElastic(Page<T> dataPage, String index) throws Exception {
