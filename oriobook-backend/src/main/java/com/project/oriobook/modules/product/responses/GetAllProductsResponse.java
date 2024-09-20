@@ -1,6 +1,5 @@
 package com.project.oriobook.modules.product.responses;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.oriobook.core.entity.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

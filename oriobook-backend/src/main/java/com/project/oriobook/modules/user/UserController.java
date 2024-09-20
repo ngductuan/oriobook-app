@@ -1,25 +1,19 @@
 package com.project.oriobook.modules.user;
 
 import com.project.oriobook.common.constants.CommonConst;
-import com.project.oriobook.common.constants.ElasticIndexConst;
 import com.project.oriobook.common.constants.RoleConst;
 import com.project.oriobook.common.exceptions.ValidationException;
 import com.project.oriobook.modules.elastic.services.ElasticService;
-import com.project.oriobook.modules.elastic.services.IElasticService;
 import com.project.oriobook.modules.user.dto.UpdateUserProfileDTO;
 import com.project.oriobook.modules.user.entities.User;
 import com.project.oriobook.modules.user.responses.UserResponse;
 import com.project.oriobook.modules.user.services.IUserService;
-import com.project.oriobook.modules.user.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

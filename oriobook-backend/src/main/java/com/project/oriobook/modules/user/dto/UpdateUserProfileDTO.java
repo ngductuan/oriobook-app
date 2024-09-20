@@ -1,6 +1,5 @@
 package com.project.oriobook.modules.user.dto;
 
-import com.project.oriobook.common.annotations.ValidEmail;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

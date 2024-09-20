@@ -11,7 +11,6 @@ import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.json.JsonData;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.project.oriobook.common.constants.CommonConst;
-import com.project.oriobook.common.constants.ElasticIndexConst;
 import com.project.oriobook.common.enums.CommonEnum;
 import com.project.oriobook.common.exceptions.CommonException;
 import com.project.oriobook.core.pagination.base.QueryFilterBase;

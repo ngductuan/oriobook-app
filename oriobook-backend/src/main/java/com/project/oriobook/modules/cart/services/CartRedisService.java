@@ -6,12 +6,10 @@ import com.project.oriobook.common.exceptions.CartException;
 import com.project.oriobook.common.exceptions.CommonException;
 import com.project.oriobook.common.utils.MapperUtil;
 import com.project.oriobook.common.utils.RedisUtil;
-import com.project.oriobook.modules.auth.services.AuthService;
 import com.project.oriobook.modules.cart.entities.CartRedisItem;
 import com.project.oriobook.modules.product.services.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CartRedisService implements ICartRedisService {
@@ -27,7 +26,6 @@ public class CartRedisService implements ICartRedisService {
 
     private final RedisTemplate<String, Object> redisTemplate;
     private final RedisUtil redisUtil;
-    private static final Logger logger = LoggerFactory.getLogger(CartRedisService.class);
 
     @Override
     public List<CartRedisItem> getCart(String userId) throws Exception {

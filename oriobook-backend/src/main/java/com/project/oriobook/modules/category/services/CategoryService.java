@@ -8,9 +8,8 @@ import com.project.oriobook.modules.category.dto.FindAllCategoryQueryDTO;
 import com.project.oriobook.modules.category.entities.Category;
 import com.project.oriobook.modules.category.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,13 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CategoryService implements ICategoryService {
     private final CategoryRepository categoryRepository;
 
     private final ModelMapper modelMapper;
-    private static final Logger logger = LoggerFactory.getLogger(CategoryService.class);
 
     @Override
     public Page<Category> getAllMainCategories(FindAllCategoryQueryDTO query) {

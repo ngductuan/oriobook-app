@@ -9,13 +9,11 @@ import com.project.oriobook.modules.author.services.AuthorService;
 import com.project.oriobook.modules.category.entities.Category;
 import com.project.oriobook.modules.category.services.CategoryService;
 import com.project.oriobook.modules.elastic.services.ElasticService;
-import com.project.oriobook.modules.elastic.services.IElasticService;
 import com.project.oriobook.modules.kafka.debezium.messages.ProductMessage;
 import com.project.oriobook.modules.product.entities.Product;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaNull;
@@ -23,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 @KafkaListener(groupId = KafkaConst.DB_PRODUCTS_GROUP_ID, topics = {KafkaConst.DB_PRODUCTS_TOPIC})
@@ -32,7 +31,6 @@ public class ProductListener {
     private final AuthorService authorService;
 
     private final ModelMapper modelMapper;
-    private static final Logger logger = LoggerFactory.getLogger(ProductListener.class);
 
     @KafkaHandler
     public void listenProduct(Object productObject) throws Exception {

@@ -4,7 +4,6 @@ import com.project.oriobook.common.exceptions.ValidationException;
 import com.project.oriobook.modules.auth.dto.LoginDTO;
 import com.project.oriobook.modules.auth.dto.SignUpDTO;
 import com.project.oriobook.modules.auth.responses.LoginResponse;
-import com.project.oriobook.modules.auth.services.AuthService;
 import com.project.oriobook.modules.auth.services.IAuthService;
 import com.project.oriobook.modules.user.entities.User;
 import io.swagger.v3.oas.annotations.tags.Tag;

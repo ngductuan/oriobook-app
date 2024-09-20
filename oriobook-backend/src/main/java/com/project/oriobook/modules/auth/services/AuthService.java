@@ -6,13 +6,11 @@ import com.project.oriobook.common.exceptions.AuthException;
 import com.project.oriobook.modules.auth.dto.LoginDTO;
 import com.project.oriobook.modules.auth.dto.SignUpDTO;
 import com.project.oriobook.modules.auth.responses.LoginResponse;
-import com.project.oriobook.modules.user.UserController;
 import com.project.oriobook.modules.user.entities.User;
 import com.project.oriobook.modules.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService implements IAuthService {
@@ -31,7 +30,6 @@ public class AuthService implements IAuthService {
     private final ModelMapper modelMapper;
     private final JwtTokenHelper jwtTokenHelper;
     private final AuthenticationManager authenticationManager;
-    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     @Override
     @Transactional
@@ -64,7 +62,7 @@ public class AuthService implements IAuthService {
 
         // Check password
         if(!passwordEncoder.matches(loginDTO.getPassword(), existingUser.getPassword())){
-            logger.warn("User {} entered wrong password", existingUser.getEmail());
+            log.warn("User {} entered wrong password", existingUser.getEmail());
             throw new AuthException.WrongCredentials();
         }
 
@@ -82,7 +80,7 @@ public class AuthService implements IAuthService {
         LocalDateTime expiredTime = jwtTokenHelper.getExpirationFromToken(loginResponse.getAccessToken());
         loginResponse.setExpiredAt(expiredTime);
 
-        logger.info("User {} logged in", existingUser.getEmail());
+        log.info("User {} logged in", existingUser.getEmail());
 
         return loginResponse;
     }

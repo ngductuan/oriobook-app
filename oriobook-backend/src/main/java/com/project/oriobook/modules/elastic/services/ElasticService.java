@@ -8,19 +8,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.project.oriobook.common.exceptions.CommonException;
 import com.project.oriobook.common.utils.MapperUtil;
 import com.project.oriobook.core.entity.base.BaseEntity;
-import com.project.oriobook.modules.auth.services.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ElasticService implements IElasticService{
     private final ElasticsearchClient elasticClient;
-
-    private static final Logger logger = LoggerFactory.getLogger(ElasticService.class);
 
     @Override
     public <T extends BaseEntity> boolean syncDataToElastic(Page<T> dataPage, String index) throws Exception {

@@ -9,7 +9,6 @@ import com.project.oriobook.modules.category.dto.CreateSubCategoryDTO;
 import com.project.oriobook.modules.category.dto.FindAllCategoryQueryDTO;
 import com.project.oriobook.modules.category.entities.Category;
 import com.project.oriobook.modules.category.responses.CategoryResponse;
-import com.project.oriobook.modules.category.services.CategoryService;
 import com.project.oriobook.modules.category.services.ICategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

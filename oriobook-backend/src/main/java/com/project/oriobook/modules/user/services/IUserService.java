@@ -2,7 +2,6 @@ package com.project.oriobook.modules.user.services;
 
 import com.project.oriobook.modules.user.dto.UpdateUserProfileDTO;
 import com.project.oriobook.modules.user.entities.User;
-import org.springframework.data.domain.Page;
 
 public interface IUserService {
     User getUserById(String id) throws Exception;
